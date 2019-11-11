@@ -28,16 +28,14 @@ string syntaxLine(string line){
 	vector<string> variables = {"bool", "string", "int"};
 	vector<string> functions = {"extern", "include"};
 
-	// if
-
 	for (int i = 0; i < text.size(); i ++){
 		if (commentMode == true){
 		}else if (stringMode == true){
-			if (text.substr(i, 1) == "\""){
+			if (text.substr(i, 1) == "\"" && text.substr(i - 1, 1) != "\\"){
                 string replacer = "\"\u001b[0m";
                 text.replace(i, 1, replacer);
-                i += replacer.size();
-                stringMode = false;
+	            i += replacer.size();
+	            stringMode = false;
             }
 
 		}else{
