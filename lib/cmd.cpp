@@ -3,7 +3,9 @@
 #include <stdio.h>
 #include <string>
 #include <sys/ioctl.h>
+#include <algorithm>
 #include <unistd.h>
+#include <dirent.h>
 
 using namespace std;
 
@@ -39,6 +41,35 @@ vector<string> splitIndex(string text, int index){
 
 	returnvector.push_back(current);
 	return returnvector;
+}
+
+vector<string> DirView(const string& path){
+	struct dirent *de;
+	DIR *dr = opendir(path.c_str());
+
+	vector<string> returnarray;
+
+	if (dr == NULL){
+		returnarray.push_back("Error while opening directory");
+		return returnarray;
+	}
+
+	while ((de = readdir(dr)) != NULL){
+		string returnstring = de->d_name;
+
+		if (de->d_type == DT_REG){
+			returnstring += ("|FILE");
+		}else{
+			returnstring += ("|DIR");
+		}
+		returnarray.push_back(returnstring);
+	}
+
+	closedir(dr);
+
+	sort(returnarray.begin(), returnarray.end());
+
+	return returnarray;
 }
 
 void updateScreenSize(){

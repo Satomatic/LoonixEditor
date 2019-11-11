@@ -18,6 +18,8 @@ extern vector<string> raw;
 extern vector<string> lines;
 extern vector<string> viewport;
 
+extern bool hasEdited;
+
 void updateViewport(){
 	viewport.clear();
 	for (int i = 0; i < lines.size(); i++){
@@ -39,6 +41,12 @@ void drawHeader(){
 	headerdata += "] :: ";
 	headerdata += currentfile;
 
+	if (hasEdited == true){
+		headerdata += " *";
+	}
+
+	headerdata += "   ";
+
 	cout << fillX(headerdata);
 }
 
@@ -53,6 +61,12 @@ void updateHeader(){
 	headerdata += to_string(index + cury);
 	headerdata += "] :: ";
 	headerdata += currentfile;
+
+	if (hasEdited == true){
+		headerdata += " *";
+	}
+
+	headerdata += "   ";
 
 	cout << headerdata;
 }

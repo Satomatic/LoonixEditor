@@ -24,9 +24,21 @@ int index = 0;
 int screenHeight;
 int screenWidth;
 
+bool hasEdited = false;
+
 string currentfile = "";
 
-int main(){
+void infoBox(string title, string message){
+	Box MessageBox;
+	MessageBox.title = title;
+	MessageBox.width = message.size();
+	MessageBox.height = 1;
+	MessageBox.message = message;
+	MessageBox.center = true;
+	MessageBox.draw();
+}
+
+int main(int argc, char** argv){
 	// start up //
 	signal(SIGINT,SIG_IGN);
 
@@ -38,11 +50,18 @@ int main(){
 
 	updateScreenSize();
 
-	newFile();
+	if (argc == 2){
+		loadFile(argv[1]);
+		drawScreen();
+		drawHeader();
+		updateCursor();
+	}else{
+		newFile();
+	}
 
 	// Welcome Message //
 	Box WelcomeMessage;
-	WelcomeMessage.message = " Welcome to Loonix editor";
+	WelcomeMessage.message = " Welcome to Loonix editor ";
 	WelcomeMessage.width = 26;
 	WelcomeMessage.height = 1;
 	WelcomeMessage.center = true;
@@ -115,15 +134,25 @@ int main(){
 				}
 
 			}else{
-				curx --;
+				if (curx >= 4){
+					string currentline = raw[index + cury];
+					if (currentline.substr(curx - 4, 4) == "    "){
+						curx -= 4;
+					}else{
+						curx --;
+					}
+				}else{
+					curx --;
+				}
 			}
+
 
 			updateCursor();
 
 		}else if (key == "RightArrow"){
 			if (curx == raw[index + cury].size()){
 				if (cury == viewport.size()){
-					if (index + cury != raw.size() - 1){
+					if (index + cury != raw.size()){
 						curx = 0;
 						index ++;
 						updateViewport();
@@ -138,8 +167,14 @@ int main(){
 					drawScreen();
 					drawHeader();
 				}
+
 			}else{
-				curx ++;
+				string currentline = raw[index + cury];
+				if (currentline.substr(curx, 4) == "    "){
+					curx += 4;
+				}else{
+					curx ++;
+				}
 			}
 
 			updateCursor();
@@ -163,29 +198,42 @@ int main(){
 
 			updateCursor();
 
+			hasEdited = true;
+
 		}else if (key == "Backspace" && curx != 0){
 			string currentline = raw[index + cury];
 			string newline = "";
+			string extend = "";
 
-			if (curx == currentline.size()){
-				newline = currentline.substr(0, currentline.size() - 1);
-			}else{
+			if (curx >= 4 && currentline.substr(curx - 4, 4) == "    "){
 				vector<string> linesplit = splitIndex(currentline, curx);
-				string beforePoint = linesplit[0].substr(0, linesplit[0].size() - 1);
+				newline = linesplit[0].substr(0, curx - 4);
+				newline += linesplit[1];
+				curx -= 4;
+				extend = "     ";
+			}else{
+				if (curx == currentline.size()){
+					newline = currentline.substr(0, currentline.size() - 1);
+				}else{
+					vector<string> linesplit = splitIndex(currentline, curx);
+					string beforePoint = linesplit[0].substr(0, linesplit[0].size() - 1);
 
-				newline = beforePoint + linesplit[1];
+					newline = beforePoint + linesplit[1];
+				}
+				extend = "  ";
+				curx --;
 			}
 
 			lines[index + cury] = syntaxLine(newline);
 			raw[index + cury] = newline;
 			updateViewport();
 
-			curx --;
-
 			resetColor();
 			setCursorPosition(0, cury);
-			cout << newline << "  ";
+			cout << newline << extend;
 			updateCursor();
+
+			hasEdited = true;
 
 		}else if (key == "Return"){
 			string currentline = raw[index + cury];
@@ -207,6 +255,8 @@ int main(){
 			curx = 0;
 			cury ++;
 			updateCursor();
+
+			hasEdited = true;
 
 		}else if (key == "CTRLX"){
 			break;
@@ -243,6 +293,8 @@ int main(){
 			curx += 4;
 			updateCursor();
 
+			hasEdited = true;
+
 		}else{
 			if (key.size() == 1){
 				string currentline = raw[index + cury];
@@ -264,6 +316,8 @@ int main(){
 				cout << newline;
 				updateCursor();
 			}
+
+			hasEdited = true;
 		}
 
 		checkScreenSize();
@@ -271,13 +325,6 @@ int main(){
 		if (WelcomeMessage.showing == true){
 			WelcomeMessage.undraw();
 		}
-
-        Box DebugInfo;
-        DebugInfo.width = 20;
-        DebugInfo.height = 15;
-        DebugInfo.title = "Debug info";
-        DebugInfo.escape = "\u001b[4m\u001b[3m\u001b[38;5;213m";
-		DebugInfo.center = true;
 	}
 
 	setCursorPosition(0,0);

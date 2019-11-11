@@ -9,6 +9,7 @@ extern vector<string> raw;
 extern vector<string> lines;
 extern vector<string> viewport;
 extern string currentfile;
+extern bool hasEdited;
 
 void loadFile(string filepath){
 	lines.clear();
@@ -17,6 +18,7 @@ void loadFile(string filepath){
 	raw.push_back(" if you can see this, somethings gone wrong ");
 
 	currentfile = filepath;
+	hasEdited = false;
 
 	ifstream file(filepath);
 
@@ -55,6 +57,8 @@ void openFile(){
 
 			// redraw display //
 			system("setterm -cursor off");
+			curx = 0; // reset cursor
+			cury = 1;
 			clear();
 			drawScreen();
 			drawHeader();
@@ -69,10 +73,12 @@ void openFile(){
 }
 
 void saveFile(){
+	hasEdited = false;
+
 	ofstream file(currentfile);
 
-	for (int i = 1; i < lines.size(); i++){
-		file << lines[i] << endl;
+	for (int i = 1; i < raw.size(); i++){
+		file << raw[i] << endl;
 	}
 
 	file.close();
@@ -123,3 +129,167 @@ void newFile(){
 	drawHeader();
 	updateCursor();
 }
+
+class filemanager{
+	public:
+		int posx = 0;
+		int posy = 0;
+		int width = 10;
+		int height = 10;
+
+		string title = "";
+
+		vector<string> view;
+		vector<string> currentdir;
+		vector<string> currentsort;
+
+		int start = 0;
+		int index = 0;
+		int lastIndex = 0;
+
+		string selected = "";
+		string dir = ".";
+
+		Box FileManagerBox;
+
+		void draw(){
+			currentdir = DirView(".");
+
+			// draw box //
+			FileManagerBox.title = title;
+			FileManagerBox.width = width;
+			FileManagerBox.height = height;
+			FileManagerBox.posx = posx;
+			FileManagerBox.posy = posy;
+			FileManagerBox.center = true;
+			FileManagerBox.draw();
+
+			// display dir //
+			updateView();
+			updateList();
+			updateCursor();
+
+			while(true){
+				string key = getInput();
+
+				if (key == "DownArrow"){
+					if (start + index != currentdir.size() - 1){
+						if (start + index == height - 1){
+							// at bottom //
+							clearView();
+							start ++;
+							updateView();
+							updateList();
+							updateCursor();
+						}else{
+							index ++;
+							updateCursor();
+						}
+					}
+
+				}else if (key == "UpArrow"){
+					if (start + index > 0){
+						if (index == 0){
+							clearView();
+							start --;
+							updateView();
+							updateList();
+							updateCursor();
+						}else{
+							index --;
+							updateCursor();
+						}
+					}
+
+				}else if (key == "Return"){
+					string currentItem = currentsort[int(start + index)];
+					vector<string> itemsplit = split(currentItem, '|');
+
+					if (itemsplit[1] == "FILE"){
+						selected = dir + "/" + itemsplit[0];
+						break;
+					}else{
+						dir += "/";
+						dir += itemsplit[0];
+
+						clearView();
+						currentdir.clear();
+						currentdir = DirView(dir);
+						index = 0;
+						start = 0;
+						updateView();
+						updateList();
+						updateCursor();
+					}
+
+				}else if (key == "CTRLX"){
+					selected = "exit";
+					break;
+				}
+
+			}
+		}
+
+		void updateView(){
+			view.clear();
+			currentsort.clear();
+			// for directories //
+			for (int i = 0; i < currentdir.size(); i++){
+				if (i >= start && i < height){
+					vector<string> linesplit = split(currentdir[i], '|');
+					if (linesplit[1] == "DIR"){
+						view.push_back(linesplit[0]);
+						currentsort.push_back(linesplit[0] + "|" + linesplit[1]);
+					}
+				}
+			}
+
+			// for files //
+            for (int i = 0; i < currentdir.size(); i++){
+                if (i >= start && i < height){
+                    vector<string> linesplit = split(currentdir[i], '|');
+                    if (linesplit[1] == "FILE"){
+                        view.push_back(linesplit[0]);
+						currentsort.push_back(linesplit[0] + "|" + linesplit[1]);
+                    }
+                }
+            }
+
+		}
+
+		void clearView(){
+            resetColor();
+
+            // clear list //
+            for (int i = 0; i < view.size(); i++){
+                for (int b = 0; b < view[i].size(); b++){
+                    setCursorPosition(FileManagerBox.posx + 1 + b, FileManagerBox.posy + 1 + i);
+                    cout << " ";
+                }
+            }
+		}
+
+		void updateList(){
+			clearView();
+
+			// display list//
+			for (int i = 0; i < view.size(); i++){
+				setCursorPosition(FileManagerBox.posx + 1, FileManagerBox.posy + 1 + i);
+				cout << view[i];
+			}
+		}
+
+		void updateCursor(){
+			// overwrite previous line //
+			setCursorPosition(FileManagerBox.posx + 1, FileManagerBox.posy + 1 + lastIndex);
+			resetColor();
+			cout << view[lastIndex];
+
+			// write new cursor //
+			setCursorPosition(FileManagerBox.posx + 1, FileManagerBox.posy + 1 + index);
+			cout << "\u001b[30m\u001b[107m";
+			cout << view[index];
+
+			lastIndex = index;
+		}
+};
