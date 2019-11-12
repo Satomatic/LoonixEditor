@@ -6,6 +6,7 @@
 #include "lib/keyboard.cpp"
 #include "lib/display.cpp"
 #include "lib/render.cpp"
+#include "lib/help.cpp"
 #include "lib/file.cpp"
 
 using namespace std;
@@ -61,9 +62,12 @@ int main(int argc, char** argv){
 
 	// Welcome Message //
 	Box WelcomeMessage;
-	WelcomeMessage.message = " Welcome to Loonix editor ";
+	WelcomeMessage.message = " Welcome to Loonix editor \\ \\";
+	WelcomeMessage.message += "  \u001b[30;107m^N\u001b[0m New";
+	WelcomeMessage.message += " \u001b[30;107m^O\u001b[0m Open";
+	WelcomeMessage.message += " \u001b[30;107m^S\u001b[0m Save";
 	WelcomeMessage.width = 26;
-	WelcomeMessage.height = 1;
+	WelcomeMessage.height = 3;
 	WelcomeMessage.center = true;
 	WelcomeMessage.draw();
 
@@ -145,7 +149,6 @@ int main(int argc, char** argv){
 					curx --;
 				}
 			}
-
 
 			updateCursor();
 
@@ -276,6 +279,15 @@ int main(int argc, char** argv){
 
 		}else if (key == "CTRLN"){
 			newFile();
+
+		}else if (key == "CTRLH"){
+			helpMenu help;
+			help.draw();
+
+			clear();
+			drawScreen();
+			drawHeader();
+			updateCursor();
 
 		}else if (key == "TAB"){
 			string currentline = raw[index + cury];

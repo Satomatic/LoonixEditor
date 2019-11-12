@@ -95,7 +95,7 @@ class Box{
 
 		    if (vcenter == true || center == true){
 		        int pos = int(screenHeight / 2) - int(height / 2);
-		        posy = pos;
+		        posy = pos - 1;
 		    }
 
 			// draw top bar //
@@ -138,8 +138,8 @@ class Box{
 		    if (message != ""){
 		        int yoff = 0;
 		        int xoff = 0;
-		        for (int i = 0; i < message.size(); i++){
-		            setCursorPosition(posx + 1 + xoff, posy + yoff + 1);
+		        /*for (int i = 0; i < message.size(); i++){
+					setCursorPosition(posx + 1 + xoff, posy + yoff + 1);
 		            cout << message[i];
 
 		            if (xoff == width){
@@ -148,7 +148,12 @@ class Box{
 		            }else{
 		                xoff ++;
 		            }
-		        }
+		        }*/
+				vector<string> messagesplit = split(message, '\\');
+				for (int i = 0; i < messagesplit.size(); i++){
+					setCursorPosition(posx + 1, posy + 1 + i);
+					cout << messagesplit[i];
+				}
 		    }
 			showing = true;
 		}
