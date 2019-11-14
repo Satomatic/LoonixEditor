@@ -1,14 +1,15 @@
 # LoonixEditor
 A mildly temperamental console-based text editor for linux.
 
-<img src="http://www.satomatic.space/projects/LoonixEditor/screen_1.png" width="40%">.
+<img src="http://www.satomatic.space/projects/LoonixEditor/screen_2.png" width="40%">.
 
 ## How to use
 ### Key binds
 **Ctrl + O** Open file\
 **Ctrl + S** Save file\
 **Ctrl + N** New file\
-**Ctrl + X** Close program\
+**Ctrl + H** Help menu\
+**Ctrl + X** Close program
 
 ### Build
 #### Windows
