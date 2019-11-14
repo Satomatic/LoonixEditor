@@ -40,6 +40,7 @@ class helpMenu{
 			string key = getInput();
 
 			if (key == "CTRLX"){
+				setCursorPosition(0,0);
 				break;
 			}
 		}

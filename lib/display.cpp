@@ -138,17 +138,7 @@ class Box{
 		    if (message != ""){
 		        int yoff = 0;
 		        int xoff = 0;
-		        /*for (int i = 0; i < message.size(); i++){
-					setCursorPosition(posx + 1 + xoff, posy + yoff + 1);
-		            cout << message[i];
 
-		            if (xoff == width){
-		                xoff = 0;
-		                yoff ++;
-		            }else{
-		                xoff ++;
-		            }
-		        }*/
 				vector<string> messagesplit = split(message, '\\');
 				for (int i = 0; i < messagesplit.size(); i++){
 					setCursorPosition(posx + 1, posy + 1 + i);
@@ -166,6 +156,7 @@ class Box{
 					cout << " ";
 				}
 			}
+			setCursorPosition(0,0);
 			showing = false;
 		}
 };

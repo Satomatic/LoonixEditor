@@ -182,10 +182,10 @@ int main(int argc, char** argv){
 
 			updateCursor();
 
-		}else if (key == "Backspace" && curx == 0 && cury != 1){ // fix
+		}else if (key == "Backspace" && curx == 0 && cury != 1){ // At beginning of line
 			string currentline = raw[index + cury];
 			string previousline = raw[index + cury - 1];
-			lines[index + cury - 1] = syntaxLine(lines[index + cury - 1] + currentline);
+			lines[index + cury - 1] = syntaxLine(raw[index + cury - 1] + currentline);
 			raw[index + cury - 1] = raw[index + cury - 1] + currentline;
 
 			lines.erase(lines.begin() + index + cury);
@@ -208,14 +208,18 @@ int main(int argc, char** argv){
 			string newline = "";
 			string extend = "";
 
-			if (curx >= 4 && currentline.substr(curx - 4, 4) == "    "){
+			if (curx >= 4 && currentline.substr(curx - 4, 4) == "    "){ // Tab backspace
 				vector<string> linesplit = splitIndex(currentline, curx);
 				newline = linesplit[0].substr(0, curx - 4);
-				newline += linesplit[1];
+
+				if (linesplit.size() == 2){
+					newline += linesplit[1];
+				}
+
 				curx -= 4;
 				extend = "     ";
 			}else{
-				if (curx == currentline.size()){
+				if (curx == currentline.size()){ // end of line
 					newline = currentline.substr(0, currentline.size() - 1);
 				}else{
 					vector<string> linesplit = splitIndex(currentline, curx);
