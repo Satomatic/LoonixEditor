@@ -1,7 +1,7 @@
 # LoonixEditor
 A mildly temperamental console-based text editor for linux.
 
-<img src="http://www.satomatic.space/projects/LoonixEditor/screen_2.png" width="40%">.
+<img src="http://www.satomatic.space/projects/LoonixEditor/screen_3.png" width="40%">.
 
 ## How to use
 ### Key binds
