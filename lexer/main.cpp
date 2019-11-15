@@ -18,18 +18,30 @@ string replace_all(string text, string replace, string replacer){
 	return text;
 }
 
-// add support for lexer file later on //
+int find_str(string text, string finding){
+	int results = 0;
 
+	for (int i = 0; i < text.size(); i ++){
+		if (text.substr(i, finding.size()) == finding){
+			results ++;
+		}
+	}
+
+	return results;
+}
+
+// add support for lexer file later on //
 string syntaxLine(string line){
 	string text = line;
 
 	bool commentMode = false;
 	bool stringMode = false;
 	bool tagMode = false;
+	bool charMode = false;
 
 	vector<string> statements = {"if", "else", "return", "for", "while"};
-	vector<string> variables = {"bool", "string", "int"};
-	vector<string> functions = {"extern", "include"};
+	vector<string> variables = {"bool", "string", "int", "void"};
+	vector<string> functions = {"extern", "include", "vector"};
 
 	for (int i = 0; i < text.size(); i ++){
 		if (commentMode == true){
@@ -38,7 +50,15 @@ string syntaxLine(string line){
 				string replacer = "\u001b[0m>";
 				text.replace(i, 1, replacer);
 				i += replacer.size();
-				tagMode = true;
+				tagMode = false;
+			}
+
+		}else if (charMode == true){
+			if (text.substr(i, 1) == "'"){
+				string replacer = "'\u001b[0m";
+				text.replace(i, 1, replacer);
+				i += replacer.size();
+				charMode = false;
 			}
 
 		}else if (stringMode == true){
@@ -67,9 +87,12 @@ string syntaxLine(string line){
 				string keyword = variables[b];
 
 				if (text.substr(i, keyword.size()) == keyword){
-					string replacer = "\u001b[38;5;32m" + keyword + "\u001b[0m";
-					text.replace(i, keyword.size(), replacer);
-					i += replacer.size();
+					string nextchar = text.substr(i + keyword.size(), 1);
+					if (nextchar == " " || nextchar == "(" || nextchar == "{"){
+						string replacer = "\u001b[38;5;32m" + keyword + "\u001b[0m";
+						text.replace(i, keyword.size(), replacer);
+						i += replacer.size();
+					}
 				}
 			}
 
@@ -93,10 +116,19 @@ string syntaxLine(string line){
 			}
 
 			if (text.substr(i, 1) == "<"){
-				string replacer = "<\u001b[38;5;32m";
+				if (find_str(line, "#include") >= 1 || find_str(line, "vector<") >= 1 || find_str(line, "vector <") >= 1){
+					string replacer = "<\u001b[38;5;32m";
+					text.replace(i, 1, replacer);
+					i += replacer.size();
+					tagMode = true;
+				}
+			}
+
+			if (text.substr(i, 1) == "'"){
+				string replacer = "\u001b[38;5;135m'";
 				text.replace(i, 1, replacer);
 				i += replacer.size();
-				tagMode = true;
+				charMode = true;
 			}
 
 			if (text.substr(i, 2) == "//"){

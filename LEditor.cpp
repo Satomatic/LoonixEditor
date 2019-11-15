@@ -182,6 +182,37 @@ int main(int argc, char** argv){
 
 			updateCursor();
 
+		}else if (key == "PGUP"){
+			if (index - screenHeight < 0){
+				index = 0;
+				cury = 0;
+			}else{
+				index -= screenHeight;
+				cury -= screenHeight;
+			}
+
+			clear();
+			updateViewport();
+			drawScreen();
+			drawHeader();
+			updateCursor();
+
+		}else if (key == "PGDN"){
+			if (index + screenHeight > lines.size() - 1){
+				index = lines.size() - 3;
+				cury = 0;
+			}else{
+				index += screenHeight;
+				cury = 1;
+				curx = 0;
+			}
+
+			clear();
+			updateViewport();
+			drawScreen();
+			drawHeader();
+			updateCursor();
+
 		}else if (key == "Backspace" && curx == 0 && cury != 1){ // At beginning of line
 			string currentline = raw[index + cury];
 			string previousline = raw[index + cury - 1];

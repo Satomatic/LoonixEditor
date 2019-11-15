@@ -21,6 +21,18 @@ string getInput(){
 			absolute = "RightArrow";
 		}else if (b == 'D'){
 			absolute = "LeftArrow";
+		}else{
+			if (b == 53){
+				char c = getch();
+				if (c == 126){
+					absolute = "PGUP";
+				}
+			}else if (54){
+				char c = getch();
+				if (c == 126){
+					absolute = "PGDN";
+				}
+			}
 		}
 
 		return absolute;

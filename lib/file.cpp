@@ -57,9 +57,12 @@ void openFile(){
 
 			// redraw display //
 			system("setterm -cursor off");
+			index = 0;
 			curx = 0; // reset cursor
 			cury = 1;
+
 			clear();
+			updateViewport();
 			drawScreen();
 			drawHeader();
 			updateCursor();
