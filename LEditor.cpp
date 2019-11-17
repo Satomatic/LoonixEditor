@@ -27,16 +27,19 @@ int screenWidth;
 
 bool hasEdited = false;
 
+HeaderDrop headerMessage;
+
 string currentfile = "";
 
-void infoBox(string title, string message){
+Box infoBox(string title, string message){
 	Box MessageBox;
 	MessageBox.title = title;
 	MessageBox.width = message.size();
 	MessageBox.height = 1;
 	MessageBox.message = message;
 	MessageBox.center = true;
-	MessageBox.draw();
+
+	return MessageBox;
 }
 
 int main(int argc, char** argv){
@@ -78,6 +81,14 @@ int main(int argc, char** argv){
 		// keyboard stuff //
 		string key = getInput();
 
+		if (headerMessage.showing == true){
+			if(headerMessage.count >= 5){
+				headerMessage.undraw();
+			}else{
+				headerMessage.count ++;
+			}
+		}
+
 		if (key == "DownArrow"){
 			if (index + cury != raw.size() - 1){
 				string nextline = raw[index + cury + 1];
@@ -87,9 +98,9 @@ int main(int argc, char** argv){
 
 				if (cury == viewport.size() - 1){
 					index ++;
+					clearFromPoint(0);
 					updateViewport();
-					clear();
-					drawScreen();
+					drawFromPoint(0);
 					drawHeader();
 
 					updateCursor();
@@ -110,9 +121,9 @@ int main(int argc, char** argv){
 			if (cury == 1){
 				if (cury + index != 1){
 					index --;
+					clearFromPoint(cury - 1);
 					updateViewport();
-					clear();
-					drawScreen();
+					drawFromPoint(cury - 1);
 					drawHeader();
 					updateCursor();
 				}
@@ -126,9 +137,9 @@ int main(int argc, char** argv){
 				if (cury == 1){
 					if (index + cury != 1){
 						index --;
+						clearFromPoint(cury - 1);
 						updateViewport();
-						clear();
-						drawScreen();
+						drawFromPoint(cury - 1);
 						drawHeader();
 						curx = raw[index  + cury].length();
 					}
@@ -158,16 +169,16 @@ int main(int argc, char** argv){
 					if (index + cury != raw.size()){
 						curx = 0;
 						index ++;
+						clearFromPoint(cury - 1);
 						updateViewport();
-						clear();
-						drawScreen();
+						drawFromPoint(cury - 1);
 						drawHeader();
 					}
 				}else{
 					curx = 0;
 					cury ++;
-					clear();
-					drawScreen();
+					clearFromPoint(0);
+					drawFromPoint(0);
 					drawHeader();
 				}
 
@@ -183,33 +194,33 @@ int main(int argc, char** argv){
 			updateCursor();
 
 		}else if (key == "PGUP"){
-			if (index - screenHeight < 0){
+			if (cury - screenHeight < 0){
 				index = 0;
-				cury = 0;
+				cury = 1;
 			}else{
 				index -= screenHeight;
 				cury -= screenHeight;
 			}
 
-			clear();
+			clearFromPoint(0);
 			updateViewport();
-			drawScreen();
+			drawFromPoint(0);
 			drawHeader();
 			updateCursor();
 
 		}else if (key == "PGDN"){
 			if (index + screenHeight > lines.size() - 1){
 				index = lines.size() - 3;
-				cury = 0;
+				cury = 1;
 			}else{
 				index += screenHeight;
 				cury = 1;
 				curx = 0;
 			}
 
-			clear();
+			clearFromPoint(0);
 			updateViewport();
-			drawScreen();
+			drawFromPoint(0);
 			drawHeader();
 			updateCursor();
 
@@ -222,9 +233,9 @@ int main(int argc, char** argv){
 			lines.erase(lines.begin() + index + cury);
 			raw.erase(raw.begin() + index + cury);
 
+			clearFromPoint(cury - 1);
 			updateViewport();
-			clear();
-			drawScreen();
+			drawFromPoint(cury - 2);
 			drawHeader();
 
 			curx = previousline.size();
@@ -286,9 +297,9 @@ int main(int argc, char** argv){
 				raw.insert(raw.begin() + index + cury + 1, linesplit[1]);
 			}
 
+			clearFromPoint(cury - 1);
 			updateViewport();
-			clear();
-			drawScreen();
+			drawFromPoint(cury - 1);
 			drawHeader();
 			curx = 0;
 			cury ++;

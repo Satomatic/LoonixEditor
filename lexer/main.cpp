@@ -75,10 +75,18 @@ string syntaxLine(string line){
 
 				if (text.substr(i, keyword.size()) == keyword){
 					string nextchar = text.substr(i + keyword.size(), 1);
+					string prevchar = "";
+
+                    if (i > 0){
+                        prevchar = text.substr(i - 1, 1);
+					}
+
 					if (nextchar == " " || nextchar == "(" || nextchar == "" || nextchar == "{"){
-						string replacer = "\u001b[38;5;163m" + keyword + "\u001b[0m";
-						text.replace(i, keyword.size(), replacer);
-						i += replacer.size();
+						if (prevchar == " " || prevchar == "" || i == 0){
+							string replacer = "\u001b[38;5;163m" + keyword + "\u001b[0m";
+							text.replace(i, keyword.size(), replacer);
+							i += replacer.size();
+						}
 					}
 				}
 			}
@@ -88,10 +96,18 @@ string syntaxLine(string line){
 
 				if (text.substr(i, keyword.size()) == keyword){
 					string nextchar = text.substr(i + keyword.size(), 1);
+					string prevchar = "";
+
+					if (i > 0){
+						prevchar = text.substr(i - 1, 1);
+					}
+
 					if (nextchar == " " || nextchar == "(" || nextchar == "{"){
-						string replacer = "\u001b[38;5;32m" + keyword + "\u001b[0m";
-						text.replace(i, keyword.size(), replacer);
-						i += replacer.size();
+						if (prevchar == " " || prevchar == "" || i == 0){
+							string replacer = "\u001b[38;5;32m" + keyword + "\u001b[0m";
+							text.replace(i, keyword.size(), replacer);
+							i += replacer.size();
+						}
 					}
 				}
 			}
@@ -100,9 +116,17 @@ string syntaxLine(string line){
 				string keyword = functions[b];
 
 				if (text.substr(i, keyword.size()) == keyword){
-					string replacer = "\u001b[38;5;36m" + keyword + "\u001b[0m";
-					text.replace(i, keyword.size(), replacer);
-					i += replacer.size();
+                    string prevchar = "";
+
+                    if (i > 0){
+                        prevchar = text.substr(i - 1, 1);
+                    }
+
+					if (prevchar == " " || prevchar == "" || i == 0 || prevchar == "#"){
+						string replacer = "\u001b[38;5;36m" + keyword + "\u001b[0m";
+						text.replace(i, keyword.size(), replacer);
+						i += replacer.size();
+					}
 				}
 			}
 

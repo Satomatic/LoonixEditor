@@ -39,6 +39,7 @@ void drawHeader(){
 	headerdata += "][row: ";
 	headerdata += to_string(index + cury);
 	headerdata += "] :: ";
+
 	headerdata += currentfile;
 
 	if (hasEdited == true){
@@ -57,16 +58,17 @@ void updateHeader(){
 
 	string headerdata = "Loonix [cols: ";
 	headerdata += to_string(curx);
-	headerdata += "][row: ";
-	headerdata += to_string(index + cury);
-	headerdata += "] :: ";
-	headerdata += currentfile;
+    headerdata += "][row: ";
+    headerdata += to_string(index + cury);
+    headerdata += "] :: ";
 
-	if (hasEdited == true){
-		headerdata += " *";
-	}
+    headerdata += currentfile;
 
-	headerdata += "   ";
+    if (hasEdited == true){
+        headerdata += " *";
+    }
+
+    headerdata += "   ";
 
 	cout << headerdata;
 }
@@ -152,7 +154,7 @@ void clearFromPoint(int line){
 			int x = 0;
 			string y = "";
 			while (x < viewport[i].size()){
-				y += "";
+				y += " ";
 				x ++;
 			}
 
@@ -160,3 +162,23 @@ void clearFromPoint(int line){
 		}
 	}
 }
+
+/*
+void clearFromPoint(int line){
+	resetColor();
+
+	for (int i = 0; i < viewport.size(); i++){
+		if (i > line){
+			setCursorPosition(0, i);
+			int x = 0;
+			string y = 0;
+			while (x < raw[i].size()){
+				y += " ";
+				x++;
+			}
+
+			cout << y;
+		}
+	}
+}
+*/

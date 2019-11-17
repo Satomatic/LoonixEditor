@@ -11,6 +11,8 @@ extern vector<string> viewport;
 extern string currentfile;
 extern bool hasEdited;
 
+extern HeaderDrop headerMessage;
+
 void loadFile(string filepath){
 	lines.clear();
 	raw.clear();
@@ -45,34 +47,39 @@ void openFile(){
 	system("setterm -cursor on");
 	setCursorPosition(0,0);
 	clear();
-	while (true){
-		string input = "";
-		cout << "Open file >> ";
-		getline(cin, input);
 
-		ifstream file(input);
+	string input = "";
+	cout << "Open file >> ";
+	getline(cin, input);
 
-		if (file.good()){
-			loadFile(input);
+	ifstream file(input);
 
-			// redraw display //
-			system("setterm -cursor off");
-			index = 0;
-			curx = 0; // reset cursor
-			cury = 1;
+	if (file.good()){
+        loadFile(input);
 
-			clear();
-			updateViewport();
-			drawScreen();
-			drawHeader();
-			updateCursor();
+        // redraw display //
+        index = 0;
+        curx = 0; // reset cursor
+        cury = 1;
 
-			break;
-		}else{
-			clear();
-			cout << "Error loading file" << endl << input;
-		}
+        clear();
+        updateViewport();
+        drawScreen();
+        drawHeader();
+    	updateCursor();
+	}else{
+		clear();
+		updateViewport();
+		drawScreen();
+		drawHeader();
+		updateCursor();
+
+		headerMessage.message = "File does not exist";
+		headerMessage.styling = "\u001b[2m\u001b[38;5;124m";
+		headerMessage.draw();
 	}
+
+	system("setterm -cursor off");
 }
 
 void saveFile(){
@@ -85,6 +92,10 @@ void saveFile(){
 	}
 
 	file.close();
+
+	headerMessage.message = "File saved";
+	headerMessage.styling = "";
+	headerMessage.draw();
 }
 
 void saveAsFile(){

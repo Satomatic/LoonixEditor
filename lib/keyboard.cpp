@@ -57,6 +57,11 @@ string getInput(){
 			absolute = "CTRLH";
 		}else if (key == 9){
 			absolute = "TAB";
+		}else if (key == 27){
+			char c = getch();
+			if (c == 15){
+				absolute = "CTRL-ALT-O";
+			}
 		}else{
 			absolute = key;
 		}

@@ -43,6 +43,24 @@ vector<string> splitIndex(string text, int index){
 	return returnvector;
 }
 
+bool FileExists( const char* pzPath )
+{
+	if ( pzPath == NULL) return false;
+
+	DIR *pDir;
+	bool bExists = false;
+
+	pDir = opendir (pzPath);
+
+	if (pDir != NULL)
+	{
+		bExists = true;
+		(void) closedir (pDir);
+	}
+
+	return bExists;
+}
+
 vector<string> DirView(const string& path){
 	struct dirent *de;
 	DIR *dr = opendir(path.c_str());

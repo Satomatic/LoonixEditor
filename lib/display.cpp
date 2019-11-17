@@ -70,6 +70,42 @@ void drawBox(int x, int y, int w, int h, string title = "", string msg="", bool 
 	}
 }
 
+class HeaderDrop{
+	public:
+		string message;
+		string styling;
+		int count = 0;
+
+		bool showing = false;
+
+	void draw(){
+		if (showing == true){
+			undraw();
+		}
+
+		int pos = int(screenWidth / 2) - int(message.size() / 2) - 1;
+
+		setCursorPosition(pos, 1);
+		cout << "\u001b[0m[ " << styling << message << "\u001b[0m ]";
+
+		showing = true;
+		count = 0;
+	}
+
+    void undraw(){
+        int pos = int(screenWidth / 2) - int(message.size() / 2) - 1;
+        resetColor();
+
+        for (int i = 0; i < message.size() + 4; i++){
+            setCursorPosition(pos + i, 1);
+            cout << " ";
+        }
+
+        showing = false;
+    }
+
+};
+
 class Box{
 	public:
 		int posx = 0;
