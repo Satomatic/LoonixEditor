@@ -9,6 +9,8 @@ A mildly temperamental console-based text editor for linux.
 **Ctrl + S** Save file\
 **Ctrl + N** New file\
 **Ctrl + H** Help menu\
+**Ctrl + L** Line info\
+**Ctrl + F** Find string\
 **Ctrl + X** Close program
 
 ### Build
