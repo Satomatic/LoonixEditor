@@ -73,27 +73,38 @@ void drawBox(int x, int y, int w, int h, string title = "", string msg="", bool 
 class HeaderDrop{
 	public:
 		string message;
+		string previous;
 		string styling;
 		int count = 0;
 
 		bool showing = false;
 
 	void draw(){
+		int pos;
+
 		if (showing == true){
-			undraw();
+			pos = int(screenWidth / 2) - int(previous.size() / 2) - 1;
+			setCursorPosition(pos, 1);
+			cout << "\u001b[0m";
+			for (int i = 0; i < previous.size() + 4; i++){
+				setCursorPosition(pos + i, 1);
+				cout << " ";
+			}
 		}
 
-		int pos = int(screenWidth / 2) - int(message.size() / 2) - 1;
+		pos = int(screenWidth / 2) - int(message.size() / 2) - 1;
 
 		setCursorPosition(pos, 1);
 		cout << "\u001b[0m[ " << styling << message << "\u001b[0m ]";
+
+		previous = message;
 
 		showing = true;
 		count = 0;
 	}
 
     void undraw(){
-        int pos = int(screenWidth / 2) - int(message.size() / 2) - 1;
+		int pos = int(screenWidth / 2) - int(message.size() / 2) - 1;
         resetColor();
 
         for (int i = 0; i < message.size() + 4; i++){
@@ -116,6 +127,9 @@ class Box{
 		string title = "";
 		string message = "";
 		string escape = "";
+
+		string footer = "";
+		string footerescape = "";
 
 		bool showing = true;
 		bool vcenter = false;
@@ -170,6 +184,13 @@ class Box{
 		        cout << "┤" << escape << title << "\u001b[0m├";
 		    }
 
+			// draw footer //
+			if (footer != ""){
+				int titlepos = int(width / 2) - int(footer.size() / 2) + posx;
+				setCursorPosition(titlepos, posy + height + 1);
+				cout << "┤" << footerescape << footer << "\u001b[0m├";
+			}
+
 			// draw message //
 		    if (message != ""){
 		        int yoff = 0;
@@ -192,6 +213,7 @@ class Box{
 					cout << " ";
 				}
 			}
+
 			setCursorPosition(0,0);
 			showing = false;
 		}

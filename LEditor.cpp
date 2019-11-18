@@ -8,6 +8,7 @@
 #include "lib/render.cpp"
 #include "lib/help.cpp"
 #include "lib/file.cpp"
+#include "lib/find.cpp"
 
 using namespace std;
 
@@ -326,14 +327,35 @@ int main(int argc, char** argv){
 		}else if (key == "CTRLN"){
 			newFile();
 
+		}else if (key == "CTRLL"){
+			string currentline = raw[index + cury];
+
+			string info = "line: [";
+			info += to_string(index + cury);
+			info += "/";
+			info += to_string(raw.size());
+			info += "] col: [";
+			info += to_string(curx);
+			info += "/";
+			info += to_string(currentline.size());
+			info += "]";
+
+			headerMessage.message = info;
+			headerMessage.styling = "";
+			headerMessage.draw();
+
 		}else if (key == "CTRLH"){
 			helpMenu help;
 			help.draw();
 
-			clear();
-			drawScreen();
+			clearFromPoint(0);
+			drawFromPoint(0);
 			drawHeader();
 			updateCursor();
+
+		}else if (key == "CTRLF"){
+			Find findP;
+			findP.draw();
 
 		}else if (key == "TAB"){
 			string currentline = raw[index + cury];
@@ -382,6 +404,9 @@ int main(int argc, char** argv){
 
 		if (WelcomeMessage.showing == true){
 			WelcomeMessage.undraw();
+
+			drawFromPoint(0);
+			updateCursor();
 		}
 	}
 

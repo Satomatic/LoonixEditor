@@ -163,22 +163,14 @@ void clearFromPoint(int line){
 	}
 }
 
-/*
-void clearFromPoint(int line){
-	resetColor();
-
-	for (int i = 0; i < viewport.size(); i++){
-		if (i > line){
-			setCursorPosition(0, i);
-			int x = 0;
-			string y = 0;
-			while (x < raw[i].size()){
-				y += " ";
-				x++;
+void renderBox(int x, int y, int w, int h){
+	for (int i = 0; i < h; i ++){
+		for (int b = 0; b < w; b ++){
+			string currentline = raw[index + i + y];
+			if (x + b <= currentline.size() - 1){
+				setCursorPosition(b + x, i + y);
+				cout << currentline.at(b + x);
 			}
-
-			cout << y;
 		}
 	}
 }
-*/

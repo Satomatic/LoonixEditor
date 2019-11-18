@@ -15,11 +15,13 @@ class helpMenu{
 			{"^O", " ~ \u001b[3mOpen"},
 			{"^S", " ~ \u001b[3mSave"},
 			{"^A", " ~ \u001b[3mSave as"},
+			{"^F", " ~ \u001b[3mFind"},
 			{"^X", " ~ \u001b[3mExit / Close"}
 		};
 
-	void draw(){
 		Box HelpMenu;
+
+	void draw(){
 		HelpMenu.title = "Help";
 		HelpMenu.center = true;
 		HelpMenu.width = width;

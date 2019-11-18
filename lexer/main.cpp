@@ -40,7 +40,7 @@ string syntaxLine(string line){
 	bool charMode = false;
 
 	vector<string> statements = {"if", "else", "return", "for", "while"};
-	vector<string> variables = {"bool", "string", "int", "void"};
+	vector<string> variables = {"bool", "string", "int", "void", "class"};
 	vector<string> functions = {"extern", "include", "vector"};
 
 	for (int i = 0; i < text.size(); i ++){
@@ -82,7 +82,7 @@ string syntaxLine(string line){
 					}
 
 					if (nextchar == " " || nextchar == "(" || nextchar == "" || nextchar == "{"){
-						if (prevchar == " " || prevchar == "" || i == 0){
+						if (prevchar == " " || prevchar == "" || i == 0 || prevchar == "}" || prevchar == ")"){
 							string replacer = "\u001b[38;5;163m" + keyword + "\u001b[0m";
 							text.replace(i, keyword.size(), replacer);
 							i += replacer.size();
@@ -163,10 +163,16 @@ string syntaxLine(string line){
 			}
 
 			if (text.substr(i, 1) == "\""){
-				string replacer = "\u001b[38;5;214m\"";
-				text.replace(i, 1, replacer);
-				i += replacer.size();
-				stringMode = true;
+				if (text.substr(i, 2) == "\"\""){
+					string replacer = "\u001b[38;5;214m\"\"\u001b[0m";
+					text.replace(i, 2, replacer);
+					i += replacer.size();
+				}else{
+					string replacer = "\u001b[38;5;214m\"";
+					text.replace(i, 1, replacer);
+					i += replacer.size();
+					stringMode = true;
+				}
 			}
 		}
 	}
