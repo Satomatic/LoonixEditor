@@ -327,18 +327,24 @@ int main(int argc, char** argv){
 		}else if (key == "CTRLN"){
 			newFile();
 
+		}else if (key == "CTRLK"){
+			lines.erase(lines.begin() + index + cury);
+			raw.erase(raw.begin() + index + cury);
+
+			clearFromPoint(cury - 1);
+			updateViewport();
+			drawFromPoint(cury - 1);
+			updateCursor();
+
 		}else if (key == "CTRLL"){
 			string currentline = raw[index + cury];
 
-			string info = "line: [";
-			info += to_string(index + cury);
-			info += "/";
-			info += to_string(raw.size());
-			info += "] col: [";
-			info += to_string(curx);
-			info += "/";
-			info += to_string(currentline.size());
-			info += "]";
+			string info = "line: [x/y] col: [z/p]";
+
+			info = replace_all(info, "x", to_string(index + cury));
+			info = replace_all(info, "y", to_string(raw.size()));
+			info = replace_all(info, "z", to_string(curx));
+			info = replace_all(info, "p", to_string(currentline.size()));
 
 			headerMessage.message = info;
 			headerMessage.styling = "";

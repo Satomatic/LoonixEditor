@@ -27,7 +27,6 @@ class Find{
 		FindContainer.height = 2;
 		FindContainer.center = true;
 		FindContainer.title = "Find";
-		FindContainer.footer = "Ctrl+X Close";
 		FindContainer.draw();
 
 		updateInput();
@@ -93,6 +92,12 @@ class Find{
 				}
 
 			}else if (key == "CTRLX"){
+				break;
+
+			}else if (key == "LeftArrow" || key == "RightArrow"){
+				break;
+
+			}else if (key == "UpArrow" || key == "DownArrow"){
 				break;
 
 			}else if (key.size() == 1){

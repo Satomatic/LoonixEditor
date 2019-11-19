@@ -59,6 +59,8 @@ string getInput(){
 			absolute = "CTRLL";
 		}else if (key == 6){
 			absolute = "CTRLF";
+		}else if (key == 11){
+			absolute = "CTRLK";
 		}else if (key == 9){
 			absolute = "TAB";
 		}else if (key == 27){

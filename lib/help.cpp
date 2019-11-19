@@ -16,6 +16,7 @@ class helpMenu{
 			{"^S", " ~ \u001b[3mSave"},
 			{"^A", " ~ \u001b[3mSave as"},
 			{"^F", " ~ \u001b[3mFind"},
+			{"^K", " ~ \u001b[3mCut line"},
 			{"^X", " ~ \u001b[3mExit / Close"}
 		};
 
