@@ -21,6 +21,16 @@ string getInput(){
 			absolute = "RightArrow";
 		}else if (b == 'D'){
 			absolute = "LeftArrow";
+		}else if (b == 49){
+			char c = getch();
+			char d = getch();
+			char e = getch();
+
+			if (c == 59 && d == 53 && e == 65){
+				absolute = "CTRL-UpArrow";
+			}else if (c == 59 && d == 53 && e == 66){
+				absolute = "CTRL-DownArrow";
+			}
 		}else{
 			if (b == 53){
 				char c = getch();
@@ -36,6 +46,7 @@ string getInput(){
 		}
 
 		return absolute;
+
 	}else{
 		string absolute = "";
 
@@ -63,11 +74,6 @@ string getInput(){
 			absolute = "CTRLK";
 		}else if (key == 9){
 			absolute = "TAB";
-		}else if (key == 27){
-			char c = getch();
-			if (c == 15){
-				absolute = "CTRL-ALT-O";
-			}
 		}else{
 			absolute = key;
 		}

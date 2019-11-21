@@ -27,6 +27,7 @@ class helpMenu{
 		HelpMenu.center = true;
 		HelpMenu.width = width;
 		HelpMenu.height = height;
+		HelpMenu.footer = "Ctrl + X Close";
 
 		for (int i = 0; i < items.size(); i++){
 			string item = "\u001b[30;107m";

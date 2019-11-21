@@ -327,6 +327,44 @@ int main(int argc, char** argv){
 		}else if (key == "CTRLN"){
 			newFile();
 
+		}else if (key == "CTRL-UpArrow"){
+			if (index + cury != 1){
+                string nextline = raw[index + cury - 1];
+                string currentline = raw[index + cury];
+
+				raw[index + cury - 1] = currentline;
+				raw[index + cury] = nextline;
+				lines[index + cury - 1] = syntaxLine(currentline);
+				lines[index + cury] = syntaxLine(nextline);
+
+				cury --;
+			}
+
+			clearFromPoint(0);
+			updateViewport();
+			drawFromPoint(0);
+			drawHeader();
+			updateCursor();
+
+		}else if (key == "CTRL-DownArrow"){
+			if (index + cury != raw.size() - 1){ // not at end of file
+				string previousline = raw[index + cury + 1];
+				string currentline = raw[index + cury];
+
+				raw[index + cury + 1] = currentline;
+				raw[index + cury] = previousline;
+				lines[index + cury + 1] = syntaxLine(currentline);
+				lines[index + cury ] = syntaxLine(previousline);
+
+				cury ++;
+			}
+
+			clearFromPoint(0);
+			updateViewport();
+			drawFromPoint(0);
+			drawHeader();
+			updateCursor();
+
 		}else if (key == "CTRLK"){
 			lines.erase(lines.begin() + index + cury);
 			raw.erase(raw.begin() + index + cury);

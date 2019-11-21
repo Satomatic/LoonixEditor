@@ -39,9 +39,9 @@ string syntaxLine(string line){
 	bool tagMode = false;
 	bool charMode = false;
 
-	vector<string> statements = {"if", "else", "return", "for", "while"};
-	vector<string> variables = {"bool", "string", "int", "void", "class"};
-	vector<string> functions = {"extern", "include", "vector"};
+	vector<string> statements = {"if", "else", "return", "for", "while", "elif"};
+	vector<string> variables = {"bool", "string", "int", "void", "class", "def"};
+	vector<string> functions = {"extern", "include", "vector", "from", "import"};
 
 	for (int i = 0; i < text.size(); i ++){
 		if (commentMode == true){

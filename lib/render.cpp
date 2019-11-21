@@ -34,13 +34,11 @@ void drawHeader(){
 	resetColor();
 	cout << "\u001b[30m\u001b[107m";
 
-	string headerdata = "Loonix [cols: ";
-	headerdata += to_string(curx);
-	headerdata += "][row: ";
-	headerdata += to_string(index + cury);
-	headerdata += "] :: ";
+	string headerdata = "Loonix [cols: X][row: Y] :: Z";
 
-	headerdata += currentfile;
+	headerdata = replace_all(headerdata, "X", to_string(curx));
+	headerdata = replace_all(headerdata, "Y", to_string(index + cury));
+	headerdata = replace_all(headerdata, "Z", currentfile);
 
 	if (hasEdited == true){
 		headerdata += " *";
@@ -52,17 +50,15 @@ void drawHeader(){
 }
 
 void updateHeader(){
-	setCursorPosition(0, 0);
-	resetColor();
-	cout << "\u001b[30m\u001b[107m";
+    setCursorPosition(0,0);
+    resetColor();
+    cout << "\u001b[30m\u001b[107m";
 
-	string headerdata = "Loonix [cols: ";
-	headerdata += to_string(curx);
-    headerdata += "][row: ";
-    headerdata += to_string(index + cury);
-    headerdata += "] :: ";
+    string headerdata = "Loonix [cols: X][row: Y] :: Z";
 
-    headerdata += currentfile;
+    headerdata = replace_all(headerdata, "X", to_string(curx));
+    headerdata = replace_all(headerdata, "Y", to_string(index + cury));
+    headerdata = replace_all(headerdata, "Z", currentfile);
 
     if (hasEdited == true){
         headerdata += " *";
