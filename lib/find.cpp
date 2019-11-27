@@ -44,6 +44,7 @@ class Find{
 			}else if (key == "Return"){
 				if (input.size() != 0){
 					if (input != lastinput){
+						find_results.clear();
 						current = 0;
 						total = 0;
 						for (int i = 0; i < raw.size(); i++){

@@ -168,12 +168,12 @@ int main(int argc, char** argv){
 		}else if (key == "RightArrow"){
 			if (curx == raw[index + cury].size()){
 				if (cury == viewport.size()){
-					if (index + cury != raw.size()){
+					if (index + cury != raw.size() - 1){
 						curx = 0;
 						index ++;
-						clearFromPoint(cury - 1);
+						clearFromPoint(0);
 						updateViewport();
-						drawFromPoint(cury - 1);
+						drawFromPoint(0);
 						drawHeader();
 					}
 				}else{
@@ -390,6 +390,10 @@ int main(int argc, char** argv){
 		}else if (key == "CTRLK"){
 			lines.erase(lines.begin() + index + cury);
 			raw.erase(raw.begin() + index + cury);
+
+			if (raw[index + cury].size() < curx){
+				curx = raw[index + cury].size();
+			}
 
 			clearFromPoint(cury - 1);
 			updateViewport();
