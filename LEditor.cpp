@@ -1,5 +1,6 @@
 #include <iostream>
 #include <signal.h>
+#include <math.h>
 #include <vector>
 #include <string>
 #include "lexer/main.cpp"
@@ -298,11 +299,32 @@ int main(int argc, char** argv){
 				raw.insert(raw.begin() + index + cury + 1, linesplit[1]);
 			}
 
+			// auto indent
+			if (curx > 0){
+				int spaceCount = 0;
+				for (int i = 0; i < currentline.size(); i++){
+					char chara = currentline.at(i);
+					if (chara == ' '){
+						spaceCount ++;
+					}else{
+						break;
+					}
+				}
+
+				int tabCount = floor(spaceCount / 4);
+
+				for (int i = 0; i < tabCount; i++){
+					raw[index + cury + 1].insert(0, "    ");
+					lines[index + cury + 1].insert(0, "    ");
+				}
+
+				curx = tabCount * 4;
+			}
+
 			clearFromPoint(cury - 1);
 			updateViewport();
 			drawFromPoint(cury - 1);
 			drawHeader();
-			curx = 0;
 			cury ++;
 			updateCursor();
 
