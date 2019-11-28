@@ -12,12 +12,13 @@ A mildly temperamental console-based text editor for linux.
 **Ctrl + L** Line info\
 **Ctrl + F** Find string\
 **Ctrl + K** Cut line\
+**Ctrl + T** Todo menu\
 **Ctrl + X** Close program
 
-### Build
-#### Windows
+## Build
+### Windows
 LoonixEditor hasn't been test compiled on windows as of now.
-#### Linux
+### Linux
 With linux you can compile LoonixEditor using g++\
 <code>g++ LEditor.cpp</code>
 \
