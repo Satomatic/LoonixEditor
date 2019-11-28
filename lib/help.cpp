@@ -27,7 +27,6 @@ class helpMenu{
 		HelpMenu.center = true;
 		HelpMenu.width = width;
 		HelpMenu.height = height;
-		HelpMenu.footer = "Ctrl + X Close";
 
 		for (int i = 0; i < items.size(); i++){
 			string item = "\u001b[30;107m";
@@ -40,15 +39,7 @@ class helpMenu{
 
 		HelpMenu.draw();
 
-		while (true){
-			string key = getInput();
-
-			if (key == "CTRLX"){
-				setCursorPosition(0,0);
-				break;
-			}
-		}
-
+		string key = getInput();
 		HelpMenu.undraw();
 	}
 };

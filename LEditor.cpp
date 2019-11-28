@@ -10,6 +10,7 @@
 #include "lib/help.cpp"
 #include "lib/file.cpp"
 #include "lib/find.cpp"
+#include "lib/todo.cpp"
 
 using namespace std;
 
@@ -167,7 +168,7 @@ int main(int argc, char** argv){
 
 		}else if (key == "RightArrow"){
 			if (curx == raw[index + cury].size()){
-				if (cury == viewport.size()){
+				if (cury == viewport.size() - 1){
 					if (index + cury != raw.size() - 1){
 						curx = 0;
 						index ++;
@@ -196,12 +197,14 @@ int main(int argc, char** argv){
 			updateCursor();
 
 		}else if (key == "PGUP"){
-			if (cury - screenHeight < 0){
+			if (index - screenHeight <= 0){
 				index = 0;
 				cury = 1;
+				curx = 0;
 			}else{
 				index -= screenHeight;
-				cury -= screenHeight;
+				cury = 0;
+				curx = 0;
 			}
 
 			clearFromPoint(0);
@@ -426,6 +429,10 @@ int main(int argc, char** argv){
 		}else if (key == "CTRLF"){
 			Find findP;
 			findP.draw();
+
+		}else if (key == "CTRLT"){
+			Todo todoP;
+			todoP.draw();
 
 		}else if (key == "TAB"){
 			string currentline = raw[index + cury];
