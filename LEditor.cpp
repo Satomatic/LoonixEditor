@@ -7,6 +7,7 @@
 #include "lib/keyboard.cpp"
 #include "lib/display.cpp"
 #include "lib/render.cpp"
+#include "lib/replace.cpp"
 #include "lib/help.cpp"
 #include "lib/file.cpp"
 #include "lib/find.cpp"
@@ -429,6 +430,10 @@ int main(int argc, char** argv){
 		}else if (key == "CTRLF"){
 			Find findP;
 			findP.draw();
+
+		}else if (key == "CTRLR"){
+			Replace replaceP; // replaceP = replacePanel
+			replaceP.draw();
 
 		}else if (key == "CTRLT"){
 			Todo todoP;
