@@ -55,18 +55,18 @@ void openFile(){
 	ifstream file(input);
 
 	if (file.good()){
-        loadFile(input);
+		loadFile(input);
 
-        // redraw display //
-        index = 0;
-        curx = 0; // reset cursor
-        cury = 1;
+		// redraw display //
+		index = 0;
+		curx = 0; // reset cursor
+		cury = 1;
 
-        clear();
-        updateViewport();
-        drawScreen();
-        drawHeader();
-    	updateCursor();
+		clear();
+		updateViewport();
+		drawScreen();
+		drawHeader();
+		updateCursor();
 	}else{
 		clear();
 		updateViewport();
@@ -88,7 +88,20 @@ void saveFile(){
 	ofstream file(currentfile);
 
 	for (int i = 1; i < raw.size(); i++){
-		file << raw[i] << endl;
+		//file << raw[i] << endl;
+		string convert = raw[i];
+
+		// convert spaces to tabs
+		for (int b = 0; b < convert.size(); b++){
+			if (convert.substr(b, 4) == "    "){
+				convert.replace(b, 4, "\t");
+			}else{
+				break;
+			}
+		}
+
+		file << convert << endl;
+
 	}
 
 	file.close();
@@ -259,28 +272,28 @@ class filemanager{
 			}
 
 			// for files //
-            for (int i = 0; i < currentdir.size(); i++){
-                if (i >= start && i < height){
-                    vector<string> linesplit = split(currentdir[i], '|');
-                    if (linesplit[1] == "FILE"){
-                        view.push_back(linesplit[0]);
+			for (int i = 0; i < currentdir.size(); i++){
+				if (i >= start && i < height){
+					vector<string> linesplit = split(currentdir[i], '|');
+					if (linesplit[1] == "FILE"){
+						view.push_back(linesplit[0]);
 						currentsort.push_back(linesplit[0] + "|" + linesplit[1]);
-                    }
-                }
-            }
+					}
+				}
+			}
 
 		}
 
 		void clearView(){
-            resetColor();
+			resetColor();
 
-            // clear list //
-            for (int i = 0; i < view.size(); i++){
-                for (int b = 0; b < view[i].size(); b++){
-                    setCursorPosition(FileManagerBox.posx + 1 + b, FileManagerBox.posy + 1 + i);
-                    cout << " ";
-                }
-            }
+			// clear list //
+			for (int i = 0; i < view.size(); i++){
+				for (int b = 0; b < view[i].size(); b++){
+					setCursorPosition(FileManagerBox.posx + 1 + b, FileManagerBox.posy + 1 + i);
+					cout << " ";
+				}
+			}
 		}
 
 		void updateList(){

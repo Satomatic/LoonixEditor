@@ -106,40 +106,41 @@ void resetColor(){
 }
 
 void setCursorPosition(int x, int y){
-    printf("\033[%d;%dH", y+1, x+1);
+	printf("\033[%d;%dH", y+1, x+1);
 }
 
 void setConsoleTitle(string title){
-    cout << "\u001b]0;" << title << "\007";
+	cout << "\u001b]0;" << title << "\007";
 }
 
 void clear(){
-    printf("\033[0m"); // reset terminal to default
-    printf("\033[2J"); // clear screen
-    system("clear"); // system clear 'prevents any coloring issues'
+	printf("\033[0m"); // reset terminal to default
+	printf("\033[2J"); // clear screen
+	system("clear"); // system clear 'prevents any coloring issues'
 }
 
 void checkScreenSize(){
-    extern int screenHeight;
-    extern int screenWidth;
+	extern int screenHeight;
+	extern int screenWidth;
 
 	extern void drawHeader();
-    extern void drawScreen();
-    extern void updateCursor();
+	extern void drawScreen();
+	extern void updateCursor();
+	extern void updateViewport();
 
-    struct winsize size;
-    ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
+	struct winsize size;
+	ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
 
-    if (screenWidth != size.ws_col || screenHeight != size.ws_row){
-        clear();
-        resetColor();
-        setCursorPosition(0,0);
-		drawScreen();
-        updateCursor();
-		drawHeader();
-
+	if (screenWidth != size.ws_col || screenHeight != size.ws_row){
 		updateScreenSize();
-    }
+		clear();
+		updateViewport();
+		resetColor();
+		setCursorPosition(0,0);
+		drawScreen();
+		updateCursor();
+		drawHeader();
+	}
 }
 
 
@@ -163,32 +164,32 @@ static struct termios old, current;
 
 void initTermios(int echo)
 {
-  tcgetattr(0, &old);
-  current = old;
-  current.c_lflag &= ~ICANON;
-  if (echo) {
-      current.c_lflag |= ECHO;
-  } else {
-      current.c_lflag &= ~ECHO;
-  }
-  tcsetattr(0, TCSANOW, &current);
+	tcgetattr(0, &old);
+	current = old;
+	current.c_lflag &= ~ICANON;
+	if (echo) {
+		current.c_lflag |= ECHO;
+	} else {
+		current.c_lflag &= ~ECHO;
+	}
+	tcsetattr(0, TCSANOW, &current);
 }
 
 void resetTermios(void)
 {
-  tcsetattr(0, TCSANOW, &old);
+	tcsetattr(0, TCSANOW, &old);
 }
 
 char getch_(int echo)
 {
-  char ch;
-  initTermios(echo);
-  ch = getchar();
-  resetTermios();
-  return ch;
+	char ch;
+	initTermios(echo);
+	ch = getchar();
+	resetTermios();
+	return ch;
 }
 
 char getch(void)
 {
-  return getch_(0);
+	return getch_(0);
 }

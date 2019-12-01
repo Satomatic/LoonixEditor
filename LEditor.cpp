@@ -355,8 +355,8 @@ int main(int argc, char** argv){
 
 		}else if (key == "CTRL-UpArrow"){
 			if (index + cury != 1){
-                string nextline = raw[index + cury - 1];
-                string currentline = raw[index + cury];
+				string nextline = raw[index + cury - 1];
+				string currentline = raw[index + cury];
 
 				raw[index + cury - 1] = currentline;
 				raw[index + cury] = nextline;
