@@ -11,6 +11,7 @@ A mildly temperamental console-based text editor for linux.
 **Ctrl + H** Help menu\
 **Ctrl + L** Line info\
 **Ctrl + F** Find string\
+**Ctrl + R** Find and Replace\
 **Ctrl + K** Cut line\
 **Ctrl + T** Todo menu\
 **Ctrl + X** Close program
