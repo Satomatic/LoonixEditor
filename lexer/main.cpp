@@ -63,11 +63,11 @@ string syntaxLine(string line){
 
 		}else if (stringMode == true){
 			if (text.substr(i, 1) == "\"" && text.substr(i - 1, 1) != "\\"){
-                string replacer = "\"\u001b[0m";
-                text.replace(i, 1, replacer);
-	            i += replacer.size();
-	            stringMode = false;
-            }
+				string replacer = "\"\u001b[0m";
+				text.replace(i, 1, replacer);
+				i += replacer.size();
+				stringMode = false;
+			}
 
 		}else{
 			for (int b = 0; b < statements.size(); b++){
@@ -77,8 +77,8 @@ string syntaxLine(string line){
 					string nextchar = text.substr(i + keyword.size(), 1);
 					string prevchar = "";
 
-                    if (i > 0){
-                        prevchar = text.substr(i - 1, 1);
+					if (i > 0){
+						prevchar = text.substr(i - 1, 1);
 					}
 
 					if (nextchar == " " || nextchar == "(" || nextchar == "" || nextchar == "{"){
@@ -116,11 +116,11 @@ string syntaxLine(string line){
 				string keyword = functions[b];
 
 				if (text.substr(i, keyword.size()) == keyword){
-                    string prevchar = "";
+					string prevchar = "";
 
-                    if (i > 0){
-                        prevchar = text.substr(i - 1, 1);
-                    }
+					if (i > 0){
+						prevchar = text.substr(i - 1, 1);
+					}
 
 					if (prevchar == " " || prevchar == "" || i == 0 || prevchar == "#"){
 						string replacer = "\u001b[38;5;36m" + keyword + "\u001b[0m";

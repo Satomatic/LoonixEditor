@@ -17,14 +17,17 @@ extern string currentfile;
 extern vector<string> raw;
 extern vector<string> lines;
 extern vector<string> viewport;
+extern vector<string> rawViewport;
 
 extern bool hasEdited;
 
 void updateViewport(){
 	viewport.clear();
+	rawViewport.clear();
 	for (int i = 0; i < lines.size(); i++){
 		if (i >= index && i <= index + screenHeight - 2){
 			viewport.push_back(lines[i]);
+			rawViewport.push_back(raw[i]);
 		}
 	}
 }
@@ -50,21 +53,21 @@ void drawHeader(){
 }
 
 void updateHeader(){
-    setCursorPosition(0,0);
-    resetColor();
-    cout << "\u001b[30m\u001b[107m";
+	setCursorPosition(0,0);
+	resetColor();
+	cout << "\u001b[30m\u001b[107m";
 
-    string headerdata = "Loonix [cols: X][row: Y] :: Z";
+	string headerdata = "Loonix [cols: X][row: Y] :: Z";
 
-    headerdata = replace_all(headerdata, "X", to_string(curx));
-    headerdata = replace_all(headerdata, "Y", to_string(index + cury));
-    headerdata = replace_all(headerdata, "Z", currentfile);
+	headerdata = replace_all(headerdata, "X", to_string(curx));
+	headerdata = replace_all(headerdata, "Y", to_string(index + cury));
+	headerdata = replace_all(headerdata, "Z", currentfile);
 
-    if (hasEdited == true){
-        headerdata += " *";
-    }
+	if (hasEdited == true){
+		headerdata += " *";
+	}
 
-    headerdata += "   ";
+	headerdata += "   ";
 
 	cout << headerdata;
 }
@@ -78,9 +81,9 @@ void drawScreen(){
 void showDebug(){
 	string debuginfo = to_string(raw.size());
 	debuginfo += "::";
-    debuginfo += to_string(lines.size());
-    drawBox(50, 20, 20, 10, "Debug info", debuginfo, true, true, "\u001b[4m\u001b[3m\u001b[38;5;213m");
-    setCursorPosition(0,0);
+	debuginfo += to_string(lines.size());
+	drawBox(50, 20, 20, 10, "Debug info", debuginfo, true, true, "\u001b[4m\u001b[3m\u001b[38;5;213m");
+	setCursorPosition(0,0);
 }
 
 void updateCursor(){
@@ -113,21 +116,21 @@ void updateCursor(){
 }
 
 void updateCursorBlank(){
-    int cursorAbsolute = index + cury;
-    string previousline = raw[index + prey];
+	int cursorAbsolute = index + cury;
+	string previousline = raw[index + prey];
 
-    // draw over cursor //
-    cout << "\u001b[39;49m";
-    setCursorPosition(prex, prey);
-    cout << previousline.at(prex);
+	// draw over cursor //
+	cout << "\u001b[39;49m";
+	setCursorPosition(prex, prey);
+	cout << previousline.at(prex);
 
-    cout << "\u001b[30m\u001b[107m";
-    // draw new cursor //
-    setCursorPosition(curx, cury);
-    cout << " ";
+	cout << "\u001b[30m\u001b[107m";
+	// draw new cursor //
+	setCursorPosition(curx, cury);
+	cout << " ";
 
-    prey = cury;
-    prex = curx;
+	prey = cury;
+	prex = curx;
 }
 
 void drawFromPoint(int line){
@@ -170,3 +173,32 @@ void renderBox(int x, int y, int w, int h){
 		}
 	}
 }
+
+void refresh(){
+	resetColor();
+
+	vector<string> oldViewport = rawViewport;
+	updateViewport();
+	vector<string> newViewport = rawViewport;
+
+	for (int i = 0; i < viewport.size(); i++){
+		if (i >= 1){
+			string oldLine = oldViewport[i];
+			string newLine = newViewport[i];
+			int difference = 0;
+
+			if (oldLine.size() > newLine.size()){
+				difference = oldLine.size() - newLine.size();
+			}
+
+			setCursorPosition(0, i);
+			cout << viewport[i];
+
+			for (int b = 0; b < difference; b++){
+				setCursorPosition(newLine.size() + b, i);
+				cout << " ";
+			}
+		}
+	}
+}
+

@@ -19,6 +19,7 @@ using namespace std;
 vector <string> raw;
 vector <string> lines;
 vector <string> viewport;
+vector <string> rawViewport;
 
 int curx = 0;
 int cury = 1;
@@ -59,10 +60,14 @@ int main(int argc, char** argv){
 	updateScreenSize();
 
 	if (argc == 2){
-		loadFile(argv[1]);
-		drawScreen();
-		drawHeader();
-		updateCursor();
+		if (FileExists(argv[1]) == true){
+			loadFile(argv[1]);
+			drawScreen();
+			drawHeader();
+			updateCursor();
+		}else{
+			newFile();
+		}
 	}else{
 		newFile();
 	}
@@ -102,9 +107,7 @@ int main(int argc, char** argv){
 
 				if (cury == viewport.size() - 1){
 					index ++;
-					clearFromPoint(0);
-					updateViewport();
-					drawFromPoint(0);
+					refresh();
 					drawHeader();
 
 					updateCursor();
@@ -125,6 +128,7 @@ int main(int argc, char** argv){
 			if (cury == 1){
 				if (cury + index != 1){
 					index --;
+					//refresh();
 					clearFromPoint(cury - 1);
 					updateViewport();
 					drawFromPoint(cury - 1);
@@ -141,9 +145,7 @@ int main(int argc, char** argv){
 				if (cury == 1){
 					if (index + cury != 1){
 						index --;
-						clearFromPoint(cury - 1);
-						updateViewport();
-						drawFromPoint(cury - 1);
+						refresh();
 						drawHeader();
 						curx = raw[index  + cury].length();
 					}
@@ -173,16 +175,13 @@ int main(int argc, char** argv){
 					if (index + cury != raw.size() - 1){
 						curx = 0;
 						index ++;
-						clearFromPoint(0);
-						updateViewport();
-						drawFromPoint(0);
+						refresh();
 						drawHeader();
 					}
 				}else{
 					curx = 0;
 					cury ++;
-					clearFromPoint(0);
-					drawFromPoint(0);
+					refresh();
 					drawHeader();
 				}
 
@@ -239,9 +238,7 @@ int main(int argc, char** argv){
 			lines.erase(lines.begin() + index + cury);
 			raw.erase(raw.begin() + index + cury);
 
-			clearFromPoint(cury - 1);
-			updateViewport();
-			drawFromPoint(cury - 2);
+			refresh();
 			drawHeader();
 
 			curx = previousline.size();
@@ -325,9 +322,7 @@ int main(int argc, char** argv){
 				curx = tabCount * 4;
 			}
 
-			clearFromPoint(cury - 1);
-			updateViewport();
-			drawFromPoint(cury - 1);
+			refresh();
 			drawHeader();
 			cury ++;
 			updateCursor();
@@ -366,9 +361,7 @@ int main(int argc, char** argv){
 				cury --;
 			}
 
-			clearFromPoint(0);
-			updateViewport();
-			drawFromPoint(0);
+			refresh();
 			drawHeader();
 			updateCursor();
 
@@ -385,9 +378,7 @@ int main(int argc, char** argv){
 				cury ++;
 			}
 
-			clearFromPoint(0);
-			updateViewport();
-			drawFromPoint(0);
+			refresh();
 			drawHeader();
 			updateCursor();
 
@@ -399,9 +390,8 @@ int main(int argc, char** argv){
 				curx = raw[index + cury].size();
 			}
 
-			clearFromPoint(cury - 1);
-			updateViewport();
-			drawFromPoint(cury - 1);
+			refresh();
+			drawHeader();
 			updateCursor();
 
 		}else if (key == "CTRLL"){

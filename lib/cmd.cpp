@@ -43,24 +43,6 @@ vector<string> splitIndex(string text, int index){
 	return returnvector;
 }
 
-bool FileExists( const char* pzPath )
-{
-	if ( pzPath == NULL) return false;
-
-	DIR *pDir;
-	bool bExists = false;
-
-	pDir = opendir (pzPath);
-
-	if (pDir != NULL)
-	{
-		bExists = true;
-		(void) closedir (pDir);
-	}
-
-	return bExists;
-}
-
 vector<string> DirView(const string& path){
 	struct dirent *de;
 	DIR *dr = opendir(path.c_str());
@@ -88,6 +70,23 @@ vector<string> DirView(const string& path){
 	sort(returnarray.begin(), returnarray.end());
 
 	return returnarray;
+}
+
+bool FileExists(string filename)
+{
+	bool exists = false;
+	vector<string> dirview = DirView(".");
+	
+	// search for file //
+	for (int i = 0; i < dirview.size(); i++){
+		vector<string> dirsplit = split(dirview[i], '|');
+		if (dirsplit[0] == filename){
+			exists = true;
+			break;
+		}
+	}
+
+	return exists;
 }
 
 void updateScreenSize(){
