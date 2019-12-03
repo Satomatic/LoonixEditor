@@ -95,24 +95,28 @@ class Replace{
 								lines[ycoord] = syntaxLine(raw[ycoord]);
 								
 								if (done + 1 != search.size()){
-									if (search[done + 1][0] == search[done][0]){
-										int difference = 0;
-										
-										if (replacer.size() > replace.size()){
-											difference = replacer.size() - replace.size();
-										}else{
-											difference = replace.size() - replacer.size();
+									int totalDifference = 0;
+									for (int i = 0; i < search.size(); i++){
+										if (search[i][0] == search[done][0]){
+											if (stoi(search[i][1]) != xcoord){
+												int difference = 0;
+											
+												if (replacer.size() > replace.size()){
+													difference = replacer.size() - replace.size();
+												}else{
+													difference = replace.size() - replacer.size();
+												}
+											
+												int x = stoi(search[i][1]);
+												x += difference + totalDifference;
+												search[i][1] = to_string(x);
+											}
 										}
-										
-										int y = stoi(search[done + 1][1]);
-										y += difference;
-										search[done + 1][1] = to_string(y);
 									}
 								}
 								
-								clearFromPoint(0);
-								updateViewport();
-								drawFromPoint(0);
+								refresh();
+								drawHeader();
 								updateCursor();
 							}
 							

@@ -177,28 +177,8 @@ void renderBox(int x, int y, int w, int h){
 void refresh(){
 	resetColor();
 
-	vector<string> oldViewport = rawViewport;
+	clearFromPoint(0);
 	updateViewport();
-	vector<string> newViewport = rawViewport;
-
-	for (int i = 0; i < viewport.size(); i++){
-		if (i >= 1){
-			string oldLine = oldViewport[i];
-			string newLine = newViewport[i];
-			int difference = 0;
-
-			if (oldLine.size() > newLine.size()){
-				difference = oldLine.size() - newLine.size();
-			}
-
-			setCursorPosition(0, i);
-			cout << viewport[i];
-
-			for (int b = 0; b < difference; b++){
-				setCursorPosition(newLine.size() + b, i);
-				cout << " ";
-			}
-		}
-	}
+	drawFromPoint(0);
 }
 
