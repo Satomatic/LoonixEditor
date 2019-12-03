@@ -128,10 +128,10 @@ int main(int argc, char** argv){
 			if (cury == 1){
 				if (cury + index != 1){
 					index --;
-					//refresh();
-					clearFromPoint(cury - 1);
-					updateViewport();
-					drawFromPoint(cury - 1);
+					refresh();
+					//clearFromPoint(0);
+					//updateViewport();
+					//drawFromPoint(0);
 					drawHeader();
 					updateCursor();
 				}
@@ -215,7 +215,7 @@ int main(int argc, char** argv){
 
 		}else if (key == "PGDN"){
 			if (index + screenHeight > lines.size() - 1){
-				index = lines.size() - 3;
+				index = lines.size() - 10;
 				cury = 1;
 			}else{
 				index += screenHeight;

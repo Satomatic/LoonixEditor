@@ -74,8 +74,22 @@ vector<string> DirView(const string& path){
 
 bool FileExists(string filename)
 {
+	string filepath = ".";
+	
+	// check for file path
+	for (int i = 0; i < filename.size(); i++){
+		if (filename.substr(i, 1) == "/"){
+			filepath = filename.substr(0, filename.find_last_of("/"));
+			break;    
+		}    
+	}
+	
+	// get file name //
+	vector<string> fileSplit = split(filename, '/');
+	filename = fileSplit[fileSplit.size() - 1];
+	
 	bool exists = false;
-	vector<string> dirview = DirView(".");
+	vector<string> dirview = DirView(filepath);
 	
 	// search for file //
 	for (int i = 0; i < dirview.size(); i++){
