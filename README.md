@@ -14,6 +14,7 @@ A mildly temperamental console-based text editor for linux.
 **Ctrl + R** Find and Replace\
 **Ctrl + K** Cut line\
 **Ctrl + T** Todo menu\
+**Ctrl + U** Jump to line\
 **Ctrl + X** Close program
 
 ## Build
