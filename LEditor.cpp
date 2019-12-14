@@ -12,6 +12,7 @@
 #include "lib/file.cpp"
 #include "lib/find.cpp"
 #include "lib/todo.cpp"
+#include "lib/jump.cpp"
 
 using namespace std;
 
@@ -348,6 +349,10 @@ int main(int argc, char** argv){
 		}else if (key == "CTRLN"){
 			newFile();
 
+		}else if (key == "CTRLU"){
+			jumpLine jump;
+			jump.draw();
+
 		}else if (key == "CTRL-UpArrow"){
 			if (index + cury != 1){
 				string nextline = raw[index + cury - 1];
@@ -400,7 +405,7 @@ int main(int argc, char** argv){
 			string info = "line: [x/y] col: [z/p]";
 
 			info = replace_all(info, "x", to_string(index + cury));
-			info = replace_all(info, "y", to_string(raw.size()));
+			info = replace_all(info, "y", to_string(raw.size() - 1));
 			info = replace_all(info, "z", to_string(curx));
 			info = replace_all(info, "p", to_string(currentline.size()));
 
