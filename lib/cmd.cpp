@@ -156,6 +156,19 @@ void checkScreenSize(){
 	}
 }
 
+int isAlpha(char letter){
+	string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	bool found = false;
+	
+	for (int i = 0; i < chars.size(); i++){
+		if (chars.at(i) == letter){
+			found = true;
+			break;
+		}
+	}
+	
+	return found;    
+}
 
 string fillX(string text){
 	struct winsize w;

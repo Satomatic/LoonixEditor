@@ -5,10 +5,10 @@ A mildly temperamental console-based text editor for linux.
 
 ## How to use
 ### Key binds
+**F1** Help menu\
 **Ctrl + O** Open file\
 **Ctrl + S** Save file\
 **Ctrl + N** New file\
-**Ctrl + H** Help menu\
 **Ctrl + L** Line info\
 **Ctrl + F** Find string\
 **Ctrl + R** Find and Replace\

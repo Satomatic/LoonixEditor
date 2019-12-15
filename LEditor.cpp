@@ -130,9 +130,6 @@ int main(int argc, char** argv){
 				if (cury + index != 1){
 					index --;
 					refresh();
-					//clearFromPoint(0);
-					//updateViewport();
-					//drawFromPoint(0);
 					drawHeader();
 					updateCursor();
 				}
@@ -211,8 +208,8 @@ int main(int argc, char** argv){
 			clearFromPoint(0);
 			updateViewport();
 			drawFromPoint(0);
-			drawHeader();
 			updateCursor();
+			drawHeader();
 
 		}else if (key == "PGDN"){
 			if (index + screenHeight > lines.size() - 1){
@@ -227,8 +224,8 @@ int main(int argc, char** argv){
 			clearFromPoint(0);
 			updateViewport();
 			drawFromPoint(0);
-			drawHeader();
 			updateCursor();
+			drawHeader();
 
 		}else if (key == "Backspace" && curx == 0 && cury != 1){ // At beginning of line
 			string currentline = raw[index + cury];
@@ -387,6 +384,71 @@ int main(int argc, char** argv){
 			drawHeader();
 			updateCursor();
 
+		}else if (key == "CTRL-RightArrow"){
+			int pos = curx;
+			for (int i=0; i < raw[index + cury].size(); i++){
+				if (i > curx){
+					if (isAlpha(raw[index + cury].at(i)) != true){
+						pos += (i - curx);
+						break;
+					}
+				}
+			}
+
+			if (raw[index + cury].substr(curx, 4) == "    "){
+				curx += 4;
+			
+			}else{            
+				if (pos > raw[index + cury].size() - 1 || curx == raw[index + cury].size()){
+					if (cury == viewport.size() - 1){
+						if (index + cury != raw.size() - 1){
+							curx = 0;
+							index ++;
+							refresh();
+							drawHeader();
+						}
+					}else{
+						curx = 0;
+						cury += 1;
+					}
+				}else{
+					curx = pos + 1;
+				}
+			}
+			
+			updateCursor();
+			
+		}else if (key == "CTRL-LeftArrow"){
+			int pos = 0;
+			for (int i=curx - 1; i > 0; i--){
+				if (isAlpha(raw[index + cury].at(i)) != true){
+					pos = i;
+					break;
+				}
+			}
+			
+			if (curx >= 4 && raw[index + cury].substr(curx - 4, 4) == "    "){//raw[index + cury].substr(curx - 4, 4) == "    "){
+				curx -= 4;
+			}else{
+				if (curx == 0){
+					if (cury == 1){
+						if (index + cury != 1){ // move viewport up
+							index --;
+							refresh();
+							drawHeader();
+							curx = raw[index + cury].length();
+						}
+					}else{ // move to previous line
+						curx = raw[index + cury - 1].size();
+						cury -= 1;
+					}
+				}else{ // move back
+					curx = pos;
+				}
+			}
+			
+			updateCursor();
+
 		}else if (key == "CTRLK"){
 			lines.erase(lines.begin() + index + cury);
 			raw.erase(raw.begin() + index + cury);
@@ -413,7 +475,7 @@ int main(int argc, char** argv){
 			headerMessage.styling = "";
 			headerMessage.draw();
 
-		}else if (key == "CTRLH"){
+		}else if (key == "F1"){
 			helpMenu help;
 			help.draw();
 
