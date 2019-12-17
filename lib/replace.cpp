@@ -165,6 +165,7 @@ class Replace{
 
 	void undraw(){
 		ReplaceContainer.undraw();
+		drawFromPoint(0);
 	}
 	
 	void updateInput(string text, int pos){

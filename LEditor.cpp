@@ -108,8 +108,9 @@ int main(int argc, char** argv){
 
 				if (cury == viewport.size() - 1){
 					index ++;
-					refresh();
-					drawHeader();
+					//refresh();
+					//drawHeader();
+					newRefresh();
 
 					updateCursor();
 				}else{
@@ -129,8 +130,7 @@ int main(int argc, char** argv){
 			if (cury == 1){
 				if (cury + index != 1){
 					index --;
-					refresh();
-					drawHeader();
+					newRefresh();
 					updateCursor();
 				}
 			}else{
@@ -201,29 +201,26 @@ int main(int argc, char** argv){
 				curx = 0;
 			}else{
 				index -= screenHeight;
-				cury = 0;
+				cury = 1;
 				curx = 0;
 			}
 
-			clearFromPoint(0);
-			updateViewport();
-			drawFromPoint(0);
+			newRefresh();
 			updateCursor();
 			drawHeader();
 
 		}else if (key == "PGDN"){
-			if (index + screenHeight > lines.size() - 1){
-				index = lines.size() - 10;
+			index += screenHeight;
+			
+			if (testViewport() < screenHeight - 1){
+				index = lines.size() - screenHeight + 1;
 				cury = 1;
 			}else{
-				index += screenHeight;
 				cury = 1;
 				curx = 0;
 			}
 
-			clearFromPoint(0);
-			updateViewport();
-			drawFromPoint(0);
+			newRefresh();
 			updateCursor();
 			drawHeader();
 
@@ -320,16 +317,39 @@ int main(int argc, char** argv){
 				curx = tabCount * 4;
 			}
 
+			// move viewport down
+			if (cury == viewport.size() - 1){
+				index ++;
+			}else{
+				cury ++;
+			}
+
 			refresh();
 			drawHeader();
-			cury ++;
 			updateCursor();
 
 			hasEdited = true;
 
 		}else if (key == "CTRLX"){
-			break;
-
+			if (hasEdited == true){
+				OptionDialog save;
+				save.message = "Save changes?";
+				save.items = {"Yes", "No", "Cancel"};
+				save.centerText = true;
+				save.draw();
+				
+				if (save.selected == 0){
+					saveFile();
+					break;
+				
+				}else if (save.selected == 1){
+					break;
+				}
+			
+			}else{
+				break;
+			}
+			
 		}else if (key == "CTRLS"){
 			if (currentfile == "" || currentfile == "newfile"){
 				saveAsFile();
@@ -341,14 +361,79 @@ int main(int argc, char** argv){
 			saveAsFile();
 
 		}else if (key == "CTRLO"){
-			openFile();
+			if (hasEdited == true){
+				OptionDialog save;
+				save.message = "Save changes?";
+				save.items = {"Yes", "No", "Cancel"};
+				save.centerText = true;
+				save.draw();
+				
+				if (save.selected == 0){
+					saveFile();
+					openFile();
+				
+				}else if (save.selected == 1){
+					openFile();
+				}
 
+				refresh();
+				updateCursor();
+				drawHeader();
+		
+			}else{
+				openFile();
+			}
+			
 		}else if (key == "CTRLN"){
-			newFile();
+			if (hasEdited == true){
+				OptionDialog save;
+				save.message = "Save changes?";
+				save.items = {"Yes", "No", "Cancel"};
+				save.centerText = true;
+				save.draw();
+				
+				if (save.selected == 0){
+					saveFile();
+					newFile();
+					
+				}else if (save.selected == 1){
+					newFile();
+				}
+			
+				refresh();
+				updateCursor();
+				drawHeader();
+			
+			}else{
+				newFile();
+			}
 
+			
+		}else if (key == "CTRLH"){
+			
 		}else if (key == "CTRLU"){
 			jumpLine jump;
 			jump.draw();
+			
+		}else if (key == "CTRL/"){
+			if (raw[index + cury].size() >= 2){
+				if (raw[index + cury].substr(0, 2) == "  "){
+					raw[index + cury][0] = '/';
+					raw[index + cury][1] = '/';
+				}else{
+					raw[index + cury].insert(0, "//");
+					curx += 2;
+				}
+			}else{
+				raw[index + cury].insert(0, "//");
+				curx += 2;
+			}
+			
+			lines[index + cury] = syntaxLine(raw[index + cury]);
+			
+			newRefresh();
+			updateCursor();
+			drawHeader();
 
 		}else if (key == "CTRL-UpArrow"){
 			if (index + cury != 1){
@@ -426,8 +511,8 @@ int main(int argc, char** argv){
 					break;
 				}
 			}
-			
-			if (curx >= 4 && raw[index + cury].substr(curx - 4, 4) == "    "){//raw[index + cury].substr(curx - 4, 4) == "    "){
+
+			if (curx >= 4 && raw[index + cury].substr(curx - 4, 4) == "    "){
 				curx -= 4;
 			}else{
 				if (curx == 0){
@@ -446,7 +531,7 @@ int main(int argc, char** argv){
 					curx = pos;
 				}
 			}
-			
+
 			updateCursor();
 
 		}else if (key == "CTRLK"){

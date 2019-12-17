@@ -88,6 +88,8 @@ string getInput(){
 			absolute = "CTRLU";
 		}else if (key == 127){
 			absolute = "CTRL?";
+		}else if (key == 31){
+			absolute = "CTRL/";
 		}else{
 			absolute = key;
 		}

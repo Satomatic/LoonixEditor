@@ -4,6 +4,7 @@
 
 using namespace std;
 
+extern vector<string> viewport;
 extern int screenWidth;
 extern int screenHeight;
 
@@ -103,17 +104,20 @@ class HeaderDrop{
 		count = 0;
 	}
 
-    void undraw(){
+	void undraw(){
 		int pos = int(screenWidth / 2) - int(message.size() / 2) - 1;
-        resetColor();
+		resetColor();
 
-        for (int i = 0; i < message.size() + 4; i++){
-            setCursorPosition(pos + i, 1);
-            cout << " ";
-        }
+		for (int i = 0; i < message.size() + 4; i++){
+			setCursorPosition(pos + i, 1);
+			cout << " ";
+		}
 
-        showing = false;
-    }
+		showing = false;
+		
+		setCursorPosition(0, 1);
+		cout << viewport[1];
+	}
 
 };
 
@@ -135,54 +139,55 @@ class Box{
 		bool vcenter = false;
 		bool hcenter = false;
 		bool center = false;
+		bool centerText = false;
 
 		void draw(){
 			// center //
-		    if (hcenter == true || center == true){
-		        int pos = int(screenWidth / 2) - int(width / 2) + 1;
-		        posx = pos;
-		    }
+			if (hcenter == true || center == true){
+				int pos = int(screenWidth / 2) - int(width / 2) + 1;
+				posx = pos;
+			}
 
-		    if (vcenter == true || center == true){
-		        int pos = int(screenHeight / 2) - int(height / 2);
-		        posy = pos - 1;
-		    }
+			if (vcenter == true || center == true){
+				int pos = int(screenHeight / 2) - int(height / 2);
+				posy = pos - 1;
+			}
 
 			// draw top bar //
-    		setCursorPosition(posx, posy);
-    		resetColor();
-    		string linetop = "";
-    		for (int i = 0; i < width; i++){
-    		    linetop += "─";
-    		}
-    		cout << "┌" << linetop << "┐";
+			setCursorPosition(posx, posy);
+			resetColor();
+			string linetop = "";
+			for (int i = 0; i < width; i++){
+				linetop += "─";
+			}
+			cout << "┌" << linetop << "┐";
 
 			// draw mid bars //
-    		string linefill = "";
-    		for (int i = 0; i < width; i++){
-    		    linefill += " ";
-   			}
+			string linefill = "";
+			for (int i = 0; i < width; i++){
+				linefill += " ";
+			   }
 
-    		for (int i = 0; i < height; i++){
-    		    setCursorPosition(posx, posy + i + 1);
-    		    cout << "│" << linefill << "│";
-		    }
+			for (int i = 0; i < height; i++){
+				setCursorPosition(posx, posy + i + 1);
+				cout << "│" << linefill << "│";
+			}
 
 			// draw bottom line //
 			string bottomline = "";
-    		for (int i = 0; i < width; i++){
-    		    bottomline += "─";
-    		}
+			for (int i = 0; i < width; i++){
+				bottomline += "─";
+			}
 
-		    setCursorPosition(posx, posy + height + 1);
-		    cout << "└" << bottomline << "┘";
+			setCursorPosition(posx, posy + height + 1);
+			cout << "└" << bottomline << "┘";
 
 			// draw title //
 			if (title != ""){
-		        int titlepos = int(width / 2) - int(title.size() / 2) + posx;
-		        setCursorPosition(titlepos, posy);
-		        cout << "┤" << escape << title << "\u001b[0m├";
-		    }
+				int titlepos = int(width / 2) - int(title.size() / 2) + posx;
+				setCursorPosition(titlepos, posy);
+				cout << "┤" << escape << title << "\u001b[0m├";
+			}
 
 			// draw footer //
 			if (footer != ""){
@@ -192,16 +197,19 @@ class Box{
 			}
 
 			// draw message //
-		    if (message != ""){
-		        int yoff = 0;
-		        int xoff = 0;
-
+			if (message != ""){
+				int xoff = 0;
+			
 				vector<string> messagesplit = split(message, '\\');
 				for (int i = 0; i < messagesplit.size(); i++){
-					setCursorPosition(posx + 1, posy + 1 + i);
+					if (centerText == true){
+						xoff = int(width / 2) - int(messagesplit[i].size() / 2);
+					}
+					
+					setCursorPosition(posx + 1 + xoff, posy + 1 + i);
 					cout << messagesplit[i];
 				}
-		    }
+			}
 			showing = true;
 		}
 
@@ -218,3 +226,90 @@ class Box{
 			showing = false;
 		}
 };
+
+class OptionDialog{
+	public:
+		string title = "";
+		string message = "";
+		int width = 26; // default width and height
+		int height = 3;
+		int selected = 0;
+		bool centerText = false;
+		vector<string> items;
+		
+		Box messageContainer;
+
+	void draw(){
+		messageContainer.title = title;
+		messageContainer.message = message;
+		messageContainer.width = width;
+		messageContainer.height = height;
+		messageContainer.center = true;
+		messageContainer.centerText = centerText;
+		messageContainer.draw();
+		updateInput();
+		
+		while (true){
+			string key = getInput();
+
+			if (key == "LeftArrow"){
+				if (selected == 0){
+					selected = items.size() - 1;
+				}else{
+					selected -= 1;
+				}
+
+			}else if (key == "RightArrow"){
+				if (selected == items.size() - 1){
+					selected = 0;
+				}else{
+					selected += 1;
+				}
+			
+			}else if (key == "Return"){
+				undraw();
+				break;
+			}
+			
+			updateInput();
+		}
+	}
+	
+	void updateInput(){
+		int curPos = messageContainer.posx + messageContainer.width / 2 - 1;
+		int diff = 0;
+		
+		for (int i = 0; i < items.size(); i++){
+			diff += items[i].size();
+		}
+		
+		curPos -= (diff / 2);
+		
+		setCursorPosition(curPos, messageContainer.posy + 3);
+		
+		for (int i = 0; i < items.size(); i++){
+			if (i == selected){
+				cout << "\u001b[107;30;4m";
+			}else{
+				cout << "\u001b[4m";
+			}
+		
+			for (int b = 0; b < items[i].size(); b++){
+				if (b == 0){
+					cout << items[i][b] << "\u001b[24m";
+				}else{
+					cout << items[i][b];
+				}
+			}
+			
+			cout << "\u001b[0m  ";
+
+		}    
+	}
+	
+	void undraw(){
+		messageContainer.undraw();
+	}
+};
+
+

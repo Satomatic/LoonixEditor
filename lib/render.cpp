@@ -21,6 +21,17 @@ extern vector<string> rawViewport;
 
 extern bool hasEdited;
 
+int unilen(string str) {
+	int length = 0;
+	for (char c : str) {
+		if ((c & 0xC0) != 0x80) {
+			length++;
+		}
+	}
+
+	return length;
+}
+
 void updateViewport(){
 	viewport.clear();
 	rawViewport.clear();
@@ -30,6 +41,17 @@ void updateViewport(){
 			rawViewport.push_back(raw[i]);
 		}
 	}
+}
+
+int testViewport(){
+	int size = 0;
+	for (int i = 0; i < lines.size(); i++){
+		if (i >= index && i <= index + screenHeight - 2){
+			size++;
+		}
+	}
+	
+	return size;
 }
 
 void drawHeader(){
@@ -180,5 +202,32 @@ void refresh(){
 	clearFromPoint(0);
 	updateViewport();
 	drawFromPoint(0);
+}
+
+void newRefresh(){
+	resetColor();
+	
+	vector<string> oldViewport = rawViewport;
+	updateViewport();
+	vector<string> newViewport = rawViewport;
+	
+	for (int i = 1; i < newViewport.size(); i++){
+		int newline = unilen(newViewport[i]);
+		int oldline = unilen(oldViewport[i]);
+		int difference = 0;
+
+		setCursorPosition(0, i);
+		cout << viewport[i];
+
+		if (newline >= oldline){
+			difference = newline - oldline;
+		}else{
+			difference = oldline - newline;
+		}
+		
+		for (int b = 0; b < difference; b++){
+			cout << " ";
+		}
+	}
 }
 
