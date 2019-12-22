@@ -107,6 +107,7 @@ int main(int argc, char** argv){
 				}
 
 				if (cury == viewport.size() - 1){
+					updateCursor();
 					index ++;
 					//refresh();
 					//drawHeader();
@@ -258,6 +259,17 @@ int main(int argc, char** argv){
 
 				curx -= 4;
 				extend = "     ";
+				
+			}else if (currentline.substr(curx - 1, 1) == "/" && currentline.size() >= curx + 2  && currentline.substr(curx, 2) == "  "){
+				vector<string> linesplit = splitIndex(currentline, curx);
+				newline = linesplit[0].substr(0, curx - 1);
+				
+				newline += " ";
+				newline += linesplit[1];
+				
+				curx --;
+				extend = "  ";
+			
 			}else{
 				if (curx == currentline.size()){ // end of line
 					newline = currentline.substr(0, currentline.size() - 1);
@@ -318,7 +330,7 @@ int main(int argc, char** argv){
 			}
 
 			// move viewport down
-			if (cury == viewport.size() - 1){
+			if (cury == screenHeight - 2){
 				index ++;
 			}else{
 				cury ++;
@@ -406,10 +418,17 @@ int main(int argc, char** argv){
 			
 			}else{
 				newFile();
+				refresh();
+				updateCursor();
+				drawHeader();
 			}
 
 			
 		}else if (key == "CTRLH"){
+			filemanager fm;
+			fm.width = 20;
+			fm.title = "Epic";
+			fm.draw();
 			
 		}else if (key == "CTRLU"){
 			jumpLine jump;
@@ -599,6 +618,18 @@ int main(int argc, char** argv){
 
 			hasEdited = true;
 
+		}else if (key == "/" && raw[index + cury].size() > curx + 1 && raw[index + cury].substr(curx + 1, 1) == " "){
+			raw[index + cury][curx] = '/';
+			lines[index + cury] = syntaxLine(raw[index + cury]);
+				
+			updateViewport();
+			curx ++;
+				
+			resetColor();
+			setCursorPosition(0, cury);
+			cout << lines[index + cury];
+			updateCursor();
+			
 		}else{
 			if (key.size() == 1){
 				string currentline = raw[index + cury];

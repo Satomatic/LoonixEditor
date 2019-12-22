@@ -69,6 +69,11 @@ string syntaxLine(string line){
 				stringMode = false;
 			}
 
+//      }else if (publicCommentMode == true){
+//          text.insert(0, "\u001b[38;5;242m\u001b[3m");
+			
+//          return text;
+		
 		}else{
 			for (int b = 0; b < statements.size(); b++){
 				string keyword = statements[b];
@@ -103,7 +108,7 @@ string syntaxLine(string line){
 					}
 
 					if (nextchar == " " || nextchar == "(" || nextchar == "{"){
-						if (prevchar == " " || prevchar == "" || i == 0){
+						if (prevchar == " " || prevchar == "" || prevchar == "(" || i == 0){
 							string replacer = "\u001b[38;5;32m" + keyword + "\u001b[0m";
 							text.replace(i, keyword.size(), replacer);
 							i += replacer.size();
@@ -160,6 +165,20 @@ string syntaxLine(string line){
 				text.replace(i, 2, replacer);
 				i += replacer.size();
 				commentMode = true;
+			}
+			
+			if (text.substr(i, 2) == "/*"){
+				string replacer = "\u001b[38;5;242m\u001b[3m/*";
+				text.replace(i, 2, replacer);
+				i += replacer.size();
+				publicCommentMode = true;
+			}
+			
+			if (text.substr(i, 2) == "*/"){
+				string replacer = "\u001b[0m*/";
+				text.replace(i, 2, replacer);
+				i += replacer.size();
+				publicCommentMode = false;
 			}
 
 			if (text.substr(i, 1) == "\""){

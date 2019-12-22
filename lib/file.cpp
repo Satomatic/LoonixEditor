@@ -147,6 +147,7 @@ void newFile(){
 
 	updateViewport();
 
+	index = 0;
 	curx = 0;
 	cury = 1;
 

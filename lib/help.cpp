@@ -7,7 +7,7 @@ using namespace std;
 class helpMenu{
 	public:
 		int width = 20;
-		int height = 10;
+		int height = 13;
 
 		vector<vector<string>> items = {
 			{"\u001b[0mKeys", ""},
@@ -18,6 +18,10 @@ class helpMenu{
 			{"^F", " ~ \u001b[3mFind"},
 			{"^F", " ~ \u001b[3mReplace"},
 			{"^K", " ~ \u001b[3mCut line"},
+			{"^T", " ~ \u001b[3mTodo list"},
+			{"^J", " ~ \u001b[3mJump line"},
+			{"^L", " ~ \u001b[3mLine info"},
+			{"^/", " ~ \u001b[3mComment line"},
 			{"^X", " ~ \u001b[3mExit / Close"}
 		};
 

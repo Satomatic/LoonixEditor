@@ -205,15 +205,23 @@ void refresh(){
 }
 
 void newRefresh(){
-	resetColor();
-	
 	vector<string> oldViewport = rawViewport;
 	updateViewport();
 	vector<string> newViewport = rawViewport;
-	
-	for (int i = 1; i < newViewport.size(); i++){
+	int offset = 0;
+
+	if (newViewport.size() != oldViewport.size()){
+		if (newViewport.size() > oldViewport.size()){
+			offset = newViewport.size() - oldViewport.size();
+		}else{
+			offset = oldViewport.size() - newViewport.size();
+		}
+	}
+
+	for (int i = 1; i < newViewport.size() - offset; i++){
 		int newline = unilen(newViewport[i]);
 		int oldline = unilen(oldViewport[i]);
+
 		int difference = 0;
 
 		setCursorPosition(0, i);
@@ -224,9 +232,16 @@ void newRefresh(){
 		}else{
 			difference = oldline - newline;
 		}
-		
+
 		for (int b = 0; b < difference; b++){
 			cout << " ";
+		}
+	}
+
+	if (offset > 0){
+		for (int i = offset; i < newViewport.size(); i++){
+			setCursorPosition(0, i);
+			cout << syntaxLine(newViewport[i]);
 		}
 	}
 }

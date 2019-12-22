@@ -68,6 +68,12 @@ class Find{
 						cury = 1;
 						curx = csx;
 
+						if (testViewport() < screenHeight - 1){
+							int difference = screenHeight - testViewport() - 1;
+							index -= difference;
+							cury += difference;
+						}
+
 						current ++;
 
 						clearFromPoint(0);
@@ -76,15 +82,15 @@ class Find{
 						drawHeader();
 						updateCursor();
 
-					    // highlight find
-                	    setCursorPosition(curx, cury);
-                	    cout << "\u001b[30;107m" << input << "\u001b[0m";
+						// highlight find
+						setCursorPosition(curx, cury);
+						cout << "\u001b[30;107m" << input << "\u001b[0m";
 					}
 
-                	FindContainer.message = "\\Found ";
+					FindContainer.message = "\\Found ";
 					FindContainer.message += to_string(current);
 					FindContainer.message += "/";
-                	FindContainer.message += to_string(total);
+					FindContainer.message += to_string(total);
 
 					FindContainer.draw();
 					updateInput();

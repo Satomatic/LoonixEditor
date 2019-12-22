@@ -50,7 +50,7 @@ class Todo{
 			int xcoord = stoi(search[i][2]);
 			vector<string> flagmessage = splitIndex(raw[ycoord], xcoord);
 
-			string item = "\u001b[1mX\u001b[0m {\u001b[3mY,Z\u001b[0m} P \\";
+			string item = "\u001b[1mX\u001b[0m {\u001b[3mY,Z\u001b[0m} P";
 			item = replace_all(item, "X", search[i][0]);
 			item = replace_all(item, "Y", search[i][1]);
 			item = replace_all(item, "Z", search[i][2]);
