@@ -1,7 +1,7 @@
 # LoonixEditor
 A mildly temperamental console-based text editor for linux.
 
-<img src="http://www.satomatic.space/projects/LoonixEditor/screen_3.png" width="40%">.
+<img src="http://www.satomatic.space/projects/LoonixEditor/screen_4.png" width="41%">.
 
 ## How to use
 ### Key binds
@@ -24,6 +24,11 @@ LoonixEditor hasn't been test compiled on windows as of now.
 ### Linux
 With linux you can compile LoonixEditor using g++\
 <code>g++ LEditor.cpp</code>
+\
+\
+If you get any errors that references c++98 try the following command\
+<code>g++ -stf=c++11 LEditor.cpp</code>
+\
 \
 *Loonix editor doesn't use any third-party libraries so it should be compatible with any modern c++ compilers.*
 
