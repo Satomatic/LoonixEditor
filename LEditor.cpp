@@ -146,10 +146,10 @@ int main(int argc, char** argv){
 						index --;
 						refresh();
 						drawHeader();
-						curx = raw[index  + cury].length();
+						curx = unilen(raw[index  + cury]);//.length();
 					}
 				}else{
-					curx = raw[index + cury - 1].length();
+					curx = unilen(raw[index + cury - 1]);//.length();
 					cury --;
 				}
 
@@ -169,7 +169,7 @@ int main(int argc, char** argv){
 			updateCursor();
 
 		}else if (key == "RightArrow"){
-			if (curx == raw[index + cury].size()){
+			if (curx == unilen(raw[index + cury])){
 				if (cury == viewport.size() - 1){
 					if (index + cury != raw.size() - 1){
 						curx = 0;
@@ -211,19 +211,26 @@ int main(int argc, char** argv){
 			drawHeader();
 
 		}else if (key == "PGDN"){
-			index += screenHeight;
+			if (lines.size() >= screenHeight - 1){
+				index += screenHeight;
 			
-			if (testViewport() < screenHeight - 1){
-				index = lines.size() - screenHeight + 1;
-				cury = 1;
-			}else{
-				cury = 1;
-				curx = 0;
-			}
+				if (testViewport() < screenHeight - 1){
+					index = lines.size() - screenHeight + 1;
+					cury = viewport.size() - 1;
+				
+				}else{
+					cury = 1;
+					curx = 0;
+				}
 
-			newRefresh();
-			updateCursor();
-			drawHeader();
+				newRefresh();
+				updateCursor();
+				drawHeader();
+			
+			}else{
+				cury = viewport.size() - 1;
+				updateCursor();
+			}
 
 		}else if (key == "Backspace" && curx == 0 && cury != 1){ // At beginning of line
 			string currentline = raw[index + cury];
@@ -412,15 +419,8 @@ int main(int argc, char** argv){
 					newFile();
 				}
 			
-				refresh();
-				updateCursor();
-				drawHeader();
-			
 			}else{
 				newFile();
-				refresh();
-				updateCursor();
-				drawHeader();
 			}
 
 			

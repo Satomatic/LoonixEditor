@@ -32,6 +32,20 @@ int unilen(string str) {
 	return length;
 }
 
+string nonUniString(string str){
+	string returnstring;
+	
+	for (int i = 0; i < str.size(); i++){
+		char c = str.at(i);
+		
+		if ((c & 0xC0) != 0x80){
+			returnstring += c;
+		}
+	}
+	
+	return returnstring;
+}
+
 void updateViewport(){
 	viewport.clear();
 	rawViewport.clear();
@@ -114,11 +128,11 @@ void updateCursor(){
 	string previousline = raw[index + prey];
 
 	// get current cursor //
-	string cursorChar = "";
-	if (curx >= currentline.size()){
-		cursorChar = " ";
+	char cursorChar;
+	if (curx >= unilen(currentline)){
+		cursorChar = ' ';
 	}else{
-		cursorChar = currentline.at(curx);
+		cursorChar = nonUniString(currentline).at(curx);//currentline.at(curx);
 	}
 
 	string previousChar = syntaxLine(previousline);//.at(prex);
