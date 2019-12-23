@@ -27,7 +27,7 @@ With linux you can compile LoonixEditor using g++\
 \
 \
 If you get any errors that references c++98 try the following command\
-<code>g++ -stf=c++11 LEditor.cpp</code>
+<code>g++ -std=c++11 LEditor.cpp</code>
 \
 \
 *Loonix editor doesn't use any third-party libraries so it should be compatible with any modern c++ compilers.*
