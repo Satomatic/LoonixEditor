@@ -31,6 +31,8 @@ void loadFile(string filepath){
 		for (int i = 0; i < line.size(); i++){
 			if (line[i] == '\t'){
 				convert += "    ";
+			}else if (line[i] == '\r'){
+				
 			}else{
 				convert += line[i];
 			}

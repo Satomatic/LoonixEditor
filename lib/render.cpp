@@ -51,8 +51,13 @@ void updateViewport(){
 	rawViewport.clear();
 	for (int i = 0; i < lines.size(); i++){
 		if (i >= index && i <= index + screenHeight - 2){
-			viewport.push_back(lines[i]);
-			rawViewport.push_back(raw[i]);
+			if (unilen(raw[i]) > screenWidth){
+				viewport.push_back(lines[i].substr(0, screenWidth - 1));
+				rawViewport.push_back(raw[i].substr(0, screenWidth - 1));
+			}else{
+				viewport.push_back(lines[i]);
+				rawViewport.push_back(raw[i]);
+			}
 		}
 	}
 }

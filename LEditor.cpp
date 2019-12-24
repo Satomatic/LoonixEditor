@@ -425,10 +425,6 @@ int main(int argc, char** argv){
 
 			
 		}else if (key == "CTRLH"){
-			filemanager fm;
-			fm.width = 20;
-			fm.title = "Epic";
-			fm.draw();
 			
 		}else if (key == "CTRLU"){
 			jumpLine jump;
@@ -593,7 +589,7 @@ int main(int argc, char** argv){
 			findP.draw();
 
 		}else if (key == "CTRLR"){
-			Replace replaceP; // replaceP = replacePanel
+			Replace replaceP;
 			replaceP.draw();
 
 		}else if (key == "CTRLT"){
