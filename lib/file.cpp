@@ -89,28 +89,33 @@ void saveFile(){
 
 	ofstream file(currentfile);
 
-	for (int i = 1; i < raw.size(); i++){
-		//file << raw[i] << endl;
-		string convert = raw[i];
+	if (file.good()){
+		for (int i = 1; i < raw.size(); i++){
+			string convert = raw[i];
 
-		// convert spaces to tabs
-		for (int b = 0; b < convert.size(); b++){
-			if (convert.substr(b, 4) == "    "){
-				convert.replace(b, 4, "\t");
-			}else{
-				break;
+			// convert spaces to tabs
+			for (int b = 0; b < convert.size(); b++){
+				if (convert.substr(b, 4) == "    "){
+					convert.replace(b, 4, "\t");
+				}else{
+					break;
+				}
 			}
+
+			file << convert << endl;
 		}
-
-		file << convert << endl;
-
+	
+		headerMessage.message = "File saved";
+		headerMessage.draw();
+	
+	}else{
+		headerMessage.message = "Error saving file";
+		headerMessage.styling = "\u001b[2m\u001b[38;5;124m";
+		headerMessage.draw();
 	}
 
 	file.close();
 
-	headerMessage.message = "File saved";
-	headerMessage.styling = "";
-	headerMessage.draw();
 }
 
 void saveAsFile(){
