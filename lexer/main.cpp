@@ -8,6 +8,8 @@ using namespace std;
 
 bool publicCommentMode = false;
 
+extern string currentfile;
+
 string replace_all(string text, string replace, string replacer){
 	for (int i = 0; i < text.size(); i++){
 		if (text.substr(i, replace.size()) == replace){
@@ -30,6 +32,24 @@ int find_str(string text, string finding){
 	return results;
 }
 
+vector<string> split(string text, string splitchar){
+	vector<string> returnVector;
+	string currentword;
+	
+	for (int i = 0; i < text.size(); i++){
+		if (text.substr(i, splitchar.size()) == splitchar){
+			currentword += text[i];
+			returnVector.push_back(currentword);
+			currentword = "";
+		}else{
+			currentword += text[i];
+		}
+	}
+	
+	returnVector.push_back(currentword);
+	return returnVector;
+}
+
 // add support for lexer file later on //
 string syntaxLine(string line){
 	string text = line;
@@ -39,9 +59,26 @@ string syntaxLine(string line){
 	bool tagMode = false;
 	bool charMode = false;
 
-	vector<string> statements = {"if", "else", "return", "for", "while", "elif"};
-	vector<string> variables = {"bool", "string", "int", "void", "class", "def"};
+	vector<string> statements = {"if", "else", "return", "for", "while", "elif", "then", "end"};
+	vector<string> variables = {"bool", "string", "int", "void", "class", "def", "function"};
 	vector<string> functions = {"extern", "include", "vector", "from", "import"};
+	vector<vector<string>> comments = {
+		{"lua", "--"},
+		{"cpp", "//"},
+		{"py", "#"},
+		{"html", "<!--"}
+	};
+	
+	string commentString = "//"; // default to '//' if language not found
+
+	// get comment mode //
+	string fileExt = currentfile.substr(currentfile.find_last_of(".") + 1);
+	
+	for (int i = 0; i < comments.size(); i++){
+		if (comments[i][0] == fileExt){
+			commentString = comments[i][1];
+		}
+	}
 
 	for (int i = 0; i < text.size(); i ++){
 		if (commentMode == true){
@@ -160,9 +197,10 @@ string syntaxLine(string line){
 				charMode = true;
 			}
 
-			if (text.substr(i, 2) == "//"){
-				string replacer = "\u001b[38;5;242m\u001b[3m//";
-				text.replace(i, 2, replacer);
+			if (text.substr(i, commentString.size()) == commentString){
+				string replacer = "\u001b[38;5;242m\u001b[3m";
+				replacer += commentString;
+				text.replace(i, commentString.size(), replacer);
 				i += replacer.size();
 				commentMode = true;
 			}
