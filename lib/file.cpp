@@ -11,6 +11,10 @@ extern vector<string> viewport;
 extern string currentfile;
 extern bool hasEdited;
 
+extern vector<vector<string>> openFiles;
+extern vector<vector<string>> fileMemory;
+extern int fileIndex;
+
 extern HeaderDrop headerMessage;
 
 void loadFile(string filepath){
@@ -45,10 +49,110 @@ void loadFile(string filepath){
 	updateViewport();
 }
 
+void createFileMemory(string filename){
+	openFiles.push_back({filename, "0", "1", "0", "1"});
+	fileMemory.push_back({filename, " header space ", " ", " "});
+}
+
+void loadFileFromMemory(string filename){
+	string currentfile = filename;
+	hasEdited = false;
+	
+	// search for file in index //
+	int foundIndex = 0;
+	
+	for (int i = 0; i < fileMemory.size(); i++){
+		if (fileMemory[i][0] == filename){
+			foundIndex = i;
+			break;
+		}
+	}
+	
+	// clear viewport, raw, ect... //
+	lines.clear();
+	raw.clear();
+	viewport.clear();
+	rawViewport.clear();
+	
+	// load file into raw and lines //
+	for (int i = 1; i < fileMemory[foundIndex].size(); i++){
+		raw.push_back(fileMemory[foundIndex][i]);
+		lines.push_back(syntaxLine(fileMemory[foundIndex][i]));
+	}
+
+	// load cursor position //
+	for (int i = 0; i < openFiles.size(); i++){
+		if (openFiles[i][0] == currentfile){
+			curx = stoi(openFiles[i][1]);
+			cury = stoi(openFiles[i][2]);
+			index = stoi(openFiles[i][3]);
+			
+			if (openFiles[i][4] == "1"){
+				hasEdited = true;
+			}else{
+				hasEdited = false;
+			}
+		}
+	}
+	
+//  updateViewport();
+}
+
+void moveFileIntoMemory(){
+	// check if file is in memory //
+	bool fileFound = false;
+	int foundIndex = 0;
+	
+	for (int i = 0; i < openFiles.size(); i++){
+		if (openFiles[i][0] == currentfile){
+			fileFound = true;
+			foundIndex = i;
+			break;
+		}
+	}
+	
+	// edit file index vector //
+	if (fileFound == false){
+		openFiles.push_back({currentfile, "0", "1", "0", "0"});
+		fileMemory.push_back({currentfile});
+		
+		for (int i = 0; i < raw.size(); i++){
+			fileMemory[fileMemory.size() - 1].push_back(raw[i]);
+		}
+	}else{
+		openFiles[foundIndex][1] = to_string(curx);
+		openFiles[foundIndex][2] = to_string(cury);
+		openFiles[foundIndex][3] = to_string(index);
+		openFiles[foundIndex][4] = to_string(hasEdited);
+	
+		int foundIndex = 0;
+	
+		// search for file in memory //
+		for (int i = 0; i < fileMemory.size(); i++){
+			if (fileMemory[i][0] == currentfile){
+				foundIndex = i;
+				break;
+			}
+		}
+		
+		// push file into memory //
+		fileMemory[foundIndex].clear();
+		fileMemory[foundIndex].push_back(currentfile);
+		for (int i = 0; i < raw.size(); i++){
+			fileMemory[foundIndex].push_back(raw[i]);
+		}
+	}
+}
+
 void openFile(){
 	system("setterm -cursor on");
 	setCursorPosition(0,0);
 	clear();
+
+	// clear file memory //
+	fileMemory.clear();
+	openFiles.clear();
+	fileIndex = 0;
 
 	string input = "";
 	cout << "Open file >> ";
@@ -64,6 +168,8 @@ void openFile(){
 		curx = 0; // reset cursor
 		cury = 1;
 
+		moveFileIntoMemory();
+
 		clear();
 		updateViewport();
 		drawScreen();
@@ -77,10 +183,61 @@ void openFile(){
 		updateCursor();
 
 		headerMessage.message = "File does not exist";
-		headerMessage.styling = "\u001b[2m\u001b[38;5;124m";
+		headerMessage.styling = "\u001b[38;5;124m";
 		headerMessage.draw();
 	}
 
+	system("setterm -cursor off");
+}
+
+void openFileNewBuffer(){
+	clear();
+	resetColor();
+	system("setterm -cursor on");
+	setCursorPosition(0, 0);
+
+	string input = "";
+	cout << "Open file >> ";
+	getline(cin, input);
+	
+	if (input != ""){
+		ifstream file(input);
+	
+		if (file.good()){
+			// check if file is already open //
+			OptionDialog overwrite;
+			for (int i = 0; i < openFiles.size(); i++){
+				if (openFiles[i][0] == input){
+					system("setterm -cursor off");
+				
+					overwrite.message = "This file in already open\\Would you like to overwrite it?";
+					overwrite.items = {"Yes", "No", "Cancel"};
+					overwrite.height = 4;
+					overwrite.width = 33;
+					overwrite.centerText = true;
+					overwrite.draw();
+				}
+			}
+			
+			if (overwrite.selected == 0){
+				index = 0;
+				curx = 0;
+				cury = 1;
+		
+				moveFileIntoMemory();
+				currentfile = input;
+				fileIndex = openFiles.size();
+				loadFile(input);
+				moveFileIntoMemory();
+			}
+		
+		}else{
+			headerMessage.message = "Error opening file";
+			headerMessage.styling = "\u001b[38;5;124m";
+			headerMessage.draw();
+		}
+	}
+	
 	system("setterm -cursor off");
 }
 
@@ -104,13 +261,14 @@ void saveFile(){
 
 			file << convert << endl;
 		}
-	
+
+		headerMessage.styling = "\u001b[0m";    
 		headerMessage.message = "File saved";
 		headerMessage.draw();
 	
 	}else{
 		headerMessage.message = "Error saving file";
-		headerMessage.styling = "\u001b[2m\u001b[38;5;124m";
+		headerMessage.styling = "\u001b[38;5;124m";
 		headerMessage.draw();
 	}
 
@@ -127,6 +285,9 @@ void saveAsFile(){
 	getline(cin, input);
 
 	currentfile = input;
+
+	// move new file into memory //
+	moveFileIntoMemory();
 
 	// redraw screen //
 	system("setterm -cursor off");

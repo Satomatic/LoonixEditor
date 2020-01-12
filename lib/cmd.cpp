@@ -185,7 +185,6 @@ string fillX(string text){
 }
 
 
-// getch shat //
 static struct termios old, current;
 
 void initTermios(int echo)

@@ -285,7 +285,7 @@ class OptionDialog{
 		
 		curPos -= (diff / 2);
 		
-		setCursorPosition(curPos, messageContainer.posy + 3);
+		setCursorPosition(curPos, messageContainer.posy + messageContainer.height);
 		
 		for (int i = 0; i < items.size(); i++){
 			if (i == selected){

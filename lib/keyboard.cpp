@@ -34,6 +34,11 @@ string getInput(){
 				absolute = "CTRL-RightArrow";
 			}else if (c == 59 && d == 53 && e == 68){
 				absolute = "CTRL-LeftArrow";
+			
+			}else if (c == 59 && d == 55 && e == 67){
+				absolute = "CTRL-ALT-RightArrow";
+			}else if (c == 59 && d == 55 && e == 68){
+				absolute = "CTRL-ALT-LeftArrow";
 			}
 		}else if (a == 'O' && b == 'P'){
 			absolute = "F1";
@@ -90,6 +95,8 @@ string getInput(){
 			absolute = "CTRL?";
 		}else if (key == 31){
 			absolute = "CTRL/";
+		}else if (key == 16){
+			absolute = "CTRLP";
 		}else{
 			absolute = key;
 		}

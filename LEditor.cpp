@@ -17,10 +17,20 @@
 using namespace std;
 
 // global variables //
+
+// current file vectors //
 vector <string> raw;
 vector <string> lines;
 vector <string> viewport;
 vector <string> rawViewport;
+
+// multi file vectors //
+vector <vector<string>> openFiles = {}; // {"filename", "curx", "cury", "index", "has saved (0/1)"}
+vector <vector<string>> fileMemory = {};
+
+bool multiBuffer = false;
+
+int fileIndex = 0;
 
 int curx = 0;
 int cury = 1;
@@ -63,14 +73,17 @@ int main(int argc, char** argv){
 	if (argc == 2){
 		if (FileExists(argv[1]) == true){
 			loadFile(argv[1]);
+			moveFileIntoMemory();
 			drawScreen();
 			drawHeader();
 			updateCursor();
 		}else{
 			newFile();
+			moveFileIntoMemory();
 		}
 	}else{
 		newFile();
+		moveFileIntoMemory();
 	}
 
 	// Welcome Message //
@@ -350,6 +363,17 @@ int main(int argc, char** argv){
 			hasEdited = true;
 
 		}else if (key == "CTRLX"){
+			// search for file in memory //
+			int foundIndex;
+			
+			for (int i = 0; i < fileMemory.size(); i++){
+				if (fileMemory[i][0] == currentfile){
+					foundIndex = i;
+				}
+			}
+			
+			bool close = false;
+			
 			if (hasEdited == true){
 				OptionDialog save;
 				save.message = "Save changes?";
@@ -359,18 +383,62 @@ int main(int argc, char** argv){
 				
 				if (save.selected == 0){
 					saveFile();
-					break;
+					close = true;
 				
 				}else if (save.selected == 1){
-					break;
+					close = true;
 				}
 			
 			}else{
-				break;
+				close = true;
+			}
+			
+			// close file //
+			if (close == true){
+				if (openFiles.size() == 1){
+					break;
+				}else{
+					fileMemory.erase(fileMemory.begin() + foundIndex);
+					
+					// search in open files //
+					for (int i = 0; i < openFiles.size(); i++){
+						if (openFiles[i][0] == currentfile){
+							openFiles.erase(openFiles.begin() + i);
+							break;
+						}
+					}
+					
+					if (fileIndex != 0){
+						fileIndex --;
+					}
+					
+					loadFileFromMemory(openFiles[fileIndex][0]);
+					
+					currentfile = openFiles[fileIndex][0];
+					curx = stoi(openFiles[fileIndex][1]);
+					cury = stoi(openFiles[fileIndex][2]);
+					index = stoi(openFiles[fileIndex][3]);
+					
+					if (openFiles[fileIndex][4] == "1"){
+						hasEdited = true;
+					}else{
+						hasEdited = false;
+					}
+					
+					clear();
+					updateViewport();
+					newRefresh();
+					updateCursor();
+					drawHeader();
+				}
 			}
 			
 		}else if (key == "CTRLS"){
 			if (currentfile == "" || currentfile == "newfile"){
+				// remove the old file from memory //
+				fileMemory.erase(fileMemory.begin() + fileIndex);
+				openFiles.erase(openFiles.begin() + fileIndex);
+				
 				saveAsFile();
 			}else{
 				saveFile();
@@ -379,57 +447,39 @@ int main(int argc, char** argv){
 		}else if (key == "CTRLA"){
 			saveAsFile();
 
-		}else if (key == "CTRLO"){
-			if (hasEdited == true){
-				OptionDialog save;
-				save.message = "Save changes?";
-				save.items = {"Yes", "No", "Cancel"};
-				save.centerText = true;
-				save.draw();
-				
-				if (save.selected == 0){
-					saveFile();
-					openFile();
-				
-				}else if (save.selected == 1){
-					openFile();
-				}
+			fileIndex = openFiles.size() - 1;
+			updateHeader();
 
-				refresh();
-				updateCursor();
-				drawHeader();
-		
-			}else{
-				openFile();
-			}
+		}else if (key == "CTRLO"){
+			openFileNewBuffer();
+
+			newRefresh();
+			updateCursor();
+			drawHeader();
 			
 		}else if (key == "CTRLN"){
-			if (hasEdited == true){
-				OptionDialog save;
-				save.message = "Save changes?";
-				save.items = {"Yes", "No", "Cancel"};
-				save.centerText = true;
-				save.draw();
-				
-				if (save.selected == 0){
-					saveFile();
-					newFile();
-					
-				}else if (save.selected == 1){
-					newFile();
-				}
+			moveFileIntoMemory();
+			createFileMemory("newfile");     
+				   
+			fileIndex = openFiles.size() - 1;
+			currentfile = "newfile";
+			index = 0;
+			cury = 0;
+			curx = 0;
 			
-			}else{
-				newFile();
-			}
+			loadFileFromMemory("newfile");
+			
+			newRefresh();
+			updateCursor();
+			drawHeader();
 
-			
 		}else if (key == "CTRLH"){
+			// this is usually used for debuging //
 			
 		}else if (key == "CTRLU"){
 			jumpLine jump;
 			jump.draw();
-			
+
 		}else if (key == "CTRL/"){
 			if (raw[index + cury].size() >= 2){
 				if (raw[index + cury].substr(0, 2) == "  "){
@@ -595,6 +645,61 @@ int main(int argc, char** argv){
 		}else if (key == "CTRLT"){
 			Todo todoP;
 			todoP.draw();
+
+		}else if (key == "CTRL-ALT-RightArrow"){
+			if (openFiles.size() == 1){
+				headerMessage.message = "No other files open";
+				headerMessage.styling = "\u001b[38;5;124m";
+				headerMessage.draw();
+			}else{
+			
+				if (fileIndex == openFiles.size() - 1){
+					fileIndex = 0;
+				}else{
+					fileIndex ++;
+				}
+			
+				moveFileIntoMemory();
+			
+				loadFileFromMemory(openFiles[fileIndex][0]);
+				curx = stoi(openFiles[fileIndex][1]);
+				cury = stoi(openFiles[fileIndex][2]);
+				index = stoi(openFiles[fileIndex][3]);
+				updateCursor();
+		
+				currentfile = openFiles[fileIndex][0];
+			
+				setCursorPosition(0, 0);
+				clear();
+				updateViewport();
+				drawScreen();
+				drawHeader();
+				updateCursor();
+			}
+
+		}else if (key == "CTRL-ALT-LeftArrow"){
+			if (fileIndex == 0){
+				fileIndex = openFiles.size() - 1;
+			}else{
+				fileIndex --;
+			}
+			
+			moveFileIntoMemory();
+			
+			loadFileFromMemory(openFiles[fileIndex][0]);
+			curx = stoi(openFiles[fileIndex][1]);
+			cury = stoi(openFiles[fileIndex][2]);
+			index = stoi(openFiles[fileIndex][3]);
+			updateCursor();
+			
+			currentfile = openFiles[fileIndex][0];
+			
+			setCursorPosition(0, 0);
+			clear();
+			updateViewport();
+			drawScreen();
+			drawHeader();
+			updateCursor();
 
 		}else if (key == "TAB"){
 			string currentline = raw[index + cury];

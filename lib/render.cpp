@@ -19,6 +19,9 @@ extern vector<string> lines;
 extern vector<string> viewport;
 extern vector<string> rawViewport;
 
+extern vector<vector<string>> openFiles;
+extern int fileIndex;
+
 extern bool hasEdited;
 
 int unilen(string str) {
@@ -84,6 +87,15 @@ void drawHeader(){
 	headerdata = replace_all(headerdata, "Y", to_string(index + cury));
 	headerdata = replace_all(headerdata, "Z", currentfile);
 
+	if (openFiles.size() > 1){
+		string buffer = " (X/Y)";
+		
+		buffer = replace_all(buffer, "X", to_string(fileIndex + 1));
+		buffer = replace_all(buffer, "Y", to_string(openFiles.size()));
+		
+		headerdata += buffer;
+	}
+
 	if (hasEdited == true){
 		headerdata += " *";
 	}
@@ -103,6 +115,15 @@ void updateHeader(){
 	headerdata = replace_all(headerdata, "X", to_string(curx));
 	headerdata = replace_all(headerdata, "Y", to_string(index + cury));
 	headerdata = replace_all(headerdata, "Z", currentfile);
+
+	if (openFiles.size() > 1){
+		string buffer = " (X/Y)";
+		
+		buffer = replace_all(buffer, "X", to_string(fileIndex + 1));
+		buffer = replace_all(buffer, "Y", to_string(openFiles.size()));
+		
+		headerdata += buffer;
+	}
 
 	if (hasEdited == true){
 		headerdata += " *";
