@@ -1,7 +1,7 @@
 # LoonixEditor
 A mildly temperamental console-based text editor for linux.
 
-<img src="http://www.satomatic.space/projects/LoonixEditor/screen_4.png" width="41%">.
+<img src="http://www.satomatic.space/projects/LoonixEditor/screen_4.png" width="41%">
 
 ## How to use
 ### Key binds
@@ -9,14 +9,22 @@ A mildly temperamental console-based text editor for linux.
 **Ctrl + N** New file\
 **Ctrl + O** Open file\
 **Ctrl + S** Save file\
-**Ctrl + L** Line info\
+**Ctrl + A** Save as filename\
+**Ctrl + X** Close file
+\
+**Ctrl + Alt + RightArrow** Move to next file\
+**Ctrl + Alt + LeftArrow** Move to previous file\
+\
 **Ctrl + F** Find string\
-**Ctrl + R** Find and Replace\
-**Ctrl + K** Cut line\
-**Ctrl + T** Todo menu\
+**Ctrl + R** Find and replace\
 **Ctrl + U** Jump to line\
+**Ctrl + L** Line info\
+\
+**Ctrl + K** Cut line\
 **Ctrl + /** Comment line\
-**Ctrl + X** Close program
+**Ctrl + Alt + Up** Move line up\
+**Ctrl + Alt + Down** Move line down\
+\
 
 ## Build
 ### Windows
