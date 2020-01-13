@@ -24,7 +24,6 @@ A mildly temperamental console-based text editor for linux.
 **Ctrl + /** Comment line\
 **Ctrl + Alt + Up** Move line up\
 **Ctrl + Alt + Down** Move line down\
-\
 
 ## Build
 ### Windows
@@ -41,7 +40,8 @@ If you get any errors that references c++98 try the following command\
 *Loonix editor doesn't use any third-party libraries so it should be compatible with any modern c++ compilers.*
 
 ## Bugs
-LoonixEditor is always prone to bugs and crashing so if you encounter any please feel free to open a new issue and ill get round to looking at it.
+If you find any bug within LoonixEditor feel free to open a new issue and ill get round to looking at it,\
+please try to include a detailed description of the bug and how you got it to trigger.\
 
 ## Releases
 Semi-regular releases will be issued to github.\
