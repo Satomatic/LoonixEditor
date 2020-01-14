@@ -47,17 +47,6 @@ HeaderDrop headerMessage;
 
 string currentfile = "";
 
-Box infoBox(string title, string message){
-	Box MessageBox;
-	MessageBox.title = title;
-	MessageBox.width = message.size();
-	MessageBox.height = 1;
-	MessageBox.message = message;
-	MessageBox.center = true;
-
-	return MessageBox;
-}
-
 int main(int argc, char** argv){
 	// start up //
 	signal(SIGINT,SIG_IGN);
@@ -122,8 +111,6 @@ int main(int argc, char** argv){
 				if (cury == viewport.size() - 1){
 					updateCursor();
 					index ++;
-					//refresh();
-					//drawHeader();
 					newRefresh();
 
 					updateCursor();
@@ -389,6 +376,8 @@ int main(int argc, char** argv){
 					close = true;
 				}
 			
+				save.undraw();
+			
 			}else{
 				close = true;
 			}
@@ -469,7 +458,7 @@ int main(int argc, char** argv){
 			
 			loadFileFromMemory("newfile");
 			
-			newRefresh();
+			clear();
 			updateCursor();
 			drawHeader();
 

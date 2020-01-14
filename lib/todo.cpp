@@ -57,6 +57,7 @@ class Todo{
 			item = replace_all(item, "P", flagmessage[1].substr(search[i][0].size() + 1, flagmessage[1].size()));
 
 			TodoContainer.message += item;
+			TodoContainer.message += "\\";
 		}
 
 		TodoContainer.draw();
