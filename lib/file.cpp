@@ -191,14 +191,22 @@ void openFile(){
 }
 
 void openFileNewBuffer(){
-	clear();
 	resetColor();
-	system("setterm -cursor on");
 	setCursorPosition(0, 0);
 
 	string input = "";
-	cout << "Open file >> ";
-	getline(cin, input);
+
+	// create input box //
+	Input open;
+	open.title = "Open file";
+	open.prefix = "File > ";
+	open.maxx = 15;
+	open.center = true;
+	open.border = true;
+	open.init();
+	open.undraw();
+	
+	input = open.input;
 	
 	if (input != ""){
 		ifstream file(input);
@@ -277,27 +285,40 @@ void saveFile(){
 }
 
 void saveAsFile(){
-	system("setterm -cursor on");
 	setCursorPosition(0,0);
-	clear();
+
 	string input = "";
-	cout << "Save as >> ";
-	getline(cin, input);
 
-	currentfile = input;
+	Input save;
+	save.title = "Save as";
+	save.prefix = "File > ";
+	save.maxx = 15;
+	save.center = true;
+	save.border = true;
+	save.init();
+	save.undraw();
 
-	// move new file into memory //
-	moveFileIntoMemory();
+	input = save.input;
 
-	// redraw screen //
-	system("setterm -cursor off");
-	setCursorPosition(0,0);
-	clear();
-	drawScreen();
-	drawHeader();
-	updateCursor();
+	if (input != ""){
+		fileMemory.erase(fileMemory.begin() + fileIndex);
+		openFiles.erase(openFiles.begin() + fileIndex);
+		
+		currentfile = input;
 
-	saveFile();
+		// move new file into memory //
+		moveFileIntoMemory();
+
+		// redraw screen //
+		system("setterm -cursor off");
+		setCursorPosition(0,0);
+		clear();
+		drawScreen();
+		drawHeader();
+		updateCursor();
+
+		saveFile();
+	}
 }
 
 void newFile(){

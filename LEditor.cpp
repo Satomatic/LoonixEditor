@@ -40,8 +40,8 @@ int index = 0;
 
 int screenHeight;
 int screenWidth;
-
 bool hasEdited = false;
+
 
 HeaderDrop headerMessage;
 
@@ -424,10 +424,6 @@ int main(int argc, char** argv){
 			
 		}else if (key == "CTRLS"){
 			if (currentfile == "" || currentfile == "newfile"){
-				// remove the old file from memory //
-				fileMemory.erase(fileMemory.begin() + fileIndex);
-				openFiles.erase(openFiles.begin() + fileIndex);
-				
 				saveAsFile();
 			}else{
 				saveFile();
@@ -447,16 +443,41 @@ int main(int argc, char** argv){
 			drawHeader();
 			
 		}else if (key == "CTRLN"){
+			string filename = "newfile";
+			int count = 0;
+			bool cont = false;
+			
+			// auto increment file //
+			while (cont == false){
+				bool found = false;
+				for (int i = 0; i < fileMemory.size(); i++){
+					if (fileMemory[i][0] == filename){
+						found = true;
+						break;
+					}
+				}
+				
+				if (found == true){
+					count ++;
+					filename = "newfile";
+					filename += to_string(count);
+				}else{
+					setCursorPosition(60, 60);
+					cout << filename;
+					cont = true;
+				}
+			}
+			
 			moveFileIntoMemory();
-			createFileMemory("newfile");     
+			createFileMemory(filename);     
 				   
 			fileIndex = openFiles.size() - 1;
-			currentfile = "newfile";
+			currentfile = filename;
 			index = 0;
 			cury = 0;
 			curx = 0;
 			
-			loadFileFromMemory("newfile");
+			loadFileFromMemory(filename);
 			
 			clear();
 			updateCursor();
@@ -464,6 +485,21 @@ int main(int argc, char** argv){
 
 		}else if (key == "CTRLH"){
 			// this is usually used for debuging //
+			Input input;
+			input.x = 10;
+			input.y = 10;
+			input.border = true;
+			input.title = "Open file";
+			input.prefix = "Filename > ";
+			input.center = true;
+			input.init();
+			
+			setCursorPosition(60, 60);
+			cout << input.input;
+			
+			input.undraw();
+			
+			newRefresh();
 			
 		}else if (key == "CTRLU"){
 			jumpLine jump;
@@ -667,28 +703,34 @@ int main(int argc, char** argv){
 			}
 
 		}else if (key == "CTRL-ALT-LeftArrow"){
-			if (fileIndex == 0){
-				fileIndex = openFiles.size() - 1;
+			if (openFiles.size() == 1){
+				headerMessage.message = "No other files open";
+				headerMessage.styling = "\u001b[38;5;124m";
+				headerMessage.draw();
 			}else{
-				fileIndex --;
+				if (fileIndex == 0){
+					fileIndex = openFiles.size() - 1;
+				}else{
+					fileIndex --;
+				}
+
+				moveFileIntoMemory();
+
+				loadFileFromMemory(openFiles[fileIndex][0]);
+				curx = stoi(openFiles[fileIndex][1]);
+				cury = stoi(openFiles[fileIndex][2]);
+				index = stoi(openFiles[fileIndex][3]);
+				updateCursor();
+
+				currentfile = openFiles[fileIndex][0];
+
+				setCursorPosition(0, 0);
+				clear();
+				updateViewport();
+				drawScreen();
+				drawHeader();
+				updateCursor();
 			}
-			
-			moveFileIntoMemory();
-			
-			loadFileFromMemory(openFiles[fileIndex][0]);
-			curx = stoi(openFiles[fileIndex][1]);
-			cury = stoi(openFiles[fileIndex][2]);
-			index = stoi(openFiles[fileIndex][3]);
-			updateCursor();
-			
-			currentfile = openFiles[fileIndex][0];
-			
-			setCursorPosition(0, 0);
-			clear();
-			updateViewport();
-			drawScreen();
-			drawHeader();
-			updateCursor();
 
 		}else if (key == "TAB"){
 			string currentline = raw[index + cury];

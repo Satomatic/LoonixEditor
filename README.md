@@ -41,7 +41,7 @@ If you get any errors that references c++98 try the following command\
 
 ## Bugs
 If you find any bug within LoonixEditor feel free to open a new issue and ill get round to looking at it,\
-please try to include a detailed description of the bug and how you got it to trigger.\
+please try to include a detailed description of the bug and how you got it to trigger.
 
 ## Releases
 Semi-regular releases will be issued to github.\

@@ -140,6 +140,7 @@ void checkScreenSize(){
 	extern void drawScreen();
 	extern void updateCursor();
 	extern void updateViewport();
+	extern void newRefresh();
 
 	struct winsize size;
 	ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
@@ -147,9 +148,11 @@ void checkScreenSize(){
 	if (screenWidth != size.ws_col || screenHeight != size.ws_row){
 		updateScreenSize();
 		clear();
+		
 		updateViewport();
 		resetColor();
 		setCursorPosition(0,0);
+		
 		drawScreen();
 		updateCursor();
 		drawHeader();

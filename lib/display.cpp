@@ -312,4 +312,119 @@ class OptionDialog{
 	}
 };
 
+class Input{
+	public:
+		string input = "";
+		string placeholder = "";
+		int cursorpos = 0;
+		int cursorpre = 0;
+		
+		string background = "";
+		string foreground = "";
+	
+		int x = 0;
+		int y = 0;
+		int maxx = 10;
+		int scroll = 0;
+	
+		bool border = false;
+		bool showing = true;
+		bool center = false;
+		
+		string title = "";
+		string style = "";
 
+		string prefix = "";
+
+	void init(){
+		// center pos //
+		if (center == true){
+			int width = maxx + prefix.size() + 1;
+			int pos = int(screenWidth / 2) - int(width / 2) + 1;
+			x = pos;
+			
+			pos = int(screenHeight / 2);
+			y = pos;
+		}
+
+		// draw border //
+		if (border == true){
+			Box container;
+			container.posx = x - 1;
+			container.posy = y - 1;
+			container.width = maxx + prefix.size() + 1;
+			container.height = 1;
+
+			if (title != ""){
+				container.title = title;
+				container.escape = style;
+			}
+
+			container.draw();
+		}
+
+		update();
+		
+		while (showing){
+			// accept input //
+			string key = getInput();
+	
+			if (key == "RightArrow"){
+	
+			}else if (key == "LeftArrow"){
+				
+			}else if (key == "Backspace"){
+				input = input.substr(0, input.size() - 1);
+
+			}else if (key == "Return"){
+				showing = false;
+
+			}else if (key == "CTRLX"){
+				input = "";
+				showing = false;
+			
+			}else{
+				input += key;
+			}
+	
+			update();
+		}
+	}
+	
+	void update(){
+		// display input //
+		string displaytext;
+	
+		if (input.size() > maxx){
+			displaytext = input.substr(input.size() - maxx, maxx);
+			cursorpos = maxx;
+		}else{
+			displaytext = input;
+			cursorpos = input.size();
+		}
+	
+		setCursorPosition(x, y);
+		cout << "\u001b[0m" << prefix << background << foreground << displaytext << " ";
+
+		if (input.size() < maxx){
+			cout << " ";
+		}
+		
+		// draw cursor //
+		setCursorPosition(x + cursorpos + prefix.size(), y);
+		cout << "\u001b[107;30m ";
+	
+		cursorpre = cursorpos;
+	}
+	
+	void undraw(){
+		cout << "\u001b[0m";
+		
+		for (int cx = 0; cx < maxx + 3 + prefix.size(); cx++){
+			for (int cy = 0; cy < 3; cy++){
+				setCursorPosition(x + cx - 1, y + cy - 1);
+				cout << " ";
+			}
+		}
+	}
+};
