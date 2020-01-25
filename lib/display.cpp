@@ -333,8 +333,10 @@ class Input{
 		
 		string title = "";
 		string style = "";
-
+		string closeMessage = "";
 		string prefix = "";
+
+		vector <string> customClose;
 
 	void init(){
 		// center pos //
@@ -369,6 +371,14 @@ class Input{
 			// accept input //
 			string key = getInput();
 	
+			for (int i = 0; i < customClose.size(); i++){
+				if (key == customClose[i]){
+					input = closeMessage;
+					showing = false;
+					break;
+				}
+			}
+
 			if (key == "RightArrow"){
 	
 			}else if (key == "LeftArrow"){
@@ -380,11 +390,13 @@ class Input{
 				showing = false;
 
 			}else if (key == "CTRLX"){
-				input = "";
+				input = closeMessage;
 				showing = false;
 			
 			}else{
-				input += key;
+				if (key.size() == 1){
+					input += key;
+				}
 			}
 	
 			update();
@@ -416,7 +428,12 @@ class Input{
 	
 		cursorpre = cursorpos;
 	}
-	
+
+	void undrawCursor(){
+		setCursorPosition(x + cursorpos + prefix.size(), y);
+		cout << "\u001b[0m ";
+	}
+
 	void undraw(){
 		cout << "\u001b[0m";
 		

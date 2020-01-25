@@ -102,7 +102,7 @@ void drawHeader(){
 
 	headerdata += "   ";
 
-	cout << fillX(headerdata);
+	cout << fillX(headerdata) << "\u001b[0m";
 }
 
 void updateHeader(){
@@ -131,7 +131,7 @@ void updateHeader(){
 
 	headerdata += "   ";
 
-	cout << headerdata;
+	cout << headerdata << "\u001b[0m";
 }
 
 void drawScreen(){

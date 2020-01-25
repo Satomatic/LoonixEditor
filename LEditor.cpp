@@ -101,6 +101,14 @@ int main(int argc, char** argv){
 			}
 		}
 
+		if (WelcomeMessage.showing == true){
+			WelcomeMessage.undraw();
+			
+			newRefresh();
+			updateCursor;
+		}
+
+
 		if (key == "DownArrow"){
 			if (index + cury != raw.size() - 1){
 				string nextline = raw[index + cury + 1];
@@ -435,9 +443,10 @@ int main(int argc, char** argv){
 			fileIndex = openFiles.size() - 1;
 			updateHeader();
 
-		}else if (key == "CTRLO"){
+		}else if (key == "CTRLO"){            
 			openFileNewBuffer();
 
+			clear();
 			newRefresh();
 			updateCursor();
 			drawHeader();
@@ -485,22 +494,7 @@ int main(int argc, char** argv){
 
 		}else if (key == "CTRLH"){
 			// this is usually used for debuging //
-			Input input;
-			input.x = 10;
-			input.y = 10;
-			input.border = true;
-			input.title = "Open file";
-			input.prefix = "Filename > ";
-			input.center = true;
-			input.init();
-			
-			setCursorPosition(60, 60);
-			cout << input.input;
-			
-			input.undraw();
-			
-			newRefresh();
-			
+		
 		}else if (key == "CTRLU"){
 			jumpLine jump;
 			jump.draw();
@@ -625,16 +619,48 @@ int main(int argc, char** argv){
 			updateCursor();
 
 		}else if (key == "CTRLK"){
-			lines.erase(lines.begin() + index + cury);
-			raw.erase(raw.begin() + index + cury);
+			if (raw.size() - 1 != 1){
+				if (raw.size() - 1 == index + cury && cury == 1){ // end of file and at cury 1
+					if (index != 0){
+						lines.erase(lines.begin() + index + cury);
+						raw.erase(lines.begin() + index + cury);
+						
+						index --;
+						
+						refresh();
+						drawHeader();
+						updateCursor();
+					}
+					
+				}else if (raw.size() - 1 == index + cury){ // end of file and more than cury 1
+					lines.erase(lines.begin() + index + cury);
+					raw.erase(raw.begin() + index + cury);
+					
+					// this method of redrawing is really bad
+					// ill fix it soon
+					
+					cury --;
+					updateCursor();
+					clear();
+					refresh();
+					drawHeader();
+					updateCursor();
+				
+				}else{
+					lines.erase(lines.begin() + index + cury);
+					raw.erase(raw.begin() + index + cury);
 
-			if (raw[index + cury].size() < curx){
-				curx = raw[index + cury].size();
+					if (raw[index + cury].size() < curx){
+						curx = raw[index + cury].size();
+					}
+
+					refresh();
+					drawHeader();
+					updateCursor();
+				}
 			}
 
-			refresh();
-			drawHeader();
-			updateCursor();
+			hasEdited = true;
 
 		}else if (key == "CTRLL"){
 			string currentline = raw[index + cury];
@@ -664,8 +690,8 @@ int main(int argc, char** argv){
 			findP.draw();
 
 		}else if (key == "CTRLR"){
-			Replace replaceP;
-			replaceP.draw();
+			NewReplace replace;
+			replace.init();
 
 		}else if (key == "CTRLT"){
 			Todo todoP;
@@ -788,13 +814,6 @@ int main(int argc, char** argv){
 		}
 
 		checkScreenSize();
-
-		if (WelcomeMessage.showing == true){
-			WelcomeMessage.undraw();
-
-			drawFromPoint(0);
-			updateCursor();
-		}
 	}
 
 	setCursorPosition(0,0);

@@ -4,6 +4,7 @@
 
 using namespace std;
 
+extern HeaderDrop headerMessage;
 extern vector<string> lines;
 extern vector<string> raw;
 extern int curx;
@@ -183,3 +184,172 @@ class Replace{
 	}
 };
 
+class NewReplace{
+	public:
+		string replacer;
+		string replace;
+
+		int total = 0;
+		int done = 0;
+		int skip = 0;
+
+		vector<vector<string>> results;
+		
+		Box replaceContainer;
+
+	void init(){
+		replaceContainer.title = "Replace";
+		replaceContainer.center = true;
+		replaceContainer.width = 26;
+		replaceContainer.height = 3;
+		replaceContainer.draw();
+		
+		// get replace //
+		Input input;
+		input.prefix = "find: ";
+		input.maxx = 19;
+		input.x = replaceContainer.posx + 1;
+		input.y = replaceContainer.posy + 1;
+		input.init();
+		replace = input.input;
+		; // wait to undraw cursor
+		input.undrawCursor();
+		
+		// get replacer //
+		Input binput;
+		binput.prefix = "replace: ";
+		binput.maxx = 16;
+		binput.x = replaceContainer.posx + 1;
+		binput.y = replaceContainer.posy + 2;
+		binput.init();
+		replacer = binput.input;
+		; // wait to undraw cursor
+		binput.undrawCursor();
+	
+		// build results array //
+		for (int i = 1; i < raw.size(); i++){
+			for (int b = 0; b < raw[i].size(); b++){
+				if (raw[i].substr(b, replace.size()) == replace){
+					results.push_back({to_string(i), to_string(b)});
+				}
+			}
+		}
+	  
+		total = results.size();
+		  
+		// cycle through results //
+		for (int i = 0; i < results.size(); i++){
+			int xcoord = stoi(results[i][1]);
+			int ycoord = stoi(results[i][0]);
+			bool close = false;
+			
+			index = ycoord - 1;
+			cury = 1;
+			curx = xcoord;
+			
+			if (raw.size() - 1 < screenHeight - 1){
+				index = 0;
+				cury = ycoord;
+				curx = xcoord;
+			}else{
+				if (testViewport() < screenHeight - 1){
+					int difference = screenHeight - testViewport() - 1;
+					index -= difference;
+					cury += difference;
+				}
+			}
+			
+			newRefresh();
+			updateCursor();
+			
+			setCursorPosition(curx, cury);
+			cout << "\u001b[107;30m" << replace << "\u001b[0m";
+	  
+			replaceContainer.draw();
+			setCursorPosition(replaceContainer.posx + 1, replaceContainer.posy + 1);
+			cout << "find: " << replace;
+			setCursorPosition(replaceContainer.posx + 1, replaceContainer.posy + 2);
+			cout << "replace: " << replacer;
+			setCursorPosition(replaceContainer.posx + 1, replaceContainer.posy + 3);
+			cout << "replaced " << done << " / " << total - 1;
+
+			while (true){
+				string key = getInput();
+				
+				if (key == "Return"){
+					raw[ycoord] = raw[ycoord].replace(xcoord, replace.size(), replacer);
+					lines[ycoord] = syntaxLine(raw[ycoord]);
+
+					setCursorPosition(0, cury);
+					cout << lines[ycoord];
+					
+					if (done + 1 != results.size()){
+						int totaldifference = 0;
+						
+						for (int i = 0; i < results.size(); i++){
+							if (results[i][0] == results[done][0]){
+								if (stoi(results[i][1]) != xcoord){
+									int difference = 0;
+									
+									if (replacer.size() > replace.size()){
+										difference = replacer.size() - replace.size();
+									}else{
+										difference = replace.size() - replacer.size();
+									}
+									
+									int x = stoi(results[i][1]);
+									x += difference + totaldifference;
+									results[i][1] = to_string(x);
+								}
+							}
+						}
+					}
+
+					updateCursor();
+
+					if (done == results.size()){
+						break;
+					}
+					
+					while (true){
+						key = getInput();
+					
+						if (key == "Return"){
+							done += 1;
+							break;
+						}
+					}
+					
+					break;
+				
+				}else if (key == "RightArrow"){
+					setCursorPosition(60, 60);
+					cout << "skipped ";
+					skip += 1;
+					break;
+			
+				}else if (key == "CTRLX"){
+					close = true;
+					break;
+				}
+			}
+			
+			if (close == true){
+				break;
+			
+			}else if (done + skip == total){
+				break;
+			}
+		}
+		
+		replaceContainer.undraw();
+		newRefresh();
+		updateCursor();
+	
+		if (done + skip == total){
+			headerMessage.styling = "\u001b[0m";
+			headerMessage.message = "No more results";
+			headerMessage.draw();
+		}
+	}
+};
