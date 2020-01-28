@@ -323,8 +323,6 @@ class NewReplace{
 					break;
 				
 				}else if (key == "RightArrow"){
-					setCursorPosition(60, 60);
-					cout << "skipped ";
 					skip += 1;
 					break;
 			

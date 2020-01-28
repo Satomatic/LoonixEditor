@@ -28,8 +28,6 @@ vector <string> rawViewport;
 vector <vector<string>> openFiles = {}; // {"filename", "curx", "cury", "index", "has saved (0/1)"}
 vector <vector<string>> fileMemory = {};
 
-bool multiBuffer = false;
-
 int fileIndex = 0;
 
 int curx = 0;
@@ -40,8 +38,9 @@ int index = 0;
 
 int screenHeight;
 int screenWidth;
-bool hasEdited = false;
 
+bool hasEdited = false;
+bool insertMode = false;
 
 HeaderDrop headerMessage;
 
@@ -54,6 +53,8 @@ int main(int argc, char** argv){
 	system("setterm -cursor off");
 	system("stty -ixon");
 	clear();
+
+	//setCursorPosition(0, 1);
 
 	lines.push_back(" if you can see this, somethings gone wrong "); // reserve space for header
 
@@ -239,6 +240,15 @@ int main(int argc, char** argv){
 				cury = viewport.size() - 1;
 				updateCursor();
 			}
+
+		}else if (key == "Insert"){
+			if (insertMode == true){
+				insertMode = false;
+			}else{
+				insertMode = true;
+			}
+			
+			updateHeader();
 
 		}else if (key == "Backspace" && curx == 0 && cury != 1){ // At beginning of line
 			string currentline = raw[index + cury];
@@ -488,6 +498,7 @@ int main(int argc, char** argv){
 			
 			loadFileFromMemory(filename);
 			
+			updateCursor();
 			clear();
 			updateCursor();
 			drawHeader();
@@ -678,9 +689,8 @@ int main(int argc, char** argv){
 
 		}else if (key == "F1"){
 			helpMenu help;
-			help.draw();
+			help.init();
 
-			clearFromPoint(0);
 			drawFromPoint(0);
 			drawHeader();
 			updateCursor();
@@ -796,9 +806,17 @@ int main(int argc, char** argv){
 				if (curx == currentline.size()){
 					newline = currentline + key;
 				}else{
-					vector<string> linesplit = splitIndex(currentline, curx);
-					newline = linesplit[0] + key + linesplit[1];
+					if (insertMode == true){
+						vector<string> linesplit = splitIndex(currentline, curx);
+						newline = linesplit[0];
+						newline += key;
+						newline += linesplit[1].substr(1, linesplit[1].size());
+					}else{
+						vector<string> linesplit = splitIndex(currentline, curx);
+						newline = linesplit[0] + key + linesplit[1];
+					}
 				}
+				
 				lines[index + cury] = syntaxLine(newline);
 				raw[index + cury] = newline;
 				updateViewport();

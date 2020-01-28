@@ -62,18 +62,41 @@ string syntaxLine(string line){
 	vector<string> statements = {"if", "else", "return", "for", "while", "elif", "then", "end"};
 	vector<string> variables = {"bool", "string", "int", "void", "class", "def", "function"};
 	vector<string> functions = {"extern", "include", "vector", "from", "import"};
+	vector<string> tags = {
+		"html", "body", "footer",
+		"title", "link", "head", "script",
+		"a", "p", "div", "img", "center",
+		"h1", "h2", "h3", "h4", "h5", "h6"
+	};
+
+	vector<string> tagLanguages = {
+		"html",
+		"php",
+		"htm",
+		"xhtml"
+	};
+
 	vector<vector<string>> comments = {
 		{"lua", "--"},
 		{"cpp", "//"},
 		{"py", "#"},
 		{"html", "<!--"}
 	};
-	
+
+	bool isTagged = false;
 	string commentString = "//"; // default to '//' if language not found
 
 	// get comment mode //
 	string fileExt = currentfile.substr(currentfile.find_last_of(".") + 1);
-	
+
+	// check if tag language //
+	for (int i = 0; i < tagLanguages.size(); i++){
+		if (fileExt == tagLanguages[i]){
+			isTagged = true;
+			break;
+		}
+	}
+
 	for (int i = 0; i < comments.size(); i++){
 		if (comments[i][0] == fileExt){
 			commentString = comments[i][1];
@@ -105,17 +128,12 @@ string syntaxLine(string line){
 				i += replacer.size();
 				stringMode = false;
 			}
-
-//      }else if (publicCommentMode == true){
-//          text.insert(0, "\u001b[38;5;242m\u001b[3m");
-			
-//          return text;
 		
 		}else{
 			for (int b = 0; b < statements.size(); b++){
 				string keyword = statements[b];
 
-				if (text.substr(i, keyword.size()) == keyword){
+				if (text.substr(i, keyword.size()) == keyword && isTagged == false){
 					string nextchar = text.substr(i + keyword.size(), 1);
 					string prevchar = "";
 
@@ -181,7 +199,37 @@ string syntaxLine(string line){
 				}
 			}
 
+			if (text.substr(i, 2) == "</"){
+				if (true){//isTagged == true){
+					for (int b = 0; b < tags.size(); b++){
+						if (text.substr(i + 2, tags[b].size()) == tags[b]){
+							string replacer = "</\u001b[38;5;32m";
+							replacer += text.substr(i + 2, tags[b].size());
+							replacer += "\u001b[0m";
+							
+							text.replace(i, tags[b].size() + 2, replacer);
+							i += replacer.size();
+							break;
+						}
+					}
+				}
+			}
+
 			if (text.substr(i, 1) == "<"){
+				if (true){//isTagged == true){
+					for (int b = 0; b < tags.size(); b++){
+						if (text.substr(i + 1, tags[b].size()) == tags[b]){
+							string replacer = "<\u001b[38;5;32m";
+							replacer += text.substr(i + 1, tags[b].size());
+							replacer += "\u001b[0m";
+							
+							text.replace(i, tags[b].size() + 1, replacer);
+							i += replacer.size();
+							//tagMode = true;
+						}
+					}
+				}
+
 				if (find_str(line, "#include") >= 1 || find_str(line, "vector<") >= 1 || find_str(line, "vector <") >= 1){
 					string replacer = "<\u001b[38;5;32m";
 					text.replace(i, 1, replacer);

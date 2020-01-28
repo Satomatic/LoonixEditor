@@ -6,45 +6,120 @@ using namespace std;
 
 class helpMenu{
 	public:
-		int width = 20;
+		int width = 40;
 		int height = 13;
-
-		vector<vector<string>> items = {
-			{"\u001b[0mKeys", ""},
-			{"^N", " ~ \u001b[3mNew"},
-			{"^O", " ~ \u001b[3mOpen"},
-			{"^S", " ~ \u001b[3mSave"},
-			{"^A", " ~ \u001b[3mSave as"},
-			{"^F", " ~ \u001b[3mFind"},
-			{"^F", " ~ \u001b[3mReplace"},
-			{"^K", " ~ \u001b[3mCut line"},
-			{"^T", " ~ \u001b[3mTodo list"},
-			{"^J", " ~ \u001b[3mJump line"},
-			{"^L", " ~ \u001b[3mLine info"},
-			{"^/", " ~ \u001b[3mComment line"},
-			{"^X", " ~ \u001b[3mExit / Close"}
+		int tabIndex = 0;
+		
+		vector<string> tabs = {
+			"file",
+			"edtior",
+			"about"
 		};
 
-		Box HelpMenu;
+		vector<vector<vector<string>>> data = {
+			// file menu //
+			{
+				{"Ctrl + N", "New file"},
+				{"Ctrl + O", "Open file"},
+				{"Ctrl + S", "Save file"},
+				{"Ctrl + A", "Save as file"},
+				{"Ctrl + X", "Close file"}
+			},
+			
+			// editor menu //
+			{
+				{"Ctrl + Alt + Right", "Next file"},
+				{"Ctrl + Alt + Left", "Previous file"},
+				{"Ctrl + F", "Find string"},
+				{"Ctrl + R", "Fine and Replace"},
+				{"Ctrl + U", "Jump line"},
+				{"Ctrl + L", "Line info"}
+			},
+			
+			// about menu //
+			{
+				{"Written by", "Satomatic (Brian Thomson)"}
+			}
+		};
 
-	void draw(){
-		HelpMenu.title = "Help";
-		HelpMenu.center = true;
-		HelpMenu.width = width;
-		HelpMenu.height = height;
+		Box HelpContainer;
+		
+	void init(){
+		HelpContainer.width = width;
+		HelpContainer.height = height;
+		HelpContainer.title = "Help";
+		HelpContainer.center = true;
+		HelpContainer.draw();
 
-		for (int i = 0; i < items.size(); i++){
-			string item = "\u001b[30;107m";
-			item += items[i][0];
-			item += "\u001b[0m\u001b[38;5;242m";
-			item +=  items[i][1] + " \\";
-			item += "\u001b[0m";
-			HelpMenu.message += item;
+		loadTabData();
+		updateTabs();
+
+		while (true){
+			string key = getInput();
+			
+			if (key == "LeftArrow"){
+				if (tabIndex == 0){
+					tabIndex = tabs.size() - 1;
+				}else{
+					tabIndex --;
+				}
+			
+			}else if (key == "RightArrow"){
+				if (tabIndex == tabs.size() - 1){
+					tabIndex = 0;
+				}else{
+					tabIndex ++;
+				}
+			
+			}else if (key == "CTRLX"){
+				break;
+			}
+		
+			loadTabData();
+			updateTabs();
 		}
-
-		HelpMenu.draw();
-
-		string key = getInput();
-		HelpMenu.undraw();
+		
+		HelpContainer.undraw();
+	}
+	
+	void updateTabs(){
+		int size = 3;
+		
+		for (int i = 0; i < tabs.size(); i++){
+			size += tabs[i].size();
+			
+			if (i != tabs.size()){
+				size += 3;
+			}
+		}
+		
+		setCursorPosition(HelpContainer.posx + 1 - (size / 2) + (width / 2), HelpContainer.posy + 1);
+		
+		cout << " | ";
+		
+		// draw tabs //
+		for (int i = 0; i < tabs.size(); i++){
+			if (i == tabIndex){
+				cout << "\u001b[107;30m" << tabs[i] << "\u001b[0m";
+			}else{
+				cout << tabs[i];
+			}
+			
+			if (i != tabs.size()){
+				cout << " | ";
+			}
+		}
+	}
+	
+	void loadTabData(){
+		HelpContainer.draw();
+		vector<vector<string>> tabdata = data[tabIndex];
+		
+		for (int i = 0; i < tabdata.size(); i++){
+			setCursorPosition(HelpContainer.posx + 1, HelpContainer.posy + 3 + i);
+			cout << "\u001b[1m" << tabdata[i][0] << "\u001b[0m";
+			setCursorPosition(HelpContainer.posx + 1 + width - tabdata[i][1].size(), HelpContainer.posy + 3 + i);
+			cout << tabdata[i][1];
+		}
 	}
 };

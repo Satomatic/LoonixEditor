@@ -48,10 +48,15 @@ string getInput(){
 				if (c == 126){
 					absolute = "PGUP";
 				}
-			}else if (54){
+			}else if (b == 54){
 				char c = getch();
 				if (c == 126){
 					absolute = "PGDN";
+				}
+			}else if (b == 50){
+				char c = getch();
+				if (c == 126){
+					absolute = "Insert";
 				}
 			}
 		}

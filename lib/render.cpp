@@ -23,6 +23,7 @@ extern vector<vector<string>> openFiles;
 extern int fileIndex;
 
 extern bool hasEdited;
+extern bool insertMode;
 
 int unilen(string str) {
 	int length = 0;
@@ -102,7 +103,17 @@ void drawHeader(){
 
 	headerdata += "   ";
 
-	cout << fillX(headerdata) << "\u001b[0m";
+	cout << fillX(headerdata);
+
+	if (insertMode == true){
+		setCursorPosition(screenWidth - 8, 0);
+		cout << "[insert]";
+	}else{
+		setCursorPosition(screenWidth - 8, 0);
+		cout << "        ";
+	}
+
+	cout << "\u001b[0m";
 }
 
 void updateHeader(){
@@ -131,7 +142,17 @@ void updateHeader(){
 
 	headerdata += "   ";
 
-	cout << headerdata << "\u001b[0m";
+	cout << headerdata;
+
+	if (insertMode == true){
+		setCursorPosition(screenWidth - 8, 0);
+		cout << "[insert]";
+	}else{
+		setCursorPosition(screenWidth - 8, 0);
+		cout << "        ";
+	}
+
+	cout << "\u001b[0m";
 }
 
 void drawScreen(){
@@ -168,8 +189,8 @@ void updateCursor(){
 	setCursorPosition(0, prey);
 	cout << previousChar << " ";
 
-	cout << "\u001b[30m\u001b[107m";
 	// draw new cursor //
+	cout << "\u001b[30m\u001b[107m";
 	setCursorPosition(curx, cury);
 	cout << cursorChar;
 
