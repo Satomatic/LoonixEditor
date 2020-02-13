@@ -94,8 +94,6 @@ void loadFileFromMemory(string filename){
 			}
 		}
 	}
-	
-//  updateViewport();
 }
 
 void moveFileIntoMemory(){
@@ -138,6 +136,7 @@ void moveFileIntoMemory(){
 		// push file into memory //
 		fileMemory[foundIndex].clear();
 		fileMemory[foundIndex].push_back(currentfile);
+
 		for (int i = 0; i < raw.size(); i++){
 			fileMemory[foundIndex].push_back(raw[i]);
 		}
@@ -190,7 +189,7 @@ void openFile(){
 	system("setterm -cursor off");
 }
 
-void openFileNewBuffer(){
+int openFileNewBuffer(){
 	resetColor();
 	setCursorPosition(0, 0);
 
@@ -207,7 +206,7 @@ void openFileNewBuffer(){
 	open.undraw();
 	
 	input = open.input;
-	
+
 	if (input != ""){
 		ifstream file(input);
 	
@@ -216,8 +215,6 @@ void openFileNewBuffer(){
 			OptionDialog overwrite;
 			for (int i = 0; i < openFiles.size(); i++){
 				if (openFiles[i][0] == input){
-					system("setterm -cursor off");
-				
 					overwrite.message = "This file in already open\\Would you like to overwrite it?";
 					overwrite.items = {"Yes", "No", "Cancel"};
 					overwrite.height = 4;
@@ -228,25 +225,26 @@ void openFileNewBuffer(){
 			}
 			
 			if (overwrite.selected == 0){
+				moveFileIntoMemory();
+		
 				index = 0;
 				curx = 0;
 				cury = 1;
 		
-				moveFileIntoMemory();
 				currentfile = input;
 				fileIndex = openFiles.size();
 				loadFile(input);
 				moveFileIntoMemory();
+
+				return 1;
 			}
-		
+
 		}else{
-			headerMessage.message = "Error opening file";
-			headerMessage.styling = "\u001b[38;5;124m";
-			headerMessage.draw();
+			return 0;
 		}
 	}
-	
-	system("setterm -cursor off");
+
+	return 2; // return 2 if file remains unopened //
 }
 
 void saveFile(){
@@ -347,166 +345,3 @@ void newFile(){
 	updateCursor();
 }
 
-class filemanager{
-	public:
-		int posx = 0;
-		int posy = 0;
-		int width = 10;
-		int height = 10;
-
-		string title = "";
-
-		vector<string> view;
-		vector<string> currentdir;
-		vector<string> currentsort;
-
-		int start = 0;
-		int index = 0;
-		int lastIndex = 0;
-
-		string selected = "";
-		string dir = ".";
-
-		Box FileManagerBox;
-
-		void draw(){
-			currentdir = DirView(".");
-
-			// draw box //
-			FileManagerBox.title = title;
-			FileManagerBox.width = width;
-			FileManagerBox.height = height;
-			FileManagerBox.posx = posx;
-			FileManagerBox.posy = posy;
-			FileManagerBox.center = true;
-			FileManagerBox.draw();
-
-			// display dir //
-			updateView();
-			updateList();
-			updateCursor();
-
-			while(true){
-				string key = getInput();
-
-				if (key == "DownArrow"){
-					if (start + index != currentdir.size() - 1){
-						if (start + index == height - 1){
-							// at bottom //
-							clearView();
-							start ++;
-							updateView();
-							updateList();
-							updateCursor();
-						}else{
-							index ++;
-							updateCursor();
-						}
-					}
-
-				}else if (key == "UpArrow"){
-					if (start + index > 0){
-						if (index == 0){
-							clearView();
-							start --;
-							updateView();
-							updateList();
-							updateCursor();
-						}else{
-							index --;
-							updateCursor();
-						}
-					}
-
-				}else if (key == "Return"){
-					string currentItem = currentsort[int(start + index)];
-					vector<string> itemsplit = split(currentItem, '|');
-
-					if (itemsplit[1] == "FILE"){
-						selected = dir + "/" + itemsplit[0];
-						break;
-					}else{
-						dir += "/";
-						dir += itemsplit[0];
-
-						clearView();
-						currentdir.clear();
-						currentdir = DirView(dir);
-						index = 0;
-						start = 0;
-						updateView();
-						updateList();
-						updateCursor();
-					}
-
-				}else if (key == "CTRLX"){
-					selected = "exit";
-					break;
-				}
-
-			}
-		}
-
-		void updateView(){
-			view.clear();
-			currentsort.clear();
-			// for directories //
-			for (int i = 0; i < currentdir.size(); i++){
-				if (i >= start && i < height){
-					vector<string> linesplit = split(currentdir[i], '|');
-					if (linesplit[1] == "DIR"){
-						view.push_back(linesplit[0]);
-						currentsort.push_back(linesplit[0] + "|" + linesplit[1]);
-					}
-				}
-			}
-
-			// for files //
-			for (int i = 0; i < currentdir.size(); i++){
-				if (i >= start && i < height){
-					vector<string> linesplit = split(currentdir[i], '|');
-					if (linesplit[1] == "FILE"){
-						view.push_back(linesplit[0]);
-						currentsort.push_back(linesplit[0] + "|" + linesplit[1]);
-					}
-				}
-			}
-
-		}
-
-		void clearView(){
-			resetColor();
-
-			// clear list //
-			for (int i = 0; i < view.size(); i++){
-				for (int b = 0; b < view[i].size(); b++){
-					setCursorPosition(FileManagerBox.posx + 1 + b, FileManagerBox.posy + 1 + i);
-					cout << " ";
-				}
-			}
-		}
-
-		void updateList(){
-			clearView();
-
-			// display list//
-			for (int i = 0; i < view.size(); i++){
-				setCursorPosition(FileManagerBox.posx + 1, FileManagerBox.posy + 1 + i);
-				cout << view[i];
-			}
-		}
-
-		void updateCursor(){
-			// overwrite previous line //
-			setCursorPosition(FileManagerBox.posx + 1, FileManagerBox.posy + 1 + lastIndex);
-			resetColor();
-			cout << view[lastIndex];
-
-			// write new cursor //
-			setCursorPosition(FileManagerBox.posx + 1, FileManagerBox.posy + 1 + index);
-			cout << "\u001b[30m\u001b[107m";
-			cout << view[index];
-
-			lastIndex = index;
-		}
-};

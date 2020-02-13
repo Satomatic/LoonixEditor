@@ -9,6 +9,20 @@
 
 using namespace std;
 
+int centerWidth(string text, int width){
+	int x = width / 2 - (text.size() / 2);
+	
+	return x;
+}
+
+void hideCursor(){
+	system("setterm -cursor off");
+}
+
+void showCursor(){
+	system("setterm -cursor on");
+}
+
 vector<string> split(string text, char letter){
 	vector<string> returnvector;
 	string current = "";

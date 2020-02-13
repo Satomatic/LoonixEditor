@@ -424,7 +424,7 @@ class Input{
 		
 		// draw cursor //
 		setCursorPosition(x + cursorpos + prefix.size(), y);
-		cout << "\u001b[107;30m ";
+		cout << "\u001b[107;30m \u001b[0m";
 	
 		cursorpre = cursorpos;
 	}

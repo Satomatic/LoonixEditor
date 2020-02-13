@@ -55,9 +55,9 @@ void updateViewport(){
 	rawViewport.clear();
 	for (int i = 0; i < lines.size(); i++){
 		if (i >= index && i <= index + screenHeight - 2){
-			if (unilen(raw[i]) > screenWidth){
-				viewport.push_back(lines[i].substr(0, screenWidth - 1));
-				rawViewport.push_back(raw[i].substr(0, screenWidth - 1));
+			if (unilen(raw[i]) >= screenWidth - 1){
+				viewport.push_back(lines[i].substr(0, screenWidth - 2) + "$");
+				rawViewport.push_back(raw[i].substr(0, screenWidth - 2) + "$");
 			}else{
 				viewport.push_back(lines[i]);
 				rawViewport.push_back(raw[i]);
@@ -196,6 +196,26 @@ void updateCursor(){
 
 	prey = cury;
 	prex = curx;
+}
+
+void updateLine(){
+	string oldLine = rawViewport[cury];
+	updateViewport();
+	string newLine = rawViewport[cury];
+	int difference;
+
+	if (oldLine.size() < newLine.size()){
+		difference = newLine.size() - oldLine.size();
+	}else{
+		difference = oldLine.size() - newLine.size();
+	}
+
+	setCursorPosition(0, cury);
+	cout << lines[index + cury];
+
+	for (int i = 0; i < difference; i++){
+		cout << " ";
+	}
 }
 
 void updateCursorBlank(){

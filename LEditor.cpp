@@ -16,8 +16,6 @@
 
 using namespace std;
 
-// global variables //
-
 // current file vectors //
 vector <string> raw;
 vector <string> lines;
@@ -50,11 +48,9 @@ int main(int argc, char** argv){
 	// start up //
 	signal(SIGINT,SIG_IGN);
 
-	system("setterm -cursor off");
+	hideCursor();
 	system("stty -ixon");
 	clear();
-
-	//setCursorPosition(0, 1);
 
 	lines.push_back(" if you can see this, somethings gone wrong "); // reserve space for header
 
@@ -250,6 +246,41 @@ int main(int argc, char** argv){
 			
 			updateHeader();
 
+		}else if (key == "Delete"){
+			string currentline = raw[index + cury];
+			string newline;
+			vector<string> linesplit;
+			
+			setCursorPosition(60, 60);
+			cout << currentline.size() << "  ";
+			
+			if (curx == currentline.size()){ // End of line
+				newline = currentline.substr(0, currentline.size() - 1);
+				curx --;
+			
+			}else if (currentline.size() == 1){
+				newline = " ";
+			
+			}else if (curx == 0){
+				newline = currentline.substr(1, currentline.size());
+			
+			}else{
+				linesplit = splitIndex(currentline, curx);
+				
+				newline = linesplit[0] + linesplit[1].substr(1, linesplit[1].size());
+			}
+			
+			// update raw and lines //
+			raw[index + cury] = newline;
+			lines[index + cury] = syntaxLine(newline);
+			
+			// update line //
+			updateViewport();
+			setCursorPosition(0, cury);
+			cout << lines[index + cury] << "  ";
+			
+			updateCursor();
+
 		}else if (key == "Backspace" && curx == 0 && cury != 1){ // At beginning of line
 			string currentline = raw[index + cury];
 			string previousline = raw[index + cury - 1];
@@ -441,7 +472,7 @@ int main(int argc, char** argv){
 			}
 			
 		}else if (key == "CTRLS"){
-			if (currentfile == "" || currentfile == "newfile"){
+			if (currentfile == "" || currentfile.substr(0, 7) == "newfile"){
 				saveAsFile();
 			}else{
 				saveFile();
@@ -453,13 +484,25 @@ int main(int argc, char** argv){
 			fileIndex = openFiles.size() - 1;
 			updateHeader();
 
-		}else if (key == "CTRLO"){            
-			openFileNewBuffer();
+		}else if (key == "CTRLO"){
+			moveFileIntoMemory();            
+			int opened = openFileNewBuffer();
 
 			clear();
 			newRefresh();
 			updateCursor();
 			drawHeader();
+
+			if (opened == 0){
+				headerMessage.styling = "\u001b[38;5;124m";
+				headerMessage.message = "File does not exist";
+				headerMessage.draw();
+				
+			}else if (opened == 1){
+				headerMessage.styling = "\u001b[0m";
+				headerMessage.message = "File opened";
+				headerMessage.draw();
+			}
 			
 		}else if (key == "CTRLN"){
 			string filename = "newfile";
@@ -704,8 +747,8 @@ int main(int argc, char** argv){
 			replace.init();
 
 		}else if (key == "CTRLT"){
-			Todo todoP;
-			todoP.draw();
+			Todo todo;
+			todo.init();
 
 		}else if (key == "CTRL-ALT-RightArrow"){
 			if (openFiles.size() == 1){
@@ -832,9 +875,42 @@ int main(int argc, char** argv){
 		}
 
 		checkScreenSize();
+
+		int value = 0;
+		string currentline = raw[index + cury];
+		bool comment = false;
+		
+		if (currentline[curx] == '('){
+			// check for comments
+			for (int i = 0; i < curx; i++){
+				if (currentline.substr(i, 2) == "//"){
+					comment = true;
+				}
+			}
+			
+			for (int i = curx; i < currentline.size(); i++){
+				if (currentline[i] == ')'){
+					value --;
+					
+				}else if (currentline[i] == '('){
+					value ++;
+				}
+				
+				if (value == 0){
+					setCursorPosition(i, cury);
+					if (comment == true){
+						cout << "\u001b[38;5;242m";
+					}else{
+						cout << "\u001b[97m";
+					}
+					cout << "\u001b[49m\u001b[4m)";
+					break;
+				}
+			}
+		}
 	}
 
 	setCursorPosition(0,0);
 	clear();
-	system("setterm -cursor on");
+	showCursor();
 }
