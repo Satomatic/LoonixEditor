@@ -58,6 +58,11 @@ string getInput(){
 				if (c == 126){
 					absolute = "Insert";
 				}
+			}else if (b == 51){
+				char c = getch();
+				if (c == 126){
+					absolute = "Delete";
+				}
 			}
 		}
 

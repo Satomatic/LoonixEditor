@@ -1,5 +1,5 @@
-#include <algorithm>
 #include <iostream>
+#include <algorithm>
 #include <vector>
 #include <string>
 #include <fstream>
@@ -9,6 +9,8 @@ using namespace std;
 bool publicCommentMode = false;
 
 extern string currentfile;
+extern int curx;
+extern int cury;
 
 string replace_all(string text, string replace, string replacer){
 	for (int i = 0; i < text.size(); i++){
@@ -141,7 +143,7 @@ string syntaxLine(string line){
 						prevchar = text.substr(i - 1, 1);
 					}
 
-					if (nextchar == " " || nextchar == "(" || nextchar == "" || nextchar == "{"){
+					if (nextchar == " " || nextchar == "(" || nextchar == "" || nextchar == "{" || nextchar == ";"){
 						if (prevchar == " " || prevchar == "" || i == 0 || prevchar == "}" || prevchar == ")"){
 							string replacer = "\u001b[38;5;163m" + keyword + "\u001b[0m";
 							text.replace(i, keyword.size(), replacer);
@@ -195,12 +197,13 @@ string syntaxLine(string line){
 				if (text.substr(i, 1) == numbers[b]){
 					string replacer = "\u001b[38;5;81m" + numbers[b] + "\u001b[0m";
 					text.replace(i, 1, replacer);
-					i += replacer.size();
+					i += replacer.size() - 1;
+					break;
 				}
 			}
 
 			if (text.substr(i, 2) == "</"){
-				if (true){//isTagged == true){
+				if (isTagged == true){
 					for (int b = 0; b < tags.size(); b++){
 						if (text.substr(i + 2, tags[b].size()) == tags[b]){
 							string replacer = "</\u001b[38;5;32m";
@@ -216,7 +219,7 @@ string syntaxLine(string line){
 			}
 
 			if (text.substr(i, 1) == "<"){
-				if (true){//isTagged == true){
+				if (isTagged == true){
 					for (int b = 0; b < tags.size(); b++){
 						if (text.substr(i + 1, tags[b].size()) == tags[b]){
 							string replacer = "<\u001b[38;5;32m";

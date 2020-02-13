@@ -226,6 +226,16 @@ class NewReplace{
 		; // wait to undraw cursor
 		binput.undrawCursor();
 	
+		if (input.input == "" && binput.input == ""){
+			headerMessage.styling = "\u001b[0m";
+			headerMessage.message = "No more results";
+			headerMessage.draw();
+		
+			replaceContainer.undraw();
+		
+			return;
+		}
+
 		// build results array //
 		for (int i = 1; i < raw.size(); i++){
 			for (int b = 0; b < raw[i].size(); b++){

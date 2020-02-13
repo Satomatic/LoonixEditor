@@ -33,7 +33,8 @@ class helpMenu{
 				{"Ctrl + F", "Find string"},
 				{"Ctrl + R", "Fine and Replace"},
 				{"Ctrl + U", "Jump line"},
-				{"Ctrl + L", "Line info"}
+				{"Ctrl + L", "Line info"},
+				{"Ctrl + T", "Todo list"}
 			},
 			
 			// about menu //
