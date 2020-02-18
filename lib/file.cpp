@@ -49,6 +49,15 @@ void loadFile(string filepath){
 	updateViewport();
 }
 
+void createFile(string filename){
+	currentfile = filename;
+	hasEdited = false;
+	
+	ofstream file(filename);
+	file << " " << endl << " " << endl;
+	file.close();
+}
+
 void createFileMemory(string filename){
 	openFiles.push_back({filename, "0", "1", "0", "1"});
 	fileMemory.push_back({filename, " header space ", " ", " "});

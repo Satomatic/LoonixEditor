@@ -161,14 +161,6 @@ void drawScreen(){
 	}
 }
 
-void showDebug(){
-	string debuginfo = to_string(raw.size());
-	debuginfo += "::";
-	debuginfo += to_string(lines.size());
-	drawBox(50, 20, 20, 10, "Debug info", debuginfo, true, true, "\u001b[4m\u001b[3m\u001b[38;5;213m");
-	setCursorPosition(0,0);
-}
-
 void updateCursor(){
 	int cursorAbsolute = index + cury;
 	string currentline = raw[cursorAbsolute];

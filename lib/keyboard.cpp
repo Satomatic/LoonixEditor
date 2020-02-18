@@ -35,6 +35,11 @@ string getInput(){
 			}else if (c == 59 && d == 53 && e == 68){
 				absolute = "CTRL-LeftArrow";
 			
+			}else if (c == 59 && d == 51 && e == 67){
+				absolute = "ALT-RightArrow";
+			}else if (c == 59 && d == 51 && e == 68){
+				absolute = "ALT-LeftArrow";
+			
 			}else if (c == 59 && d == 55 && e == 67){
 				absolute = "CTRL-ALT-RightArrow";
 			}else if (c == 59 && d == 55 && e == 68){
@@ -72,6 +77,8 @@ string getInput(){
 		string absolute = "";
 
 		if (key == 127){
+			absolute = "Backspace";
+		}else if (key == 8){
 			absolute = "Backspace";
 		}else if (key == 24){
 			absolute = "CTRLX";

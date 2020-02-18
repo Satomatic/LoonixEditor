@@ -62,7 +62,7 @@ string syntaxLine(string line){
 	bool charMode = false;
 
 	vector<string> statements = {"if", "else", "return", "for", "while", "elif", "then", "end"};
-	vector<string> variables = {"bool", "string", "int", "void", "class", "def", "function"};
+	vector<string> variables = {"bool", "string", "int", "void", "class", "def", "function", "char"};
 	vector<string> functions = {"extern", "include", "vector", "from", "import"};
 	vector<string> tags = {
 		"html", "body", "footer",
@@ -213,22 +213,22 @@ string syntaxLine(string line){
 							text.replace(i, tags[b].size() + 2, replacer);
 							i += replacer.size();
 							break;
-						}
-					}
-				}
+					   }
+				   }
+			   }
 			}
 
 			if (text.substr(i, 1) == "<"){
 				if (isTagged == true){
 					for (int b = 0; b < tags.size(); b++){
-						if (text.substr(i + 1, tags[b].size()) == tags[b]){
+						if (i + 1 + tags[b].size() <= text.size() && text.substr(i + 1, tags[b].size()) == tags[b]){
 							string replacer = "<\u001b[38;5;32m";
 							replacer += text.substr(i + 1, tags[b].size());
 							replacer += "\u001b[0m";
 							
 							text.replace(i, tags[b].size() + 1, replacer);
 							i += replacer.size();
-							//tagMode = true;
+							tagMode = true;
 						}
 					}
 				}

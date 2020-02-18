@@ -8,69 +8,6 @@ extern vector<string> viewport;
 extern int screenWidth;
 extern int screenHeight;
 
-void drawBox(int x, int y, int w, int h, string title = "", string msg="", bool vcenter=false, bool hcenter=false, string escapecode=""){
-	h = h - 2;
-
-	if (hcenter == true){
-		int pos = int(screenWidth / 2) - int(w / 2) + 1;
-		x = pos;
-	}
-
-	if (vcenter == true){
-		int pos = int(screenHeight / 2) - int(h / 2);
-		y = pos;
-	}
-
-	setCursorPosition(x,y);
-	resetColor();
-	string linetop = "";
-	for (int i = 0; i < w; i++){
-		linetop += "─";
-	}
-
-	cout << "┌" << linetop << "┐";
-
-	if (title != ""){
-		int titlepos = int(w / 2) - int(title.size() / 2) + x;
-		setCursorPosition(titlepos, y);
-		cout << "┤" << escapecode << title << "\u001b[0m├";
-	}
-
-	string linefill = "";
-	for (int i = 0; i < w; i++){
-		linefill += " ";
-	}
-
-	for (int i = 0; i < h; i++){
-		setCursorPosition(x, y + i + 1);
-		cout << "│" << linefill << "│";
-	}
-
-	string bottomline = "";
-	for (int i = 0; i < w; i++){
-		bottomline += "─";
-	}
-
-	setCursorPosition(x, y + h + 1);
-	cout << "└" << bottomline << "┘";
-
-	if (msg != ""){
-		int yoff = 0;
-		int xoff = 0;
-		for (int i = 0; i < msg.size(); i++){
-			setCursorPosition(x + 1 + xoff, y + yoff + 1);
-			cout << msg[i];
-
-			if (xoff == w){
-				xoff = 0;
-				yoff ++;
-			}else{
-				xoff ++;
-			}
-		}
-	}
-}
-
 class HeaderDrop{
 	public:
 		string message;
@@ -81,27 +18,32 @@ class HeaderDrop{
 		bool showing = false;
 
 	void draw(){
-		int pos;
+		showing = true;
+		count = 0;
+	
+		update();
+	}
 
+	void update(){
+		int pos;
+		
 		if (showing == true){
 			pos = int(screenWidth / 2) - int(previous.size() / 2) - 1;
 			setCursorPosition(pos, 1);
 			cout << "\u001b[0m";
+			
 			for (int i = 0; i < previous.size() + 4; i++){
 				setCursorPosition(pos + i, 1);
 				cout << " ";
 			}
 		}
-
+		
 		pos = int(screenWidth / 2) - int(message.size() / 2) - 1;
-
+		
 		setCursorPosition(pos, 1);
 		cout << "\u001b[0m[ " << styling << message << "\u001b[0m ]";
-
+		
 		previous = message;
-
-		showing = true;
-		count = 0;
 	}
 
 	void undraw(){
@@ -221,6 +163,9 @@ class Box{
 					cout << " ";
 				}
 			}
+
+			newRefresh();
+			drawHeader();
 
 			setCursorPosition(0,0);
 			showing = false;

@@ -30,6 +30,9 @@ class helpMenu{
 			{
 				{"Ctrl + Alt + Right", "Next file"},
 				{"Ctrl + Alt + Left", "Previous file"},
+				{"Alt + Right", "Next file"},
+				{"Alt + Left", "Previous file"},
+				{"", ""},
 				{"Ctrl + F", "Find string"},
 				{"Ctrl + R", "Fine and Replace"},
 				{"Ctrl + U", "Jump line"},

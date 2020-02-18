@@ -174,7 +174,7 @@ void checkScreenSize(){
 }
 
 int isAlpha(char letter){
-	string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 	bool found = false;
 	
 	for (int i = 0; i < chars.size(); i++){

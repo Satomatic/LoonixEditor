@@ -5,8 +5,8 @@
 #include <string>
 #include "lexer/main.cpp"
 #include "lib/keyboard.cpp"
-#include "lib/display.cpp"
 #include "lib/render.cpp"
+#include "lib/display.cpp"
 #include "lib/replace.cpp"
 #include "lib/help.cpp"
 #include "lib/file.cpp"
@@ -58,14 +58,20 @@ int main(int argc, char** argv){
 
 	if (argc == 2){
 		if (FileExists(argv[1]) == true){
+			// Open file //
 			loadFile(argv[1]);
 			moveFileIntoMemory();
 			drawScreen();
 			drawHeader();
 			updateCursor();
 		}else{
-			newFile();
+			// Create new file //
+			createFile(argv[1]);
+			loadFile(argv[1]);
 			moveFileIntoMemory();
+			drawScreen();
+			drawHeader();
+			updateCursor();
 		}
 	}else{
 		newFile();
@@ -86,17 +92,17 @@ int main(int argc, char** argv){
 	// program loop //
 	while (true){
 		updateHeader();
-
-		// keyboard stuff //
-		string key = getInput();
-
+		
 		if (headerMessage.showing == true){
 			if(headerMessage.count >= 5){
 				headerMessage.undraw();
 			}else{
 				headerMessage.count ++;
+				headerMessage.update();
 			}
 		}
+
+		string key = getInput();
 
 		if (WelcomeMessage.showing == true){
 			WelcomeMessage.undraw();
@@ -150,7 +156,7 @@ int main(int argc, char** argv){
 					if (index + cury != 1){
 						index --;
 						refresh();
-						drawHeader();
+						updateHeader();
 						curx = unilen(raw[index  + cury]);//.length();
 					}
 				}else{
@@ -180,13 +186,13 @@ int main(int argc, char** argv){
 						curx = 0;
 						index ++;
 						refresh();
-						drawHeader();
+						updateHeader();
 					}
 				}else{
 					curx = 0;
 					cury ++;
 					refresh();
-					drawHeader();
+					updateHeader();
 				}
 
 			}else{
@@ -213,7 +219,7 @@ int main(int argc, char** argv){
 
 			newRefresh();
 			updateCursor();
-			drawHeader();
+			updateHeader();
 
 		}else if (key == "PGDN"){
 			if (lines.size() >= screenHeight - 1){
@@ -230,7 +236,7 @@ int main(int argc, char** argv){
 
 				newRefresh();
 				updateCursor();
-				drawHeader();
+				updateHeader();
 			
 			}else{
 				cury = viewport.size() - 1;
@@ -251,35 +257,37 @@ int main(int argc, char** argv){
 			string newline;
 			vector<string> linesplit;
 			
-			setCursorPosition(60, 60);
-			cout << currentline.size() << "  ";
+			if (currentline != ""){
+				setCursorPosition(60, 60);
+				cout << currentline.size() << "  ";
 			
-			if (curx == currentline.size()){ // End of line
-				newline = currentline.substr(0, currentline.size() - 1);
-				curx --;
+				if (curx == currentline.size()){ // End of line
+					newline = currentline.substr(0, currentline.size() - 1);
+					curx --;
 			
-			}else if (currentline.size() == 1){
-				newline = " ";
+				}else if (currentline.size() == 1){
+					newline = " ";
 			
-			}else if (curx == 0){
-				newline = currentline.substr(1, currentline.size());
+				}else if (curx == 0){
+					newline = currentline.substr(1, currentline.size());
 			
-			}else{
-				linesplit = splitIndex(currentline, curx);
+				}else{
+					linesplit = splitIndex(currentline, curx);
 				
-				newline = linesplit[0] + linesplit[1].substr(1, linesplit[1].size());
+					newline = linesplit[0] + linesplit[1].substr(1, linesplit[1].size());
+				}
+			
+				// update raw and lines //
+				raw[index + cury] = newline;
+				lines[index + cury] = syntaxLine(newline);
+			
+				// update line //
+				updateViewport();
+				setCursorPosition(0, cury);
+				cout << lines[index + cury] << "  ";
+				
+				updateCursor();
 			}
-			
-			// update raw and lines //
-			raw[index + cury] = newline;
-			lines[index + cury] = syntaxLine(newline);
-			
-			// update line //
-			updateViewport();
-			setCursorPosition(0, cury);
-			cout << lines[index + cury] << "  ";
-			
-			updateCursor();
 
 		}else if (key == "Backspace" && curx == 0 && cury != 1){ // At beginning of line
 			string currentline = raw[index + cury];
@@ -291,7 +299,7 @@ int main(int argc, char** argv){
 			raw.erase(raw.begin() + index + cury);
 
 			refresh();
-			drawHeader();
+			updateHeader();
 
 			curx = previousline.size();
 			cury --;
@@ -393,7 +401,7 @@ int main(int argc, char** argv){
 			}
 
 			refresh();
-			drawHeader();
+			updateHeader();
 			updateCursor();
 
 			hasEdited = true;
@@ -546,9 +554,6 @@ int main(int argc, char** argv){
 			updateCursor();
 			drawHeader();
 
-		}else if (key == "CTRLH"){
-			// this is usually used for debuging //
-		
 		}else if (key == "CTRLU"){
 			jumpLine jump;
 			jump.draw();
@@ -750,7 +755,7 @@ int main(int argc, char** argv){
 			Todo todo;
 			todo.init();
 
-		}else if (key == "CTRL-ALT-RightArrow"){
+		}else if (key == "CTRL-ALT-RightArrow" || key == "ALT-RightArrow"){
 			if (openFiles.size() == 1){
 				headerMessage.message = "No other files open";
 				headerMessage.styling = "\u001b[38;5;124m";
@@ -781,7 +786,7 @@ int main(int argc, char** argv){
 				updateCursor();
 			}
 
-		}else if (key == "CTRL-ALT-LeftArrow"){
+		}else if (key == "CTRL-ALT-LeftArrow" || key == "ALT-LeftArrow"){
 			if (openFiles.size() == 1){
 				headerMessage.message = "No other files open";
 				headerMessage.styling = "\u001b[38;5;124m";
