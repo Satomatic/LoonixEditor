@@ -14,11 +14,15 @@ A mildly temperamental console-based text editor for linux.
 \
 **Ctrl + Alt + RightArrow** Move to next file\
 **Ctrl + Alt + LeftArrow** Move to previous file\
+**Alt + RightArrow** Move to next file\
+**Alt + LeftArrow** Move to previous file\
 \
 **Ctrl + F** Find string\
 **Ctrl + R** Find and replace\
 **Ctrl + U** Jump to line\
 **Ctrl + L** Line info\
+**Ctrl + T** Todo Manager\
+**Ctrl + D** Duplicate line\
 \
 **Ctrl + K** Cut line\
 **Ctrl + /** Comment line\
@@ -27,7 +31,9 @@ A mildly temperamental console-based text editor for linux.
 
 ## Build
 ### Windows
-LoonixEditor hasn't been test compiled on windows as of now.
+You can compile LoonixEditor on windows however you will need tools such as the linux subsystem\
+or git bash to compile and run it in.
+
 ### Linux
 With linux you can compile LoonixEditor using g++\
 <code>g++ LEditor.cpp</code>
