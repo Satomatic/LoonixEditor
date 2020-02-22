@@ -10,7 +10,7 @@ A mildly temperamental console-based text editor for linux.
 **Ctrl + O** Open file\
 **Ctrl + S** Save file\
 **Ctrl + A** Save as filename\
-**Ctrl + X** Close file
+**Ctrl + X** Close file\
 \
 **Ctrl + Alt + RightArrow** Move to next file\
 **Ctrl + Alt + LeftArrow** Move to previous file\

@@ -158,8 +158,8 @@ class Box{
 		void undraw(){
 			resetColor();
 			for (int i = 0; i < height + 2; i++){
+				setCursorPosition(posx, posy + i);
 				for (int b = 0; b < width + 2; b++){
-					setCursorPosition(posx + b, posy + i);
 					cout << " ";
 				}
 			}

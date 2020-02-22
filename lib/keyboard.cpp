@@ -114,6 +114,8 @@ string getInput(){
 			absolute = "CTRL/";
 		}else if (key == 16){
 			absolute = "CTRLP";
+		}else if (key == 4){
+			absolute = "CTRLD";
 		}else{
 			absolute = key;
 		}

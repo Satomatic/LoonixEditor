@@ -37,7 +37,8 @@ class helpMenu{
 				{"Ctrl + R", "Fine and Replace"},
 				{"Ctrl + U", "Jump line"},
 				{"Ctrl + L", "Line info"},
-				{"Ctrl + T", "Todo list"}
+				{"Ctrl + T", "Todo list"},
+				{"Ctrl + D", "Duplicate line"},
 			},
 			
 			// about menu //

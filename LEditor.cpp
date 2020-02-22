@@ -400,7 +400,7 @@ int main(int argc, char** argv){
 				cury ++;
 			}
 
-			refresh();
+			newRefresh();
 			updateHeader();
 			updateCursor();
 
@@ -686,8 +686,11 @@ int main(int argc, char** argv){
 						
 						index --;
 						
-						refresh();
-						drawHeader();
+						if (raw[index + cury].size() < curx){
+							curx = raw[index + cury].size();
+						}
+						
+						newRefresh();
 						updateCursor();
 					}
 					
@@ -695,15 +698,14 @@ int main(int argc, char** argv){
 					lines.erase(lines.begin() + index + cury);
 					raw.erase(raw.begin() + index + cury);
 					
-					// this method of redrawing is really bad
-					// ill fix it soon
-					
 					cury --;
+					
+					if (raw[index + cury].size() < curx){
+						curx = raw[index + cury].size();
+					}
+					
 					updateCursor();
-					clear();
-					refresh();
-					drawHeader();
-					updateCursor();
+					clearFromPoint(cury);
 				
 				}else{
 					lines.erase(lines.begin() + index + cury);
@@ -713,8 +715,7 @@ int main(int argc, char** argv){
 						curx = raw[index + cury].size();
 					}
 
-					refresh();
-					drawHeader();
+					newRefresh();
 					updateCursor();
 				}
 			}
@@ -754,6 +755,19 @@ int main(int argc, char** argv){
 		}else if (key == "CTRLT"){
 			Todo todo;
 			todo.init();
+
+		}else if (key == "CTRLD"){
+			raw.insert(raw.begin() + cury + index, raw[cury + index]);
+			lines.insert(lines.begin() + cury + index, syntaxLine(raw[cury + index]));
+			
+			if (cury == screenHeight - 2){
+				index ++;
+			}else{
+				cury ++;
+			}
+			
+			newRefresh();
+			updateCursor();
 
 		}else if (key == "CTRL-ALT-RightArrow" || key == "ALT-RightArrow"){
 			if (openFiles.size() == 1){
@@ -885,31 +899,41 @@ int main(int argc, char** argv){
 		string currentline = raw[index + cury];
 		bool comment = false;
 		
-		if (currentline[curx] == '('){
-			// check for comments
-			for (int i = 0; i < curx; i++){
-				if (currentline.substr(i, 2) == "//"){
-					comment = true;
-				}
-			}
-			
-			for (int i = curx; i < currentline.size(); i++){
-				if (currentline[i] == ')'){
-					value --;
-					
-				}else if (currentline[i] == '('){
-					value ++;
-				}
+		vector<char> brackets = {'(', '{', '[', '<'};
+		vector<char> closing = {')', '}', ']', '>'};
+		char bracket;
+		char closer;
+		
+		for (int i = 0; i < brackets.size(); i++){
+			if (currentline[curx] == brackets[i]){
+				bracket = brackets[i];
+				closer = closing[i];
 				
-				if (value == 0){
-					setCursorPosition(i, cury);
-					if (comment == true){
-						cout << "\u001b[38;5;242m";
-					}else{
-						cout << "\u001b[97m";
+				// check for comments
+				for (int i = 0; i < curx; i++){
+					if (currentline.substr(i, 2) == "//"){
+						comment = true;
 					}
-					cout << "\u001b[49m\u001b[4m)";
-					break;
+				}
+			
+				for (int i = curx; i < currentline.size(); i++){
+					if (currentline[i] == closer){
+						value --;
+						
+					}else if (currentline[i] == bracket){
+						value ++;
+					}
+					
+					if (value == 0){
+						setCursorPosition(i, cury);
+						if (comment == true){
+							cout << "\u001b[38;5;242m";
+						}else{
+							cout << "\u001b[97m";
+						}
+						cout << "\u001b[49m\u001b[4m" << closer;
+						break;
+					}
 				}
 			}
 		}

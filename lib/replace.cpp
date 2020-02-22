@@ -290,6 +290,8 @@ class NewReplace{
 					raw[ycoord] = raw[ycoord].replace(xcoord, replace.size(), replacer);
 					lines[ycoord] = syntaxLine(raw[ycoord]);
 
+					cout << cury + index << " " << screenHeight;
+
 					setCursorPosition(0, cury);
 					cout << lines[ycoord];
 					

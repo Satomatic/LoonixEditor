@@ -68,10 +68,16 @@ class Find{
 						cury = 1;
 						curx = csx;
 
-						if (testViewport() < screenHeight - 1){
-							int difference = screenHeight - testViewport() - 1;
-							index -= difference;
-							cury += difference;
+						if (raw.size() - 1 < screenHeight - 1){
+							index = 0;
+							cury = csy;
+							curx = csx;
+						}else{
+							if (testViewport() < screenHeight - 1){
+								int difference = screenHeight - testViewport() - 1;
+								index -= difference;
+								cury += difference;
+							}
 						}
 
 						current ++;
