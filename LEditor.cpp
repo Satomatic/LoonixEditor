@@ -34,6 +34,11 @@ int prex = 0;
 int prey = 1;
 int index = 0;
 
+int startx = 0;
+int starty = 0;
+int endx = 0;
+int endy = 0;
+
 int screenHeight;
 int screenWidth;
 
@@ -93,6 +98,7 @@ int main(int argc, char** argv){
 	while (true){
 		updateHeader();
 		
+		// header message logic //
 		if (headerMessage.showing == true){
 			if(headerMessage.count >= 5){
 				headerMessage.undraw();
@@ -104,6 +110,7 @@ int main(int argc, char** argv){
 
 		string key = getInput();
 
+		// welcome message logic //
 		if (WelcomeMessage.showing == true){
 			WelcomeMessage.undraw();
 			
@@ -111,6 +118,17 @@ int main(int argc, char** argv){
 			updateCursor;
 		}
 
+		// selection logic //
+		if (key == "RightArrow" && startx > 0 || endx > 0){
+			curx = endx - 1;
+		}
+		
+		if (key == "LeftArrow" || key == "RightArrow" || key == "UpArrow" || key == "DownArrow"){
+			startx = 0;
+			starty = 0;
+			endx = 0;
+			endy = 0;
+		}
 
 		if (key == "DownArrow"){
 			if (index + cury != raw.size() - 1){
@@ -678,7 +696,44 @@ int main(int argc, char** argv){
 			updateCursor();
 
 		}else if (key == "CTRLK"){
-			if (raw.size() - 1 != 1){
+			if (returnSelection() != ""){
+				int start = 0;
+				int end = 0;
+				
+				if (endx < startx){
+					start = endx;
+					end = startx;
+				}else{
+					start = startx;
+					end = endx;
+					curx -= (end - start - 1);
+				}
+				
+				// undraw line //
+				setCursorPosition(0, cury);
+				for (int i = 0; i < raw[cury + index].size(); i++){
+					cout << " ";
+				}
+						
+				// generate new line //
+				string newline = raw[cury + index].erase(start, (end - start));
+				raw[cury + index] = newline;
+				lines[cury + index] = syntaxLine(newline);
+				
+				startx = 0;
+				starty = 0;
+				endx = 0;
+				endy = 0;
+				
+				// draw new line //
+				setCursorPosition(0, cury);
+				cout << newline;
+				
+				updateViewport();    
+				
+				updateCursor();
+
+			}else if (raw.size() - 1 != 1){
 				if (raw.size() - 1 == index + cury && cury == 1){ // end of file and at cury 1
 					if (index != 0){
 						lines.erase(lines.begin() + index + cury);
@@ -705,7 +760,9 @@ int main(int argc, char** argv){
 					}
 					
 					updateCursor();
-					clearFromPoint(cury);
+					clearFromPoint(cury - 1);
+					newRefresh();
+					updateCursor();
 				
 				}else{
 					lines.erase(lines.begin() + index + cury);
@@ -715,6 +772,7 @@ int main(int argc, char** argv){
 						curx = raw[index + cury].size();
 					}
 
+					clearFromPoint(cury - 1);
 					newRefresh();
 					updateCursor();
 				}
@@ -746,10 +804,12 @@ int main(int argc, char** argv){
 
 		}else if (key == "CTRLF"){
 			Find findP;
+			findP.input = returnSelection();
 			findP.draw();
-
+		
 		}else if (key == "CTRLR"){
 			NewReplace replace;
+			replace.replace = returnSelection();
 			replace.init();
 
 		}else if (key == "CTRLT"){
@@ -829,6 +889,40 @@ int main(int argc, char** argv){
 				drawHeader();
 				updateCursor();
 			}
+
+		}else if (key == "SHIFT-RightArrow"){
+			// calculate variables //
+			if (startx == 0){
+				startx = curx;
+				starty = cury;
+				endx = curx + 1;
+				endy = cury;
+			}
+			
+			if (endx < raw[starty + index].size()){
+				endx ++;
+			}
+			
+			newRefresh();
+			drawSelection();
+		
+		}else if (key == "SHIFT-LeftArrow"){
+			if (startx == 0 || endx == 0){
+				if (curx > 0){
+					startx = curx;
+					starty = cury;
+					endx = curx - 1;
+					endy = cury;
+				}
+			}else{
+				if (endx > 0){
+					endx --;
+				}
+			}
+			
+			newRefresh();
+			
+			drawSelection();
 
 		}else if (key == "TAB"){
 			string currentline = raw[index + cury];

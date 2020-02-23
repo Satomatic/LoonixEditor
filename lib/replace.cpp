@@ -187,7 +187,7 @@ class Replace{
 class NewReplace{
 	public:
 		string replacer;
-		string replace;
+		string replace = "";
 
 		int total = 0;
 		int done = 0;
@@ -210,6 +210,7 @@ class NewReplace{
 		input.maxx = 19;
 		input.x = replaceContainer.posx + 1;
 		input.y = replaceContainer.posy + 1;
+		input.input = replace;
 		input.init();
 		replace = input.input;
 		; // wait to undraw cursor

@@ -44,7 +44,20 @@ string getInput(){
 				absolute = "CTRL-ALT-RightArrow";
 			}else if (c == 59 && d == 55 && e == 68){
 				absolute = "CTRL-ALT-LeftArrow";
+			
+			}else if (c == 59 && d == 50 && e == 65){
+				absolute = "SHIFT+UpArrow";
+			
+			}else if (c == 59 && d == 50 && e == 66){
+				absolute = "SHIFT-DownArrow";
+			
+			}else if (c == 59 && d == 50 && e == 67){
+				absolute = "SHIFT-RightArrow";
+			
+			}else if (c == 59 && d == 50 && e == 68){
+				absolute = "SHIFT-LeftArrow";
 			}
+		
 		}else if (a == 'O' && b == 'P'){
 			absolute = "F1";
 		}else{

@@ -13,6 +13,11 @@ extern int index; // acts as a start point for view port //
 extern int screenHeight; // used as the viewport size //
 extern int screenWidth;
 
+extern int startx;
+extern int starty;
+extern int endx;
+extern int endy;
+
 extern string currentfile;
 extern vector<string> raw;
 extern vector<string> lines;
@@ -316,6 +321,35 @@ void newRefresh(){
 			setCursorPosition(0, i);
 			cout << syntaxLine(newViewport[i]);
 		}
+	}
+}
+
+void drawSelection(){
+	int start;
+	int end;
+	
+	if (endx < startx){
+		start = endx;
+		end = startx;
+	}else{
+		start = startx;
+		end = endx;
+	}
+	
+	setCursorPosition(start, starty);
+	cout << "\u001b[107;30m" << raw[cury + index].substr(start, end - start) << "\u001b[0m";
+}
+
+string returnSelection(){
+	if (startx == 0 || endx == 0){
+		return "";
+	}
+	
+	if (endx < startx){
+		return raw[cury + index].substr(endx, startx - endx);
+	
+	}else{
+		return raw[cury + index].substr(startx, endx - startx);
 	}
 }
 
