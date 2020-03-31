@@ -199,11 +199,11 @@ class NewReplace{
 
 	void init(){
 		replaceContainer.title = "Replace";
-		replaceContainer.center = true;
-		replaceContainer.width = 26;
+		replaceContainer.width = screenWidth - 2;
 		replaceContainer.height = 3;
+		replaceContainer.posy = screenHeight - replaceContainer.height - 2;
 		replaceContainer.draw();
-		
+
 		// get replace //
 		Input input;
 		input.prefix = "find: ";
@@ -291,8 +291,6 @@ class NewReplace{
 					raw[ycoord] = raw[ycoord].replace(xcoord, replace.size(), replacer);
 					lines[ycoord] = syntaxLine(raw[ycoord]);
 
-					cout << cury + index << " " << screenHeight;
-
 					setCursorPosition(0, cury);
 					cout << lines[ycoord];
 					
@@ -330,6 +328,10 @@ class NewReplace{
 						if (key == "Return"){
 							done += 1;
 							break;
+							
+						}else if (key == "CTRLX"){
+							replaceContainer.undraw();
+							return;
 						}
 					}
 					

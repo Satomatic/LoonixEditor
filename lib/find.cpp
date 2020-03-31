@@ -23,11 +23,22 @@ class Find{
 		Box FindContainer;
 
 	void draw(){
-		FindContainer.width = 26;
+		FindContainer.width = screenWidth - 2;
 		FindContainer.height = 2;
-		FindContainer.center = true;
+		FindContainer.posx = 0;
+		FindContainer.posy = screenHeight - FindContainer.height - 2;
 		FindContainer.title = "Find";
 		FindContainer.draw();
+
+		// Size information //
+		if (screenWidth > 46){
+			setCursorPosition(FindContainer.width - 18, FindContainer.posy + 1);
+			cout << "\u001b[107;30mReturn\u001b[0m: Find / Next";
+			setCursorPosition(FindContainer.width - 18, FindContainer.posy + 2);
+			cout << "\u001b[107;30mCtrl X\u001b[0m:        Exit";
+
+			FindContainer.addSeperator(FindContainer.VERTICAL, 20);
+		}
 
 		updateInput();
 
@@ -128,8 +139,10 @@ class Find{
 	void updateInput(){
 		setCursorPosition(FindContainer.posx + 1, FindContainer.posy + 1);
 
-		if (input.size() > 19){
-			cout << "\u001b[1mfind: \u001b[0m" << input.substr(input.size() - 19, 19);
+		int max = FindContainer.width - 27;
+
+		if (input.size() > max){
+			cout << "\u001b[1mfind: \u001b[0m" << input.substr(input.size() - max, max);
 		}else{
 			cout << "\u001b[1mfind: \u001b[0m" << input;
 		}

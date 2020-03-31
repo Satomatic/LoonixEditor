@@ -83,6 +83,17 @@ class Box{
 		bool center = false;
 		bool centerText = false;
 
+		enum align{
+			LEFT,
+			RIGHT,
+			CENTER,
+			VERTICAL,
+			HORIZONTAL
+		};
+		
+		align titleAlign;
+		align footerAlign;
+
 		void draw(){
 			// center //
 			if (hcenter == true || center == true){
@@ -126,14 +137,36 @@ class Box{
 
 			// draw title //
 			if (title != ""){
-				int titlepos = int(width / 2) - int(title.size() / 2) + posx;
+				int titlepos;
+				
+				if (titleAlign == LEFT){
+					titlepos = posx + 1;
+				
+				}else if (titleAlign == RIGHT){
+					titlepos = posx + width - title.size() - 1;
+				
+				}else{
+					titlepos = int(width / 2) - int(title.size() / 2) + posx;
+				}
+			
 				setCursorPosition(titlepos, posy);
 				cout << "┤" << escape << title << "\u001b[0m├";
 			}
 
 			// draw footer //
 			if (footer != ""){
-				int titlepos = int(width / 2) - int(footer.size() / 2) + posx;
+				int titlepos;
+	
+				if (footerAlign == LEFT){
+					titlepos = posx + 1;
+				
+				}else if (footerAlign == RIGHT){
+					titlepos = posx + width - footer.size() - 1;
+				
+				}else{
+					titlepos = int(width / 2) - int(footer.size() / 2) + posx;
+				}
+
 				setCursorPosition(titlepos, posy + height + 1);
 				cout << "┤" << footerescape << footer << "\u001b[0m├";
 			}
@@ -169,6 +202,50 @@ class Box{
 
 			setCursorPosition(0,0);
 			showing = false;
+		}
+		
+		void addSeperator(align anchor, int position){
+			int pos;
+			
+			vector<string> chars = {
+				"┬",
+				"┴",
+				"│",
+				"┤",
+				"├",
+				"─",
+			};
+			
+			if (anchor == VERTICAL){
+				pos = posx + width - position;
+			
+				// draw connectors //
+				setCursorPosition(pos, posy);
+				cout << chars[0];
+				setCursorPosition(pos, posy + height + 2);
+				cout << chars[1];
+				
+				// draw filler //
+				for (int i = 0; i < height; i++){
+					setCursorPosition(pos, posy + i + 1);
+					cout << chars[2];
+				}
+			
+			}else if (anchor == HORIZONTAL){
+				pos = posy + position;
+				
+				// draw connectors //
+				setCursorPosition(posx, pos);
+				cout << chars[4];
+				setCursorPosition(posx + width + 2, pos);
+				cout << chars[3];
+				
+				// draw filler //
+				for (int i = 0; i < width; i++){
+					setCursorPosition(posx + i + 1, pos);
+					cout << chars[5];
+				}
+			}
 		}
 };
 
@@ -301,6 +378,7 @@ class Input{
 			container.posy = y - 1;
 			container.width = maxx + prefix.size() + 1;
 			container.height = 1;
+			container.titleAlign = container.CENTER;
 
 			if (title != ""){
 				container.title = title;

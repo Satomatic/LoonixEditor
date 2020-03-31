@@ -117,6 +117,22 @@ bool FileExists(string filename)
 	return exists;
 }
 
+bool DirectoryExists(const char * path){
+	if (path == NULL) return false;
+	
+	DIR *pDir;
+	bool exists = false;
+	
+	pDir = opendir(path);
+	
+	if (pDir != NULL){
+		exists = true;
+		(void) closedir (pDir);
+	}
+	
+	return exists;
+}
+
 void updateScreenSize(){
 	extern int screenHeight;
 	extern int screenWidth;

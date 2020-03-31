@@ -46,6 +46,11 @@ void loadFile(string filepath){
 	}
 	file.close();
 
+	if (lines.size() <= 1){
+		raw.push_back("");
+		lines.push_back("");
+	}
+
 	updateViewport();
 }
 

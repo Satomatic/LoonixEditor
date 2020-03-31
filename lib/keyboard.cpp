@@ -24,7 +24,13 @@ string getInput(){
 		}else if (b == 49){
 			char c = getch();
 			char d = getch();
-			char e = getch();
+			char e = ' ';
+			
+			if (c == 53 && d == 126){
+				absolute = "F5";
+			}else{
+				e = getch();
+			}
 
 			if (c == 59 && d == 53 && e == 65){
 				absolute = "CTRL-UpArrow";
@@ -60,6 +66,8 @@ string getInput(){
 		
 		}else if (a == 'O' && b == 'P'){
 			absolute = "F1";
+		}else if (a == 'O' && b == '5'){
+			absolute = "F5";
 		}else{
 			if (b == 53){
 				char c = getch();

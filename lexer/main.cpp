@@ -61,9 +61,9 @@ string syntaxLine(string line){
 	bool tagMode = false;
 	bool charMode = false;
 
-	vector<string> statements = {"if", "else", "return", "for", "while", "elif", "then", "end"};
-	vector<string> variables = {"bool", "string", "int", "void", "class", "def", "function", "char"};
-	vector<string> functions = {"extern", "include", "vector", "from", "import"};
+	vector<string> statements = {"if", "else", "return", "for", "while", "elif", "then", "end", "and", "break"};
+	vector<string> variables = {"bool", "string", "int", "void", "class", "def", "function", "char", "do"};
+	vector<string> functions = {"extern", "include", "vector", "from", "import", "export"};
 	vector<string> tags = {
 		"html", "body", "footer",
 		"title", "link", "head", "script",

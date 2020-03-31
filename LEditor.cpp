@@ -8,6 +8,7 @@
 #include "lib/render.cpp"
 #include "lib/display.cpp"
 #include "lib/replace.cpp"
+#include "lib/config.cpp"
 #include "lib/help.cpp"
 #include "lib/file.cpp"
 #include "lib/find.cpp"
@@ -46,6 +47,7 @@ bool hasEdited = false;
 bool insertMode = false;
 
 HeaderDrop headerMessage;
+ConfigManager configManager;
 
 string currentfile = "";
 
@@ -82,6 +84,10 @@ int main(int argc, char** argv){
 		newFile();
 		moveFileIntoMemory();
 	}
+
+	// config //
+	configManager.checkConfig();
+	configManager.loadConfig();
 
 	// Welcome Message //
 	Box WelcomeMessage;
@@ -276,9 +282,6 @@ int main(int argc, char** argv){
 			vector<string> linesplit;
 			
 			if (currentline != ""){
-				setCursorPosition(60, 60);
-				cout << currentline.size() << "  ";
-			
 				if (curx == currentline.size()){ // End of line
 					newline = currentline.substr(0, currentline.size() - 1);
 					curx --;
@@ -591,6 +594,11 @@ int main(int argc, char** argv){
 			}
 			
 			lines[index + cury] = syntaxLine(raw[index + cury]);
+			
+			if (cury + index < raw.size() - 1){
+				cury ++;
+				curx = 0;
+			}
 			
 			newRefresh();
 			updateCursor();
@@ -992,6 +1000,7 @@ int main(int argc, char** argv){
 		int value = 0;
 		string currentline = raw[index + cury];
 		bool comment = false;
+		bool stringmode = false;
 		
 		vector<char> brackets = {'(', '{', '[', '<'};
 		vector<char> closing = {')', '}', ']', '>'};
@@ -1002,7 +1011,7 @@ int main(int argc, char** argv){
 			if (currentline[curx] == brackets[i]){
 				bracket = brackets[i];
 				closer = closing[i];
-				
+		
 				// check for comments
 				for (int i = 0; i < curx; i++){
 					if (currentline.substr(i, 2) == "//"){
@@ -1011,13 +1020,13 @@ int main(int argc, char** argv){
 				}
 			
 				for (int i = curx; i < currentline.size(); i++){
-					if (currentline[i] == closer){
-						value --;
-						
-					}else if (currentline[i] == bracket){
+					if (currentline[i] == bracket){
 						value ++;
+						
+					}else if (currentline[i] == closer){
+						value --;
 					}
-					
+			
 					if (value == 0){
 						setCursorPosition(i, cury);
 						if (comment == true){
