@@ -201,6 +201,7 @@ class NewReplace{
 		replaceContainer.title = "Replace";
 		replaceContainer.width = screenWidth - 2;
 		replaceContainer.height = 3;
+		replaceContainer.titleAlign = replaceContainer.CENTER;
 		replaceContainer.posy = screenHeight - replaceContainer.height - 2;
 		replaceContainer.draw();
 
@@ -273,7 +274,7 @@ class NewReplace{
 			newRefresh();
 			updateCursor();
 			
-			setCursorPosition(curx, cury);
+			setCursorPosition(curx + XOffset, cury);
 			cout << "\u001b[107;30m" << replace << "\u001b[0m";
 	  
 			replaceContainer.draw();
@@ -291,7 +292,7 @@ class NewReplace{
 					raw[ycoord] = raw[ycoord].replace(xcoord, replace.size(), replacer);
 					lines[ycoord] = syntaxLine(raw[ycoord]);
 
-					setCursorPosition(0, cury);
+					setCursorPosition(0 + XOffset, cury);
 					cout << lines[ycoord];
 					
 					if (done + 1 != results.size()){

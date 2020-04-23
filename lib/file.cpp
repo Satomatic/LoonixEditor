@@ -16,6 +16,7 @@ extern vector<vector<string>> fileMemory;
 extern int fileIndex;
 
 extern HeaderDrop headerMessage;
+extern DiffManager diffManager;
 
 void loadFile(string filepath){
 	lines.clear();
@@ -262,6 +263,7 @@ int openFileNewBuffer(){
 }
 
 void saveFile(){
+	diffManager.zero();
 	hasEdited = false;
 
 	ofstream file(currentfile);

@@ -9,6 +9,7 @@
 #include "lib/display.cpp"
 #include "lib/replace.cpp"
 #include "lib/config.cpp"
+#include "lib/diff.cpp"
 #include "lib/help.cpp"
 #include "lib/file.cpp"
 #include "lib/find.cpp"
@@ -43,10 +44,13 @@ int endy = 0;
 int screenHeight;
 int screenWidth;
 
+int XOffset = 1;
+
 bool hasEdited = false;
 bool insertMode = false;
 
 HeaderDrop headerMessage;
+DiffManager diffManager;
 ConfigManager configManager;
 
 string currentfile = "";
@@ -62,6 +66,10 @@ int main(int argc, char** argv){
 	lines.push_back(" if you can see this, somethings gone wrong "); // reserve space for header
 
 	updateScreenSize();
+
+	// config //
+	configManager.checkConfig();
+	configManager.loadConfig();
 
 	if (argc == 2){
 		if (FileExists(argv[1]) == true){
@@ -85,10 +93,6 @@ int main(int argc, char** argv){
 		moveFileIntoMemory();
 	}
 
-	// config //
-	configManager.checkConfig();
-	configManager.loadConfig();
-
 	// Welcome Message //
 	Box WelcomeMessage;
 	WelcomeMessage.message = " Welcome to Loonix editor \\ \\";
@@ -100,10 +104,14 @@ int main(int argc, char** argv){
 	WelcomeMessage.center = true;
 	WelcomeMessage.draw();
 
+	if (configManager.getValue("diff_enabled") != "1"){
+		XOffset = 0;
+	}
+
+	diffManager.init();
+
 	// program loop //
 	while (true){
-		updateHeader();
-		
 		// header message logic //
 		if (headerMessage.showing == true){
 			if(headerMessage.count >= 5){
@@ -113,6 +121,9 @@ int main(int argc, char** argv){
 				headerMessage.update();
 			}
 		}
+
+		diffManager.drawDiffBar();
+		updateHeader();
 
 		string key = getInput();
 
@@ -137,6 +148,14 @@ int main(int argc, char** argv){
 		}
 
 		if (key == "DownArrow"){
+			int moveIndex = 1;
+			int moveCury = 0;
+			
+			if (configManager.getValue("lowc_enabled") == "1"){
+				moveIndex = 10;
+				moveCury = -10;
+			}
+			
 			if (index + cury != raw.size() - 1){
 				string nextline = raw[index + cury + 1];
 				if (curx >= nextline.size()){
@@ -145,7 +164,8 @@ int main(int argc, char** argv){
 
 				if (cury == viewport.size() - 1){
 					updateCursor();
-					index ++;
+					index += moveIndex;
+					cury += moveCury;
 					newRefresh();
 
 					updateCursor();
@@ -156,6 +176,14 @@ int main(int argc, char** argv){
 			}
 
 		}else if (key == "UpArrow"){
+			int moveIndex = 1;
+			int moveCury = 0;
+
+			if (configManager.getValue("lowc_enabled") == "1"){
+				moveIndex = 10;
+				moveCury = -10;
+			}
+		
 			if (index + cury != 1){
 				string previousline = raw[index + cury - 1];
 				if (curx >= previousline.size()){
@@ -165,7 +193,9 @@ int main(int argc, char** argv){
 
 			if (cury == 1){
 				if (cury + index != 1){
-					index --;
+					index -= moveIndex;
+					cury -= moveCury;
+					
 					newRefresh();
 					updateCursor();
 				}
@@ -318,6 +348,7 @@ int main(int argc, char** argv){
 
 			lines.erase(lines.begin() + index + cury);
 			raw.erase(raw.begin() + index + cury);
+			diffManager.removeLine(cury, index);
 
 			refresh();
 			updateHeader();
@@ -327,6 +358,8 @@ int main(int argc, char** argv){
 
 			updateCursor();
 
+			diffManager.updateCurrentLine();
+			
 			hasEdited = true;
 
 		}else if (key == "Backspace" && curx != 0){
@@ -373,9 +406,11 @@ int main(int argc, char** argv){
 			updateViewport();
 
 			resetColor();
-			setCursorPosition(0, cury);
+			setCursorPosition(XOffset, cury);
 			cout << newline << extend;
 			updateCursor();
+
+			diffManager.updateCurrentLine();
 
 			hasEdited = true;
 
@@ -413,6 +448,8 @@ int main(int argc, char** argv){
 
 				curx = tabCount * 4;
 			}
+			
+			diffManager.insertLine(cury, index);
 
 			// move viewport down
 			if (cury == screenHeight - 2){
@@ -533,6 +570,8 @@ int main(int argc, char** argv){
 				headerMessage.draw();
 			}
 			
+			diffManager.init();
+			
 		}else if (key == "CTRLN"){
 			string filename = "newfile";
 			int count = 0;
@@ -559,9 +598,11 @@ int main(int argc, char** argv){
 				}
 			}
 			
+			// setup file memory //
 			moveFileIntoMemory();
 			createFileMemory(filename);     
-				   
+			
+			// reset cursor values //   
 			fileIndex = openFiles.size() - 1;
 			currentfile = filename;
 			index = 0;
@@ -570,10 +611,13 @@ int main(int argc, char** argv){
 			
 			loadFileFromMemory(filename);
 			
+			// reload editor //
 			updateCursor();
 			clear();
 			updateCursor();
 			drawHeader();
+
+			diffManager.init();
 
 		}else if (key == "CTRLU"){
 			jumpLine jump;
@@ -760,6 +804,7 @@ int main(int argc, char** argv){
 				}else if (raw.size() - 1 == index + cury){ // end of file and more than cury 1
 					lines.erase(lines.begin() + index + cury);
 					raw.erase(raw.begin() + index + cury);
+					diffManager.removeLine(cury, index);
 					
 					cury --;
 					
@@ -775,6 +820,7 @@ int main(int argc, char** argv){
 				}else{
 					lines.erase(lines.begin() + index + cury);
 					raw.erase(raw.begin() + index + cury);
+					diffManager.removeLine(cury, index);
 
 					if (raw[index + cury].size() < curx){
 						curx = raw[index + cury].size();
@@ -809,6 +855,24 @@ int main(int argc, char** argv){
 			drawFromPoint(0);
 			drawHeader();
 			updateCursor();
+			
+		}else if (key == "F6"){
+			if (configManager.getValue("diff_enabled") == "1"){
+				configManager.putValue("diff_enabled", "0");
+				XOffset = 0;
+			}else{
+				configManager.putValue("diff_enabled", "1");
+				XOffset = 1;
+			}
+			
+			// undraw side bar //
+			for (int i = 0; i < screenHeight; i++){
+				setCursorPosition(0, i + 1);
+				cout << " ";
+			}
+			
+			newRefresh();
+			updateCursor();
 
 		}else if (key == "CTRLF"){
 			Find findP;
@@ -833,6 +897,8 @@ int main(int argc, char** argv){
 			}else{
 				cury ++;
 			}
+			
+			diffManager.insertLine(cury, index);
 			
 			newRefresh();
 			updateCursor();
@@ -987,11 +1053,14 @@ int main(int argc, char** argv){
 				curx ++;
 
 				resetColor();
-				setCursorPosition(0, cury);
+				setCursorPosition(XOffset, cury);
 				cout << newline;
 				updateCursor();
 			}
 
+			diffManager.updateLine(cury + index - 1, 1);
+			diffManager.drawDiffBar();
+			
 			hasEdited = true;
 		}
 
@@ -1028,7 +1097,7 @@ int main(int argc, char** argv){
 					}
 			
 					if (value == 0){
-						setCursorPosition(i, cury);
+						setCursorPosition(XOffset + i, cury);
 						if (comment == true){
 							cout << "\u001b[38;5;242m";
 						}else{

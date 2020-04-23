@@ -11,13 +11,17 @@ class ConfigManager{
 		vector<vector<string>> config;
 		string configDir;
 		string mainFile;
-		
+		string user;
+
 	void checkConfig(){
 		configDir = "/home/X/.ledit";
 		configDir = replace_all(configDir, "X", getenv("USER"));
 	
+		if (configDir == "/home/root/.ledit"){
+			configDir = "/root/.ledit";
+		}
+		
 		// check config dir //
-		setCursorPosition(0, screenHeight - 1);
 		if (!DirectoryExists(configDir.c_str())){
 			string command = "mkdir ";
 			command += configDir;
@@ -25,12 +29,15 @@ class ConfigManager{
 		}
 		
 		// check main config file //
-		mainFile = "/home/X/.ledit/main.config";
-		mainFile = replace_all(mainFile, "X", getenv("USER"));
+		mainFile = configDir + "/main.config";
 		
 		if (!FileExists(mainFile)){
 			ofstream file(mainFile);
-			file << "";
+			
+			// write default values
+			file << "diff_enabled:1" << endl;
+			file << "sess_enabled:0";
+			
 			file.close();
 		}
 	}
@@ -47,7 +54,6 @@ class ConfigManager{
 			string value;
 			
 			for (int i = 1; i < datasplit.size(); i++){
-				value += ":";
 				value += datasplit[i];
 			}
 			
@@ -88,5 +94,13 @@ class ConfigManager{
 	
 		// save changes //
 		saveConfig();
+	}
+	
+	string getSetting(string key, string value){
+		if (getValue(key) != ""){
+			return getValue(key);
+		}
+		
+		return value;
 	}
 };

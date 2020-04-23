@@ -5,6 +5,7 @@
 using namespace std;
 
 extern vector<string> raw;
+extern int XOffset;
 extern int index;
 extern int curx;
 extern int cury;
@@ -28,6 +29,8 @@ class Find{
 		FindContainer.posx = 0;
 		FindContainer.posy = screenHeight - FindContainer.height - 2;
 		FindContainer.title = "Find";
+		FindContainer.titleAlign = FindContainer.CENTER;
+		FindContainer.addSeperator(FindContainer.VERTICAL, 20);
 		FindContainer.draw();
 
 		// Size information //
@@ -36,8 +39,6 @@ class Find{
 			cout << "\u001b[107;30mReturn\u001b[0m: Find / Next";
 			setCursorPosition(FindContainer.width - 18, FindContainer.posy + 2);
 			cout << "\u001b[107;30mCtrl X\u001b[0m:        Exit";
-
-			FindContainer.addSeperator(FindContainer.VERTICAL, 20);
 		}
 
 		updateInput();
@@ -100,7 +101,7 @@ class Find{
 						updateCursor();
 
 						// highlight find
-						setCursorPosition(curx, cury);
+						setCursorPosition(curx + XOffset, cury);
 						cout << "\u001b[30;107m" << input << "\u001b[0m";
 					}
 

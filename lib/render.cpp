@@ -18,6 +18,8 @@ extern int starty;
 extern int endx;
 extern int endy;
 
+extern int XOffset;
+
 extern string currentfile;
 extern vector<string> raw;
 extern vector<string> lines;
@@ -162,7 +164,8 @@ void updateHeader(){
 
 void drawScreen(){
 	for (int i = 0; i < viewport.size(); i++){
-		cout << viewport[i] << endl;
+		setCursorPosition(XOffset, 0 + i);
+		cout << viewport[i];
 	}
 }
 
@@ -183,12 +186,12 @@ void updateCursor(){
 
 	// draw over cursor //
 	resetColor();
-	setCursorPosition(0, prey);
+	setCursorPosition(XOffset, prey);
 	cout << previousChar << " ";
 
 	// draw new cursor //
 	cout << "\u001b[30m\u001b[107m";
-	setCursorPosition(curx, cury);
+	setCursorPosition(curx + XOffset, cury);
 	cout << cursorChar;
 
 	prey = cury;
@@ -207,7 +210,7 @@ void updateLine(){
 		difference = oldLine.size() - newLine.size();
 	}
 
-	setCursorPosition(0, cury);
+	setCursorPosition(XOffset, cury);
 	cout << lines[index + cury];
 
 	for (int i = 0; i < difference; i++){
@@ -238,7 +241,7 @@ void drawFromPoint(int line){
 
 	for (int i = 0; i < viewport.size(); i ++){
 		if (i > line){
-			setCursorPosition(0, i);
+			setCursorPosition(XOffset, i);
 			cout << viewport[i];
 		}
 	}
@@ -249,7 +252,7 @@ void clearFromPoint(int line){
 
 	for (int i = 0; i < viewport.size(); i++){
 		if (i > line){
-			setCursorPosition(0, i);
+			setCursorPosition(XOffset, i);
 			int x = 0;
 			string y = "";
 			while (x < viewport[i].size()){
@@ -287,7 +290,6 @@ void newRefresh(){
 	updateViewport();
 	vector<string> newViewport = rawViewport;
 	int offset = 0;
-
 	if (newViewport.size() != oldViewport.size()){
 		if (newViewport.size() > oldViewport.size()){
 			offset = newViewport.size() - oldViewport.size();
@@ -302,7 +304,7 @@ void newRefresh(){
 
 		int difference = 0;
 
-		setCursorPosition(0, i);
+		setCursorPosition(XOffset, i);
 		cout << viewport[i];
 
 		if (newline >= oldline){
@@ -318,7 +320,7 @@ void newRefresh(){
 
 	if (offset > 0){
 		for (int i = offset; i < newViewport.size(); i++){
-			setCursorPosition(0, i);
+			setCursorPosition(XOffset, i);
 			cout << syntaxLine(newViewport[i]);
 		}
 	}
@@ -336,7 +338,7 @@ void drawSelection(){
 		end = endx;
 	}
 	
-	setCursorPosition(start, starty);
+	setCursorPosition(start + XOffset, starty);
 	cout << "\u001b[107;30m" << raw[cury + index].substr(start, end - start) << "\u001b[0m";
 }
 

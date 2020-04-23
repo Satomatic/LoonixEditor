@@ -28,6 +28,11 @@ string getInput(){
 			
 			if (c == 53 && d == 126){
 				absolute = "F5";
+			}else if (c == 55 && d == 126){
+				absolute = "F6";
+			}else if (c == 56 && d == 126){
+				absolute = "F7";
+			
 			}else{
 				e = getch();
 			}
@@ -66,8 +71,6 @@ string getInput(){
 		
 		}else if (a == 'O' && b == 'P'){
 			absolute = "F1";
-		}else if (a == 'O' && b == '5'){
-			absolute = "F5";
 		}else{
 			if (b == 53){
 				char c = getch();

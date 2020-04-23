@@ -7,6 +7,7 @@ using namespace std;
 extern vector<string> viewport;
 extern int screenWidth;
 extern int screenHeight;
+extern int XOffset;
 
 class HeaderDrop{
 	public:
@@ -57,7 +58,7 @@ class HeaderDrop{
 
 		showing = false;
 		
-		setCursorPosition(0, 1);
+		setCursorPosition(XOffset, 1);
 		cout << viewport[1];
 	}
 
@@ -94,6 +95,8 @@ class Box{
 		align titleAlign;
 		align footerAlign;
 
+		vector<pair<int, align>> seperators;
+		
 		void draw(){
 			// center //
 			if (hcenter == true || center == true){
@@ -185,6 +188,12 @@ class Box{
 					cout << messagesplit[i];
 				}
 			}
+			
+			// draw seperators //
+			for (int i = 0; i < seperators.size(); i++){
+				drawSeperator(seperators[i].second, seperators[i].first);
+			}
+			
 			showing = true;
 		}
 
@@ -205,6 +214,15 @@ class Box{
 		}
 		
 		void addSeperator(align anchor, int position){
+			pair<int, align> spair;
+			
+			spair.first = position;
+			spair.second = anchor;
+			
+			seperators.push_back(spair);
+		}
+		
+		void drawSeperator(align anchor, int position){
 			int pos;
 			
 			vector<string> chars = {
@@ -237,7 +255,7 @@ class Box{
 				// draw connectors //
 				setCursorPosition(posx, pos);
 				cout << chars[4];
-				setCursorPosition(posx + width + 2, pos);
+				setCursorPosition(posx + width + 1, pos);
 				cout << chars[3];
 				
 				// draw filler //

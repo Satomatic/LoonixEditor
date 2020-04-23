@@ -13,7 +13,8 @@ class helpMenu{
 		vector<string> tabs = {
 			"file",
 			"edtior",
-			"about"
+			"options",
+			"about",
 		};
 
 		vector<vector<vector<string>>> data = {
@@ -23,7 +24,9 @@ class helpMenu{
 				{"Ctrl + O", "Open file"},
 				{"Ctrl + S", "Save file"},
 				{"Ctrl + A", "Save as file"},
-				{"Ctrl + X", "Close file"}
+				{"Ctrl + X", "Close file"},
+				{"", ""},
+				{"F1", "Help menu"},
 			},
 			
 			// editor menu //
@@ -41,6 +44,11 @@ class helpMenu{
 				{"Ctrl + D", "Duplicate line"},
 			},
 			
+			// options menu //
+			{
+				{"F6", "Toggle diff bar"},
+			},
+
 			// about menu //
 			{
 				{"Written by", "Satomatic (Brian Thomson)"}
@@ -53,6 +61,7 @@ class helpMenu{
 		HelpContainer.width = width;
 		HelpContainer.height = height;
 		HelpContainer.title = "Help";
+		HelpContainer.titleAlign = HelpContainer.CENTER;
 		HelpContainer.center = true;
 		HelpContainer.draw();
 
