@@ -1,7 +1,7 @@
 # LoonixEditor
 A mildly temperamental console-based text editor for linux.
 
-<img src="https://i.imgur.com/50GOc7h.png" width="41%">
+<img src="https://i.imgur.com/DlZIlcF.png" width="41%">
 
 ## How to use
 ### Key binds
@@ -11,6 +11,9 @@ A mildly temperamental console-based text editor for linux.
 **Ctrl + S** Save file\
 **Ctrl + A** Save as filename\
 **Ctrl + X** Close file\
+\
+**F6** Diff bar toggle\
+**F7** Low CPU toggle\
 \
 **Ctrl + Alt + RightArrow** Move to next file\
 **Ctrl + Alt + LeftArrow** Move to previous file\
