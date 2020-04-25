@@ -33,10 +33,10 @@ class DiffManager{
 
 		int diffSize = 0;
 		
-		if (diff[fileIndex].size() < screenHeight){
+		if (diff[fileIndex].size() < screenHeight - 1){
 			diffSize = diff[fileIndex].size();
 		}else{
-			diffSize = screenHeight;
+			diffSize = screenHeight - 2;
 		}
 
 		for (int i = 0; i < diffSize; i++){
@@ -54,7 +54,7 @@ class DiffManager{
 		}
 		
 		if (diff[fileIndex].size() < screenHeight){
-			int difference = screenHeight - diff[fileIndex].size();
+			int difference = screenHeight - diff[fileIndex].size() - 2;
 			
 			for (int i = 0; i < difference; i++){
 				setCursorPosition(0, diff[fileIndex].size() + i + 1);

@@ -124,6 +124,7 @@ int main(int argc, char** argv){
 
 		diffManager.drawDiffBar();
 		updateHeader();
+		drawFooter();
 
 		string key = getInput();
 
@@ -503,6 +504,7 @@ int main(int argc, char** argv){
 					break;
 				}else{
 					fileMemory.erase(fileMemory.begin() + foundIndex);
+					diffManager.diff.erase(diffManager.diff.begin() + foundIndex);
 					
 					// search in open files //
 					for (int i = 0; i < openFiles.size(); i++){
@@ -874,6 +876,13 @@ int main(int argc, char** argv){
 			newRefresh();
 			updateCursor();
 
+		}else if (key == "F7"){
+			if (configManager.getValue("lowc_enabled") == "1"){
+				configManager.putValue("lowc_enabled", "0");
+			}else{
+				configManager.putValue("lowc_enabled", "1");
+			}
+
 		}else if (key == "CTRLF"){
 			Find findP;
 			findP.input = returnSelection();
@@ -909,7 +918,7 @@ int main(int argc, char** argv){
 				headerMessage.styling = "\u001b[38;5;124m";
 				headerMessage.draw();
 			}else{
-			
+				
 				if (fileIndex == openFiles.size() - 1){
 					fileIndex = 0;
 				}else{

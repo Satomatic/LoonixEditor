@@ -162,6 +162,11 @@ void updateHeader(){
 	cout << "\u001b[0m";
 }
 
+void drawFooter(){
+	setCursorPosition(0, screenHeight - 1);
+	cout << "\u001b[0m" << "\u001b[30;107m" << fillX("F1 Help  ^X Exit") << "\u001b[0m";
+}
+
 void drawScreen(){
 	for (int i = 0; i < viewport.size(); i++){
 		setCursorPosition(XOffset, 0 + i);
