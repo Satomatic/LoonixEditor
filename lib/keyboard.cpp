@@ -50,6 +50,11 @@ string getInput(){
 				absolute = "ALT-RightArrow";
 			}else if (c == 59 && d == 51 && e == 68){
 				absolute = "ALT-LeftArrow";
+			}else if (c == 59 && d == 51 && e == 65){
+				absolute = "ALT-UpArrow";
+			}else if (c == 59 && d == 51 && e == 66){
+				absolute = "ALT-DownArrow";
+			
 			
 			}else if (c == 59 && d == 55 && e == 67){
 				absolute = "CTRL-ALT-RightArrow";

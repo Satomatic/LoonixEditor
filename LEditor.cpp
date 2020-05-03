@@ -211,7 +211,7 @@ int main(int argc, char** argv){
 					if (index + cury != 1){
 						index --;
 						refresh();
-						updateHeader();
+//                      updateHeader();
 						curx = unilen(raw[index  + cury]);//.length();
 					}
 				}else{
@@ -241,13 +241,13 @@ int main(int argc, char** argv){
 						curx = 0;
 						index ++;
 						refresh();
-						updateHeader();
+//                      updateHeader();
 					}
 				}else{
 					curx = 0;
 					cury ++;
 					refresh();
-					updateHeader();
+//                  updateHeader();
 				}
 
 			}else{
@@ -274,7 +274,7 @@ int main(int argc, char** argv){
 
 			newRefresh();
 			updateCursor();
-			updateHeader();
+//          updateHeader();
 
 		}else if (key == "PGDN"){
 			if (lines.size() >= screenHeight - 1){
@@ -291,7 +291,7 @@ int main(int argc, char** argv){
 
 				newRefresh();
 				updateCursor();
-				updateHeader();
+//              updateHeader();
 			
 			}else{
 				cury = viewport.size() - 1;
@@ -305,7 +305,7 @@ int main(int argc, char** argv){
 				insertMode = true;
 			}
 			
-			updateHeader();
+//          updateHeader();
 
 		}else if (key == "Delete"){
 			string currentline = raw[index + cury];
@@ -352,7 +352,7 @@ int main(int argc, char** argv){
 			diffManager.removeLine(cury, index);
 
 			refresh();
-			updateHeader();
+//          updateHeader();
 
 			curx = previousline.size();
 			cury --;
@@ -460,7 +460,7 @@ int main(int argc, char** argv){
 			}
 
 			newRefresh();
-			updateHeader();
+//          updateHeader();
 			updateCursor();
 
 			hasEdited = true;
@@ -626,17 +626,20 @@ int main(int argc, char** argv){
 			jump.draw();
 
 		}else if (key == "CTRL/"){
-			if (raw[index + cury].size() >= 2){
-				if (raw[index + cury].substr(0, 2) == "  "){
-					raw[index + cury][0] = '/';
-					raw[index + cury][1] = '/';
+			string commentString = getCommentString();
+		
+			if (raw[index + cury].size() >= commentString.size()){
+				if (raw[index + cury].substr(0, commentString.size()) == multString(" ", commentString.size())){
+					for (int i = 0; i < commentString.size(); i++){
+						raw[index + cury][i] = commentString[i];
+					}
 				}else{
-					raw[index + cury].insert(0, "//");
-					curx += 2;
+					raw[index + cury].insert(0, commentString);
+					curx += commentString.size();
 				}
 			}else{
-				raw[index + cury].insert(0, "//");
-				curx += 2;
+				raw[index + cury].insert(0, commentString);
+				curx += commentString.size();
 			}
 			
 			lines[index + cury] = syntaxLine(raw[index + cury]);
@@ -648,7 +651,6 @@ int main(int argc, char** argv){
 			
 			newRefresh();
 			updateCursor();
-			drawHeader();
 
 		}else if (key == "CTRL-UpArrow"){
 			if (index + cury != 1){
@@ -663,8 +665,7 @@ int main(int argc, char** argv){
 				cury --;
 			}
 
-			refresh();
-			drawHeader();
+			newRefresh();
 			updateCursor();
 
 		}else if (key == "CTRL-DownArrow"){
@@ -680,8 +681,7 @@ int main(int argc, char** argv){
 				cury ++;
 			}
 
-			refresh();
-			drawHeader();
+			newRefresh();
 			updateCursor();
 
 		}else if (key == "CTRL-RightArrow"){
@@ -773,6 +773,7 @@ int main(int argc, char** argv){
 				string newline = raw[cury + index].erase(start, (end - start));
 				raw[cury + index] = newline;
 				lines[cury + index] = syntaxLine(newline);
+				diffManager.removeLine(cury, index);
 				
 				startx = 0;
 				starty = 0;
@@ -792,6 +793,7 @@ int main(int argc, char** argv){
 					if (index != 0){
 						lines.erase(lines.begin() + index + cury);
 						raw.erase(lines.begin() + index + cury);
+						diffManager.removeLine(cury, index);
 						
 						index --;
 						
@@ -912,6 +914,32 @@ int main(int argc, char** argv){
 			newRefresh();
 			updateCursor();
 
+		}else if (key == "ALT-UpArrow"){
+			// move screen //
+			if (index > 0){
+				index --;
+			
+				// handel cursor //
+				if (cury != screenHeight - 2){
+					cury ++;
+				}
+			}
+			
+			newRefresh();
+			updateCursor();
+		
+		}else if (key == "ALT-DownArrow"){
+			if (index < raw.size() - screenHeight + 1){
+				index ++;
+			
+				if (cury != 0){
+					cury --;
+				}
+			}
+			
+			newRefresh();
+			updateCursor();
+
 		}else if (key == "CTRL-ALT-RightArrow" || key == "ALT-RightArrow"){
 			if (openFiles.size() == 1){
 				headerMessage.message = "No other files open";
@@ -925,6 +953,8 @@ int main(int argc, char** argv){
 					fileIndex ++;
 				}
 			
+				clearText();
+
 				moveFileIntoMemory();
 			
 				loadFileFromMemory(openFiles[fileIndex][0]);
@@ -935,8 +965,6 @@ int main(int argc, char** argv){
 		
 				currentfile = openFiles[fileIndex][0];
 			
-				setCursorPosition(0, 0);
-				clear();
 				updateViewport();
 				drawScreen();
 				drawHeader();
@@ -954,6 +982,8 @@ int main(int argc, char** argv){
 				}else{
 					fileIndex --;
 				}
+				
+				clearText();
 
 				moveFileIntoMemory();
 
@@ -961,12 +991,9 @@ int main(int argc, char** argv){
 				curx = stoi(openFiles[fileIndex][1]);
 				cury = stoi(openFiles[fileIndex][2]);
 				index = stoi(openFiles[fileIndex][3]);
-				updateCursor();
 
 				currentfile = openFiles[fileIndex][0];
 
-				setCursorPosition(0, 0);
-				clear();
 				updateViewport();
 				drawScreen();
 				drawHeader();

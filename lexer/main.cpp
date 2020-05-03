@@ -52,6 +52,26 @@ vector<string> split(string text, string splitchar){
 	return returnVector;
 }
 
+string getCommentString(){
+	vector<vector<string>> comments = {
+		{"lua", "--"},
+		{"cpp", "//"},
+		{"py", "#"},
+		{"html", "<!--"},
+		{"asm", ";"},
+	};
+	
+	string fileExt = currentfile.substr(currentfile.find_last_of(".") + 1);
+
+	for (int i = 0; i < comments.size(); i++){
+		if (comments[i][0] == fileExt){
+			return comments[i][1];
+		}
+	}
+
+	return "//";
+}
+
 // add support for lexer file later on //
 string syntaxLine(string line){
 	string text = line;
@@ -78,15 +98,8 @@ string syntaxLine(string line){
 		"xhtml"
 	};
 
-	vector<vector<string>> comments = {
-		{"lua", "--"},
-		{"cpp", "//"},
-		{"py", "#"},
-		{"html", "<!--"}
-	};
-
 	bool isTagged = false;
-	string commentString = "//"; // default to '//' if language not found
+	string commentString = getCommentString();
 
 	// get comment mode //
 	string fileExt = currentfile.substr(currentfile.find_last_of(".") + 1);
@@ -96,12 +109,6 @@ string syntaxLine(string line){
 		if (fileExt == tagLanguages[i]){
 			isTagged = true;
 			break;
-		}
-	}
-
-	for (int i = 0; i < comments.size(); i++){
-		if (comments[i][0] == fileExt){
-			commentString = comments[i][1];
 		}
 	}
 

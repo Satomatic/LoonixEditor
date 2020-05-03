@@ -23,6 +23,16 @@ void showCursor(){
 	system("setterm -cursor on");
 }
 
+string multString(string text, int times){
+	string returnstring = "";
+	
+	for (int i = 0; i < times; i++){
+		returnstring += text;
+	}
+	
+	return returnstring;
+}
+
 vector<string> split(string text, char letter){
 	vector<string> returnvector;
 	string current = "";

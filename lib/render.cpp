@@ -178,6 +178,7 @@ void updateCursor(){
 	int cursorAbsolute = index + cury;
 	string currentline = raw[cursorAbsolute];
 	string previousline = raw[index + prey];
+	string previousChar = "";
 
 	// get current cursor //
 	char cursorChar;
@@ -187,7 +188,9 @@ void updateCursor(){
 		cursorChar = nonUniString(currentline).at(curx);//currentline.at(curx);
 	}
 
-	string previousChar = syntaxLine(previousline);//.at(prex);
+	if (index + prey <= raw.size()){
+		previousChar = syntaxLine(previousline);//.at(prex);
+	}
 
 	// draw over cursor //
 	resetColor();
@@ -357,6 +360,15 @@ string returnSelection(){
 	
 	}else{
 		return raw[cury + index].substr(startx, endx - startx);
+	}
+}
+
+void clearText(){
+	for (int i = 0; i < viewport.size(); i++){
+		for (int b = 0; b < rawViewport[i].size() + 1; b++){
+			setCursorPosition(b, i);
+			cout << " ";
+		}
 	}
 }
 

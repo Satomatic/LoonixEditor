@@ -30,39 +30,29 @@ class DiffManager{
 		if (configManager.getValue("diff_enabled") != "1"){
 			return;
 		}
-
-		int diffSize = 0;
 		
-		if (diff[fileIndex].size() < screenHeight - 1){
-			diffSize = diff[fileIndex].size();
-		}else{
-			diffSize = screenHeight - 2;
-		}
+		for (int i = 0; i < screenHeight; i++){
+			setCursorPosition(0, i + 1);
 
-		for (int i = 0; i < diffSize; i++){
-			cout << "\u001b[0m";
-			
-			if (diff[fileIndex][index + i] == 1){ // Has edited
-				cout << "\u001b[38;5;214m";
-			
-			}else if (diff[fileIndex][index + i] == 2){ // Has saved
-				cout << "\u001b[38;5;29m";            
+			if (i < diff[fileIndex].size()){
+				if (diff[fileIndex][i] == 0){
+					cout << "\u001b[0m";
+				
+				}else if (diff[fileIndex][i] == 1){
+					cout << "\u001b[38;5;214m";
+				
+				}else if (diff[fileIndex][i] == 2){
+					cout << "\u001b[38;5;29m";
+				}
+				
+			}else{
+				cout << "\u001b[38;5;242m";
 			}
 			
-			setCursorPosition(0, i + 1);
 			cout << sideChar;
 		}
-		
-		if (diff[fileIndex].size() < screenHeight){
-			int difference = screenHeight - diff[fileIndex].size() - 2;
-			
-			for (int i = 0; i < difference; i++){
-				setCursorPosition(0, diff[fileIndex].size() + i + 1);
-				cout << "\u001b[38;5;242m" << sideChar << "\u001b[0m";
-			}
-		}
 	}
-	
+
 	void updateLine(int line, int value){
 		diff[fileIndex][line] = value;
 	}
