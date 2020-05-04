@@ -33,6 +33,7 @@ class DiffManager{
 		
 		for (int i = 0; i < screenHeight; i++){
 			setCursorPosition(0, i + 1);
+			cout << "\u001b[0m";
 
 			if (i < diff[fileIndex].size()){
 				if (diff[fileIndex][i] == 0){
