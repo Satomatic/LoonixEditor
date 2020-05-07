@@ -185,17 +185,22 @@ void updateCursor(){
 	if (curx >= unilen(currentline)){
 		cursorChar = ' ';
 	}else{
-		cursorChar = nonUniString(currentline).at(curx);//currentline.at(curx);
+		cursorChar = nonUniString(currentline).at(curx);
 	}
 
 	if (index + prey <= raw.size()){
-		previousChar = syntaxLine(previousline);//.at(prex);
+		previousChar = syntaxLine(previousline);
 	}
 
 	// draw over cursor //
-	resetColor();
+	cout << "\u001b[0m";
 	setCursorPosition(XOffset, prey);
 	cout << previousChar << " ";
+	
+	if (prex > previousline.size()){
+		setCursorPosition(XOffset + prex, prey);
+		cout << " ";
+	}
 
 	// draw new cursor //
 	cout << "\u001b[30m\u001b[107m";

@@ -71,7 +71,7 @@ int main(int argc, char** argv){
 	configManager.checkConfig();
 	configManager.loadConfig();
 
-	if (argc == 2){
+	if (argc >= 2){
 		if (FileExists(argv[1]) == true){
 			// Open file //
 			loadFile(argv[1]);
@@ -80,10 +80,21 @@ int main(int argc, char** argv){
 			drawHeader();
 			updateCursor();
 		}else{
-			// Create new file //
-			createFile(argv[1]);
-			loadFile(argv[1]);
-			moveFileIntoMemory();
+			if (argc == 3){
+				if (argv[2] == "-c"){
+					// Create new file and save //
+					createFile(argv[1]);
+					loadFile(argv[1]);
+					moveFileIntoMemory();
+				}else{
+					// Create new file //
+					newFile();
+					currentfile = argv[1];
+					hasEdited = true;
+					moveFileIntoMemory();
+				}
+			}
+			
 			drawScreen();
 			drawHeader();
 			updateCursor();
@@ -856,9 +867,13 @@ int main(int argc, char** argv){
 			if (configManager.getValue("diff_enabled") == "1"){
 				configManager.putValue("diff_enabled", "0");
 				XOffset = 0;
+				
+				headerMessage.message = "Disabled Diff Bar";
 			}else{
 				configManager.putValue("diff_enabled", "1");
 				XOffset = 1;
+				
+				headerMessage.message = "Enabled Diff Bar";
 			}
 			
 			// undraw side bar //
@@ -870,12 +885,22 @@ int main(int argc, char** argv){
 			newRefresh();
 			updateCursor();
 
+			headerMessage.styling = "\u001b[0m";
+			headerMessage.draw();
+
 		}else if (key == "F7"){
 			if (configManager.getValue("lowc_enabled") == "1"){
 				configManager.putValue("lowc_enabled", "0");
+				
+				headerMessage.message = "Disabled Smooth Scrolling";
 			}else{
 				configManager.putValue("lowc_enabled", "1");
+				
+				headerMessage.message = "Enabled Smooth Scrolling";
 			}
+			
+			headerMessage.styling = "\u001b[0m";
+			headerMessage.draw();
 
 		}else if (key == "CTRLF"){
 			Find findP;
