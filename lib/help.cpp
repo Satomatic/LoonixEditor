@@ -47,6 +47,7 @@ class helpMenu{
 			// options menu //
 			{
 				{"F6", "Toggle diff bar"},
+				{"F7", "Low CPU (Jump scrolling)"},
 			},
 
 			// about menu //

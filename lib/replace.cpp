@@ -4,6 +4,7 @@
 
 using namespace std;
 
+extern DiffManager diffManager;
 extern HeaderDrop headerMessage;
 extern vector<string> lines;
 extern vector<string> raw;
@@ -116,9 +117,10 @@ class Replace{
 									}
 								}
 								
-								refresh();
+								newRefresh();
 								drawHeader();
 								updateCursor();
+								diffManager.drawDiffBar();
 							}
 							
 							done ++;
@@ -273,6 +275,7 @@ class NewReplace{
 			
 			newRefresh();
 			updateCursor();
+			diffManager.drawDiffBar();
 			
 			setCursorPosition(curx + XOffset, cury);
 			cout << "\u001b[107;30m" << replace << "\u001b[0m";

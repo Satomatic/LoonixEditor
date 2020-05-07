@@ -364,7 +364,7 @@ string returnSelection(){
 }
 
 void clearText(){
-	for (int i = 0; i < viewport.size(); i++){
+	for (int i = 1; i < viewport.size(); i++){
 		for (int b = 0; b < rawViewport[i].size() + 1; b++){
 			setCursorPosition(b, i);
 			cout << " ";

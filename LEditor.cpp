@@ -7,11 +7,11 @@
 #include "lib/keyboard.cpp"
 #include "lib/render.cpp"
 #include "lib/display.cpp"
-#include "lib/replace.cpp"
 #include "lib/config.cpp"
 #include "lib/diff.cpp"
 #include "lib/help.cpp"
 #include "lib/file.cpp"
+#include "lib/replace.cpp"
 #include "lib/find.cpp"
 #include "lib/todo.cpp"
 #include "lib/jump.cpp"
@@ -211,7 +211,6 @@ int main(int argc, char** argv){
 					if (index + cury != 1){
 						index --;
 						refresh();
-//                      updateHeader();
 						curx = unilen(raw[index  + cury]);//.length();
 					}
 				}else{
@@ -241,13 +240,11 @@ int main(int argc, char** argv){
 						curx = 0;
 						index ++;
 						refresh();
-//                      updateHeader();
 					}
 				}else{
 					curx = 0;
 					cury ++;
 					refresh();
-//                  updateHeader();
 				}
 
 			}else{
@@ -274,7 +271,6 @@ int main(int argc, char** argv){
 
 			newRefresh();
 			updateCursor();
-//          updateHeader();
 
 		}else if (key == "PGDN"){
 			if (lines.size() >= screenHeight - 1){
@@ -291,7 +287,6 @@ int main(int argc, char** argv){
 
 				newRefresh();
 				updateCursor();
-//              updateHeader();
 			
 			}else{
 				cury = viewport.size() - 1;
@@ -305,7 +300,6 @@ int main(int argc, char** argv){
 				insertMode = true;
 			}
 			
-//          updateHeader();
 
 		}else if (key == "Delete"){
 			string currentline = raw[index + cury];
@@ -352,7 +346,6 @@ int main(int argc, char** argv){
 			diffManager.removeLine(cury, index);
 
 			refresh();
-//          updateHeader();
 
 			curx = previousline.size();
 			cury --;
@@ -460,7 +453,6 @@ int main(int argc, char** argv){
 			}
 
 			newRefresh();
-//          updateHeader();
 			updateCursor();
 
 			hasEdited = true;

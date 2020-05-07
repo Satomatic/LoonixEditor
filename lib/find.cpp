@@ -4,6 +4,7 @@
 
 using namespace std;
 
+extern DiffManager diffManager;
 extern vector<string> raw;
 extern int XOffset;
 extern int index;
@@ -98,6 +99,7 @@ class Find{
 						updateViewport();
 						drawFromPoint(0);
 						drawHeader();
+						diffManager.drawDiffBar();
 						updateCursor();
 
 						// highlight find
