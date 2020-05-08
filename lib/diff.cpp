@@ -16,6 +16,7 @@ extern int cury;
 class DiffManager{
 	public:
 		vector<vector<int>> diff;
+		vector<int> tempDiff;
 		string sideChar = "░";
 
 	void init(){
@@ -36,13 +37,13 @@ class DiffManager{
 			cout << "\u001b[0m";
 
 			if (i < diff[fileIndex].size()){
-				if (diff[fileIndex][i] == 0){
+				if (diff[fileIndex][index + i] == 0){
 					cout << "\u001b[0m";
 				
-				}else if (diff[fileIndex][i] == 1){
+				}else if (diff[fileIndex][index + i] == 1){
 					cout << "\u001b[38;5;214m";
 				
-				}else if (diff[fileIndex][i] == 2){
+				}else if (diff[fileIndex][index + i] == 2){
 					cout << "\u001b[38;5;29m";
 				}
 				
