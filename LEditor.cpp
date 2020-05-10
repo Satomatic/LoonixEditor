@@ -5,9 +5,9 @@
 #include <string>
 #include "lexer/main.cpp"
 #include "lib/keyboard.cpp"
+#include "lib/config.cpp"
 #include "lib/render.cpp"
 #include "lib/display.cpp"
-#include "lib/config.cpp"
 #include "lib/diff.cpp"
 #include "lib/help.cpp"
 #include "lib/file.cpp"
@@ -368,6 +368,7 @@ int main(int argc, char** argv){
 			diffManager.removeLine(cury, index);
 
 			refresh();
+			drawGuideLines();
 
 			curx = previousline.size();
 			cury --;
@@ -912,6 +913,23 @@ int main(int argc, char** argv){
 			
 			headerMessage.styling = "\u001b[0m";
 			headerMessage.draw();
+
+		}else if (key == "F8"){
+			if (configManager.getValue("line_enabled") == "1"){
+				configManager.putValue("line_enabled", "0");
+			
+				headerMessage.message = "Disabled intentation guide";
+			}else{
+				configManager.putValue("line_enabled", "1");
+				
+				headerMessage.message = "Enabled intentation guide";
+			}
+			
+			newRefresh();
+			
+			headerMessage.styling = "\u001b[0m";
+			headerMessage.draw();
+
 
 		}else if (key == "CTRLF"){
 			Find findP;

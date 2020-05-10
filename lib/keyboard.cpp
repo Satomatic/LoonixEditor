@@ -32,6 +32,8 @@ string getInput(){
 				absolute = "F6";
 			}else if (c == 56 && d == 126){
 				absolute = "F7";
+			}else if (c == 57 && d == 126){
+				absolute = "F8";
 			
 			}else{
 				e = getch();
@@ -54,7 +56,6 @@ string getInput(){
 				absolute = "ALT-UpArrow";
 			}else if (c == 59 && d == 51 && e == 66){
 				absolute = "ALT-DownArrow";
-			
 			
 			}else if (c == 59 && d == 55 && e == 67){
 				absolute = "CTRL-ALT-RightArrow";

@@ -32,6 +32,8 @@ extern int fileIndex;
 extern bool hasEdited;
 extern bool insertMode;
 
+extern ConfigManager configManager;
+
 void drawGuideLines();
 void drawGuideLinesC(int pos);
 
@@ -350,27 +352,39 @@ void newRefresh(){
 }
 
 void drawGuideLines(){
+	if (configManager.getValue("line_enabled") == "0"){
+		return;
+	}
+	
 	cout << "\u001b[0m";
 
 	for (int y = 1; y < rawViewport.size(); y++){
 		if (rawViewport[y].size() == 0){
-			if (rawViewport[y + 1].substr(0, 8) == "        " ||
-				rawViewport[y - 1].substr(0, 8) == "        "){
+			// you see Dan .R, this is how you write long statements //
+			if (rawViewport[y + 1].size() >= 8 &&
+				rawViewport[y - 1].size() >= 8 &&
+				rawViewport.size() > 2 &&
+				cury != rawViewport.size() - 1
+			){
+			
+				if (rawViewport[y + 1].substr(0, 8) == "        " ||
+					rawViewport[y - 1].substr(0, 8) == "        "){
 					
-				setCursorPosition(XOffset, y);
-				cout << "\u001b[38;5;238m    |";
-				
-				for (int x = 0; x < screenWidth; x++){
-					if (isSpecial(rawViewport[y - 1][x])){
-						break;
+					setCursorPosition(XOffset, y);
+					cout << "\u001b[38;5;238m    |";
 					
-					}else if (isAlpha(rawViewport[y + 1][x])){
-						break;
-					
-					}else{
-						if ((x & 3) == 0 && x != 0){
-							setCursorPosition(XOffset + x, y);
-							cout << "\u001b[38;5;238m|";
+					for (int x = 0; x < screenWidth; x++){
+						if (isSpecial(rawViewport[y - 1][x])){
+							break;
+						
+						}else if (isAlpha(rawViewport[y + 1][x])){
+							break;
+						
+						}else{
+							if ((x & 3) == 0 && x != 0){
+								setCursorPosition(XOffset + x, y);
+								cout << "\u001b[38;5;238m|";
+							}
 						}
 					}
 				}
@@ -384,8 +398,10 @@ void drawGuideLines(){
 				}
 				
 				setCursorPosition(XOffset + x, y);
-				if (rawViewport[y][x] == ' ' && x > 0 && rawViewport[y].substr(x, 4) == "    "){   
-					cout << "\u001b[38;5;238m|";
+				if (rawViewport[y].size() >= x + 4){
+					if (rawViewport[y][x] == ' ' && x > 0 && rawViewport[y].substr(x, 4) == "    "){   
+						cout << "\u001b[38;5;238m|";
+					}
 				}
 			}
 		}
@@ -416,15 +432,21 @@ void drawGuideLines(){
 }
 
 void drawGuideLinesC(int pos){
+	if (configManager.getValue("line_enabled") == "0"){
+		return;
+	}
+
 	for (int x = 0; x < rawViewport[pos].size(); x++){
 		if ((x & 3) == 0){
-			if (rawViewport[pos][x] == ' ' && x > 0 && rawViewport[pos].substr(x, 4) == "    "){
-				setCursorPosition(XOffset + x, pos);
-				
-				if (x == curx){
-					cout << "\u001b[0m\u001b[38;5;242m|";
-				}else{
-					cout << "\u001b[0m\u001b[38;5;238m|";
+			if (rawViewport[pos].size() >= x + 4){
+				if (rawViewport[pos][x] == ' ' && x > 0 && rawViewport[pos].substr(x, 4) == "    "){
+					setCursorPosition(XOffset + x, pos);
+					
+					if (x == curx){
+						cout << "\u001b[0m\u001b[38;5;242m|";
+					}else{
+						cout << "\u001b[0m\u001b[38;5;238m|";
+					}
 				}
 			}
 		}

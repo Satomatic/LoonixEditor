@@ -48,6 +48,7 @@ class helpMenu{
 			{
 				{"F6", "Toggle diff bar"},
 				{"F7", "Low CPU (Jump scrolling)"},
+				{"F8", "Toggle indentation guide"},
 			},
 
 			// about menu //

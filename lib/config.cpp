@@ -36,6 +36,7 @@ class ConfigManager{
 			
 			// write default values
 			file << "diff_enabled:1" << endl;
+			file << "line_enabled:1" << endl;
 			file << "sess_enabled:0";
 			
 			file.close();
