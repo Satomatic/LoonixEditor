@@ -32,6 +32,9 @@ extern int fileIndex;
 extern bool hasEdited;
 extern bool insertMode;
 
+void drawGuideLines();
+void drawGuideLinesC(int pos);
+
 int unilen(string str) {
 	int length = 0;
 	for (char c : str) {
@@ -180,6 +183,7 @@ void updateCursor(){
 	string previousline = raw[index + prey];
 	string previousChar = "";
 
+
 	// get current cursor //
 	char cursorChar;
 	if (curx >= unilen(currentline)){
@@ -202,11 +206,15 @@ void updateCursor(){
 		cout << " ";
 	}
 
+	drawGuideLinesC(prey);
+	drawGuideLinesC(cury);
+
 	// draw new cursor //
 	cout << "\u001b[30m\u001b[107m";
 	setCursorPosition(curx + XOffset, cury);
 	cout << cursorChar;
 
+	
 	prey = cury;
 	prex = curx;
 }
@@ -335,6 +343,90 @@ void newRefresh(){
 		for (int i = offset; i < newViewport.size(); i++){
 			setCursorPosition(XOffset, i);
 			cout << syntaxLine(newViewport[i]);
+		}
+	}
+	
+	drawGuideLines();
+}
+
+void drawGuideLines(){
+	cout << "\u001b[0m";
+
+	for (int y = 1; y < rawViewport.size(); y++){
+		if (rawViewport[y].size() == 0){
+			if (rawViewport[y + 1].substr(0, 8) == "        " ||
+				rawViewport[y - 1].substr(0, 8) == "        "){
+					
+				setCursorPosition(XOffset, y);
+				cout << "\u001b[38;5;238m    |";
+				
+				for (int x = 0; x < screenWidth; x++){
+					if (isSpecial(rawViewport[y - 1][x])){
+						break;
+					
+					}else if (isAlpha(rawViewport[y + 1][x])){
+						break;
+					
+					}else{
+						if ((x & 3) == 0 && x != 0){
+							setCursorPosition(XOffset + x, y);
+							cout << "\u001b[38;5;238m|";
+						}
+					}
+				}
+			}
+		}
+		
+		for (int x = 0; x < rawViewport[y].size() + 1; x++){
+			if ((x & 3) == 0){
+				if (rawViewport[y][x] != ' '){
+					break;
+				}
+				
+				setCursorPosition(XOffset + x, y);
+				if (rawViewport[y][x] == ' ' && x > 0 && rawViewport[y].substr(x, 4) == "    "){   
+					cout << "\u001b[38;5;238m|";
+				}
+			}
+		}
+	}
+	
+	// highlight current line within scope //
+	for (int y = cury; y < rawViewport.size(); y++){
+		if (curx == 0){break;}
+		
+		if (rawViewport[y][curx] == ' ' && (curx & 3) == 0 || rawViewport[y].size() == 0){
+			setCursorPosition(XOffset + curx, y);
+			cout << "\u001b[38;5;242m|";
+		}else{
+			break;
+		}
+	}
+	
+	for (int y = cury; y > 0; y--){
+		if (curx == 0){break;}
+		
+		if (rawViewport[y][curx] == ' ' && (curx & 3) == 0 || rawViewport[y].size() == 0){
+			setCursorPosition(XOffset + curx, y);
+			cout << "\u001b[38;5;242m|";
+		}else{
+			break;
+		}
+	}
+}
+
+void drawGuideLinesC(int pos){
+	for (int x = 0; x < rawViewport[pos].size(); x++){
+		if ((x & 3) == 0){
+			if (rawViewport[pos][x] == ' ' && x > 0 && rawViewport[pos].substr(x, 4) == "    "){
+				setCursorPosition(XOffset + x, pos);
+				
+				if (x == curx){
+					cout << "\u001b[0m\u001b[38;5;242m|";
+				}else{
+					cout << "\u001b[0m\u001b[38;5;238m|";
+				}
+			}
 		}
 	}
 }

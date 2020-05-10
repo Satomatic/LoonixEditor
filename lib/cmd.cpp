@@ -181,19 +181,22 @@ void checkScreenSize(){
 	extern void updateCursor();
 	extern void updateViewport();
 	extern void newRefresh();
+	extern void drawGuideLines();
 
 	struct winsize size;
 	ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
 
 	if (screenWidth != size.ws_col || screenHeight != size.ws_row){
 		updateScreenSize();
+		
 		clear();
 		
 		updateViewport();
-		resetColor();
+		cout << "\u001b[0m";
 		setCursorPosition(0,0);
 		
 		drawScreen();
+		drawGuideLines();
 		updateCursor();
 		drawHeader();
 	}
@@ -211,6 +214,20 @@ int isAlpha(char letter){
 	}
 	
 	return found;    
+}
+
+int isSpecial(char letter){
+	string chars = "!$%^&*()_+}{:@~?><,.;'#[]|";
+	bool found = false;
+	
+	for (int i = 0; i < chars.size(); i++){
+		if (chars.at(i) == letter){
+			found = true;
+			break;
+		}
+	}
+	
+	return found;
 }
 
 string fillX(string text){

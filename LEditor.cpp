@@ -93,6 +93,11 @@ int main(int argc, char** argv){
 					hasEdited = true;
 					moveFileIntoMemory();
 				}
+			}else{
+				newFile();
+				currentfile = argv[1];
+				hasEdited = true;
+				moveFileIntoMemory();
 			}
 			
 			drawScreen();
@@ -160,6 +165,8 @@ int main(int argc, char** argv){
 		}
 
 		if (key == "DownArrow"){
+			drawGuideLines();
+
 			int moveIndex = 1;
 			int moveCury = 0;
 			
@@ -188,6 +195,8 @@ int main(int argc, char** argv){
 			}
 
 		}else if (key == "UpArrow"){
+			drawGuideLines();
+
 			int moveIndex = 1;
 			int moveCury = 0;
 
@@ -242,6 +251,7 @@ int main(int argc, char** argv){
 				}
 			}
 
+			drawGuideLines();
 			updateCursor();
 
 		}else if (key == "RightArrow"){
@@ -267,6 +277,7 @@ int main(int argc, char** argv){
 				}
 			}
 
+			drawGuideLines();
 			updateCursor();
 
 		}else if (key == "PGUP"){
