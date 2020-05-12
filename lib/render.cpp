@@ -1,36 +1,9 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include "global.h"
 
 using namespace std;
-
-extern int curx;
-extern int cury;
-extern int prex;
-extern int prey;
-extern int index; // acts as a start point for view port //
-
-extern int screenHeight; // used as the viewport size //
-extern int screenWidth;
-
-extern int startx;
-extern int starty;
-extern int endx;
-extern int endy;
-
-extern int XOffset;
-
-extern string currentfile;
-extern vector<string> raw;
-extern vector<string> lines;
-extern vector<string> viewport;
-extern vector<string> rawViewport;
-
-extern vector<vector<string>> openFiles;
-extern int fileIndex;
-
-extern bool hasEdited;
-extern bool insertMode;
 
 extern ConfigManager configManager;
 

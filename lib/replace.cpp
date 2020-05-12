@@ -1,16 +1,12 @@
 #include <iostream>
 #include <string>
 #include <vector> 
+#include "global.h"
 
 using namespace std;
 
 extern DiffManager diffManager;
 extern HeaderDrop headerMessage;
-extern vector<string> lines;
-extern vector<string> raw;
-extern int curx;
-extern int cury;
-extern int index;
 
 class Replace{
 	public:

@@ -82,7 +82,7 @@ string syntaxLine(string line){
 	bool charMode = false;
 
 	vector<string> statements = {"if", "else", "return", "for", "while", "elif", "then", "end", "and", "break"};
-	vector<string> variables = {"bool", "string", "int", "void", "class", "def", "function", "char", "do"};
+	vector<string> variables = {"bool", "string", "int", "void", "class", "def", "function", "char", "do", "define", "ifndef", "endif"};
 	vector<string> functions = {"extern", "include", "vector", "from", "import", "export"};
 	vector<string> tags = {
 		"html", "body", "footer",
@@ -111,6 +111,8 @@ string syntaxLine(string line){
 			break;
 		}
 	}
+
+	// if
 
 	for (int i = 0; i < text.size(); i ++){
 		if (commentMode == true){
@@ -172,7 +174,7 @@ string syntaxLine(string line){
 					}
 
 					if (nextchar == " " || nextchar == "(" || nextchar == "{"){
-						if (prevchar == " " || prevchar == "" || prevchar == "(" || i == 0){
+						if (prevchar == " " || prevchar == "" || prevchar == "(" || prevchar == "#" || i == 0){
 							string replacer = "\u001b[38;5;32m" + keyword + "\u001b[0m";
 							text.replace(i, keyword.size(), replacer);
 							i += replacer.size();

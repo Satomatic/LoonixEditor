@@ -1,15 +1,11 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "global.h"
 
 using namespace std;
 
 extern DiffManager diffManager;
-extern vector<string> raw;
-extern int XOffset;
-extern int index;
-extern int curx;
-extern int cury;
 
 class Find{
 	public:
