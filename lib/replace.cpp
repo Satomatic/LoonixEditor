@@ -75,7 +75,7 @@ class Replace{
 							int xcoord = stoi(search[done][1]);
 							int ycoord = stoi(search[done][0]);
 
-							// move cursor //                            
+							// move cursor //    
 							curx = xcoord;
 							cury = ycoord;
 							
@@ -115,6 +115,7 @@ class Replace{
 								
 								newRefresh();
 								drawHeader();
+								drawGuideLines();
 								updateCursor();
 								diffManager.drawDiffBar();
 							}
@@ -272,10 +273,11 @@ class NewReplace{
 			newRefresh();
 			updateCursor();
 			diffManager.drawDiffBar();
+			drawGuideLines();
 			
 			setCursorPosition(curx + XOffset, cury);
 			cout << "\u001b[107;30m" << replace << "\u001b[0m";
-	  
+			
 			replaceContainer.draw();
 			setCursorPosition(replaceContainer.posx + 1, replaceContainer.posy + 1);
 			cout << "find: " << replace;

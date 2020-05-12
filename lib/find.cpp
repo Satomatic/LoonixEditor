@@ -96,6 +96,7 @@ class Find{
 						drawFromPoint(0);
 						drawHeader();
 						diffManager.drawDiffBar();
+						drawGuideLines();
 						updateCursor();
 
 						// highlight find

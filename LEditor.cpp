@@ -1014,6 +1014,7 @@ int main(int argc, char** argv){
 				updateViewport();
 				drawScreen();
 				drawHeader();
+				drawGuideLines();
 				updateCursor();
 			}
 
@@ -1043,6 +1044,7 @@ int main(int argc, char** argv){
 				updateViewport();
 				drawScreen();
 				drawHeader();
+				drawGuideLines();
 				updateCursor();
 			}
 

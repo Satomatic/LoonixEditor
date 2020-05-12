@@ -331,7 +331,7 @@ void drawGuideLines(){
 	
 	cout << "\u001b[0m";
 
-	for (int y = 1; y < rawViewport.size(); y++){
+	for (int y = 1; y < rawViewport.size() - 1; y++){
 		if (rawViewport[y].size() == 0){
 			// you see Dan .R, this is how you write long statements //
 			if (rawViewport[y + 1].size() >= 8 &&
@@ -341,7 +341,7 @@ void drawGuideLines(){
 			){
 			
 				if (rawViewport[y + 1].substr(0, 8) == "        " ||
-					rawViewport[y - 1].substr(0, 8) == "        "){
+					rawViewport[y - 1].substr(0, 8) == "        " ){
 					
 					setCursorPosition(XOffset, y);
 					cout << "\u001b[38;5;238m    |";
@@ -364,7 +364,7 @@ void drawGuideLines(){
 			}
 		}
 		
-		for (int x = 0; x < rawViewport[y].size() + 1; x++){
+		for (int x = 0; x < rawViewport[y].size(); x++){
 			if ((x & 3) == 0){
 				if (rawViewport[y][x] != ' '){
 					break;
@@ -383,6 +383,7 @@ void drawGuideLines(){
 	// highlight current line within scope //
 	for (int y = cury; y < rawViewport.size(); y++){
 		if (curx == 0){break;}
+		if (rawViewport[y][curx] != ' '){break;}
 		
 		if (rawViewport[y][curx] == ' ' && (curx & 3) == 0 || rawViewport[y].size() == 0){
 			setCursorPosition(XOffset + curx, y);
@@ -394,6 +395,7 @@ void drawGuideLines(){
 	
 	for (int y = cury; y > 0; y--){
 		if (curx == 0){break;}
+		if (rawViewport[y][curx] != ' '){break;}
 		
 		if (rawViewport[y][curx] == ' ' && (curx & 3) == 0 || rawViewport[y].size() == 0){
 			setCursorPosition(XOffset + curx, y);
@@ -457,7 +459,7 @@ string returnSelection(){
 
 void clearText(){
 	for (int i = 1; i < viewport.size(); i++){
-		for (int b = 0; b < rawViewport[i].size() + 1; b++){
+		for (int b = XOffset; b < rawViewport[i].size() + 1; b++){
 			setCursorPosition(b, i);
 			cout << " ";
 		}
