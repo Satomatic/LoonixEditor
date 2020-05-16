@@ -978,7 +978,7 @@ int main(int argc, char** argv){
 			if (index < raw.size() - screenHeight + 1){
 				index ++;
 			
-				if (cury != 0){
+				if (cury > 1){
 					cury --;
 				}
 			}

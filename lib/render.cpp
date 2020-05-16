@@ -380,6 +380,10 @@ void drawGuideLines(){
 		}
 	}
 	
+	for (int i = 0; i < curx - 1; i++){
+		if (rawViewport[i][curx] != ' '){return;}
+	}
+	
 	// highlight current line within scope //
 	for (int y = cury; y < rawViewport.size(); y++){
 		if (curx == 0){break;}

@@ -82,8 +82,8 @@ string syntaxLine(string line){
 	bool charMode = false;
 
 	vector<string> statements = {"if", "else", "return", "for", "while", "elif", "then", "end", "and", "break"};
-	vector<string> variables = {"bool", "string", "int", "void", "class", "def", "function", "char", "do", "define", "ifndef", "endif"};
-	vector<string> functions = {"extern", "include", "vector", "from", "import", "export"};
+	vector<string> variables = {"bool", "string", "int", "void", "class", "def", "function", "char", "do", "define", "ifndef", "endif", "try", "except", "catch"};
+	vector<string> functions = {"extern", "include", "vector", "from", "import", "export", "pair"};
 	vector<string> tags = {
 		"html", "body", "footer",
 		"title", "link", "head", "script",
@@ -96,8 +96,8 @@ string syntaxLine(string line){
 		"php",
 		"htm",
 		"xhtml"
-	};
 
+	};
 	bool isTagged = false;
 	string commentString = getCommentString();
 
@@ -153,7 +153,7 @@ string syntaxLine(string line){
 					}
 
 					if (nextchar == " " || nextchar == "(" || nextchar == "" || nextchar == "{" || nextchar == ";"){
-						if (prevchar == " " || prevchar == "" || i == 0 || prevchar == "}" || prevchar == ")"){
+						if (prevchar == " " || prevchar == "" || i == 0 || prevchar == "}" || prevchar == ")" || prevchar == ":"){
 							string replacer = "\u001b[38;5;163m" + keyword + "\u001b[0m";
 							text.replace(i, keyword.size(), replacer);
 							i += replacer.size();
@@ -174,7 +174,7 @@ string syntaxLine(string line){
 					}
 
 					if (nextchar == " " || nextchar == "(" || nextchar == "{"){
-						if (prevchar == " " || prevchar == "" || prevchar == "(" || prevchar == "#" || i == 0){
+						if (prevchar == " " || prevchar == "" || prevchar == "(" || prevchar == "#" || prevchar == ":" || i == 0){
 							string replacer = "\u001b[38;5;32m" + keyword + "\u001b[0m";
 							text.replace(i, keyword.size(), replacer);
 							i += replacer.size();
@@ -193,7 +193,7 @@ string syntaxLine(string line){
 						prevchar = text.substr(i - 1, 1);
 					}
 
-					if (prevchar == " " || prevchar == "" || i == 0 || prevchar == "#"){
+					if (prevchar == " " || prevchar == "" || i == 0 || prevchar == "#" || prevchar == ":"){
 						string replacer = "\u001b[38;5;36m" + keyword + "\u001b[0m";
 						text.replace(i, keyword.size(), replacer);
 						i += replacer.size();
@@ -242,7 +242,14 @@ string syntaxLine(string line){
 					}
 				}
 
-				if (find_str(line, "#include") >= 1 || find_str(line, "vector<") >= 1 || find_str(line, "vector <") >= 1){
+				if (
+					find_str(line, "#include") >= 1 || 
+					find_str(line, "vector<") >= 1 || 
+					find_str(line, "vector <") >= 1 ||
+					find_str(line, "pair<") >= 1 ||
+					find_str(line, "pair <") >= 1
+				
+				){    
 					string replacer = "<\u001b[38;5;32m";
 					text.replace(i, 1, replacer);
 					i += replacer.size();

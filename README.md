@@ -29,8 +29,8 @@ A mildly temperamental console-based text editor for linux.
 \
 **Ctrl + K** Cut line\
 **Ctrl + /** Comment line\
-**Ctrl + Alt + Up** Move line up\
-**Ctrl + Alt + Down** Move line down\
+**Ctrl + Up** Move line up\
+**Ctrl + Down** Move line down\
 
 ## Build
 ### Windows
