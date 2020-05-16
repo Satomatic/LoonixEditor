@@ -25,6 +25,7 @@ class helpMenu{
 				{"Ctrl + S", "Save file"},
 				{"Ctrl + A", "Save as file"},
 				{"Ctrl + X", "Close file"},
+				{"Ctrl + Alt + O", "Replace current file"},
 				{"", ""},
 				{"F1", "Help menu"},
 			},

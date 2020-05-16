@@ -588,6 +588,9 @@ int main(int argc, char** argv){
 			}
 			
 			diffManager.init();
+
+		}else if (key == "CTRL-ALT-O"){
+			openFileCurrentBuffer();
 			
 		}else if (key == "CTRLN"){
 			string filename = "newfile";

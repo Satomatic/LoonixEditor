@@ -381,13 +381,13 @@ void drawGuideLines(){
 	}
 	
 	for (int i = 0; i < curx - 1; i++){
-		if (rawViewport[i][curx] != ' '){return;}
+		if (rawViewport[cury][i] != ' '){return;}
 	}
 	
 	// highlight current line within scope //
 	for (int y = cury; y < rawViewport.size(); y++){
 		if (curx == 0){break;}
-		if (rawViewport[y][curx] != ' '){break;}
+		if (rawViewport[y][curx] != ' ' && rawViewport[y].size() > 2){break;}
 		
 		if (rawViewport[y][curx] == ' ' && (curx & 3) == 0 || rawViewport[y].size() == 0){
 			setCursorPosition(XOffset + curx, y);
@@ -399,8 +399,8 @@ void drawGuideLines(){
 	
 	for (int y = cury; y > 0; y--){
 		if (curx == 0){break;}
-		if (rawViewport[y][curx] != ' '){break;}
-		
+		if (rawViewport[y][curx] != ' ' && rawViewport[y].size() > 2){break;}
+
 		if (rawViewport[y][curx] == ' ' && (curx & 3) == 0 || rawViewport[y].size() == 0){
 			setCursorPosition(XOffset + curx, y);
 			cout << "\u001b[38;5;242m|";
