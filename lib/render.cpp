@@ -67,6 +67,10 @@ void drawHeader(){
 	resetColor();
 	cout << "\u001b[30m\u001b[107m";
 
+	if (configManager.getValue("dark_enabled") == "1"){
+		cout << "\u001b[0m";
+	}
+
 	string headerdata = "Loonix [cols: X][row: Y] :: Z";
 
 	headerdata = replace_all(headerdata, "X", to_string(curx));
@@ -105,6 +109,10 @@ void updateHeader(){
 	setCursorPosition(0,0);
 	resetColor();
 	cout << "\u001b[30m\u001b[107m";
+	
+	if (configManager.getValue("dark_enabled") == "1"){
+		cout << "\u001b[0m";
+	}
 
 	string headerdata = "Loonix [cols: X][row: Y] :: Z";
 
@@ -142,7 +150,11 @@ void updateHeader(){
 
 void drawFooter(){
 	setCursorPosition(0, screenHeight - 1);
-	cout << "\u001b[0m" << "\u001b[30;107m" << fillX("F1 Help  ^X Exit") << "\u001b[0m";
+	if (configManager.getValue("dark_enabled") == "1"){
+		cout << "\u001b[0m" << fillX("F1 Help  ^X Exit") << "\u001b[0m";
+	}else{
+		cout << "\u001b[0m" << "\u001b[30;107m" << fillX("F1 Help  ^X Exit") << "\u001b[0m";
+	}
 }
 
 void drawScreen(){

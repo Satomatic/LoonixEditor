@@ -28,6 +28,7 @@ class helpMenu{
 				{"Ctrl + Alt + O", "Replace current file"},
 				{"", ""},
 				{"F1", "Help menu"},
+				{"F5", "Option menu"},
 			},
 			
 			// editor menu //

@@ -12,7 +12,8 @@ class OptionMenu{
 			{"Block scrolling",   "lowc_enabled", configManager.getSetting("lowc_enabled", "0")},
 			{"Indentation guide", "line_enabled", configManager.getSetting("line_enabled", "1")},
 			{"Diff bar",          "diff_enabled", configManager.getSetting("diff_enabled", "1")},
-			{"Scroll bar",        "scrl_enabled", configManager.getSetting("scrl_enabled", "1")}
+			{"Scroll bar",        "scrl_enabled", configManager.getSetting("scrl_enabled", "1")},
+			{"Dark header",       "dark_enabled", configManager.getSetting("dark_enabled", "0")}
 		};
 
 		int cursorpos = 0;
