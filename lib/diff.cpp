@@ -29,7 +29,13 @@ class DiffManager{
 
 	void drawDiffBar(){
 		if (configManager.getValue("diff_enabled") != "1"){
+			if (XOffset == 1){XOffset = 0;}
 			return;
+		}
+		
+		if (XOffset == 0){
+			XOffset = 1;
+			newRefresh();
 		}
 		
 		for (int i = 0; i < screenHeight; i++){

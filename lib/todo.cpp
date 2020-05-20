@@ -23,6 +23,7 @@ class Todo{
 
 	void init(){
 		TodoContainer.title = "Todo";
+		TodoContainer.titleAlign = TodoContainer.CENTER;
 		TodoContainer.width = 40;
 		TodoContainer.height = 10;
 		TodoContainer.center = true;

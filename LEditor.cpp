@@ -8,6 +8,7 @@
 #include "lib/config.cpp"
 #include "lib/render.cpp"
 #include "lib/display.cpp"
+#include "lib/options.cpp"
 #include "lib/diff.cpp"
 #include "lib/help.cpp"
 #include "lib/file.cpp"
@@ -130,7 +131,9 @@ int main(int argc, char** argv){
 	scrollbar.x = screenWidth - 1;
 	scrollbar.y = 1;
 	scrollbar.height = screenHeight - 2;
-	scrollbar.draw();
+	if (configManager.getValue("scrl_enabled") != "0")
+		scrollbar.draw();
+	
 
 	// program loop //
 	while (true){
@@ -147,7 +150,8 @@ int main(int argc, char** argv){
 		diffManager.drawDiffBar();
 		scrollbar.size = lines.size() - 1;
 		scrollbar.position = index;
-		scrollbar.draw();
+		if (configManager.getValue("scrl_enabled") != "0")
+			scrollbar.draw();
 		updateHeader();
 		drawFooter();
 
@@ -887,6 +891,10 @@ int main(int argc, char** argv){
 			drawHeader();
 			updateCursor();
 			
+		}else if (key == "F5"){
+			OptionMenu options;
+			options.init();
+		
 		}else if (key == "F6"){
 			if (configManager.getValue("diff_enabled") == "1"){
 				configManager.putValue("diff_enabled", "0");

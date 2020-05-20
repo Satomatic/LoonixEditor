@@ -510,6 +510,8 @@ class ScrollBar{
 		int y = 0;
 		
 	void draw(){
+		cout << "\u001b[0m";
+
 		// draw bar background //
 		for (int i = 0; i < height; i++){
 			setCursorPosition(x, y + i);
@@ -535,7 +537,6 @@ class ScrollBar{
 		double g = (double)e * f;
 		
 		if (ceil(g) > height - ceil(d)){
-//          g = (ceil(g) - ceil(d));
 			g = height - ceil(d);
 		}
 		
