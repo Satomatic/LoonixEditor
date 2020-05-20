@@ -126,6 +126,12 @@ int main(int argc, char** argv){
 
 	diffManager.init();
 
+	ScrollBar scrollbar;
+	scrollbar.x = screenWidth - 1;
+	scrollbar.y = 1;
+	scrollbar.height = screenHeight - 2;
+	scrollbar.draw();
+
 	// program loop //
 	while (true){
 		// header message logic //
@@ -139,6 +145,9 @@ int main(int argc, char** argv){
 		}
 
 		diffManager.drawDiffBar();
+		scrollbar.size = lines.size() - 1;
+		scrollbar.position = index;
+		scrollbar.draw();
 		updateHeader();
 		drawFooter();
 

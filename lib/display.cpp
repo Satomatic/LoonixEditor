@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <math.h>
 
 using namespace std;
 
@@ -483,6 +484,52 @@ class Input{
 				setCursorPosition(x + cx - 1, y + cy - 1);
 				cout << " ";
 			}
+		}
+	}
+};
+
+class ScrollBar{
+	public:
+		int height = 10;
+		int size = 30;
+		int position = 10;
+		int x = 0;
+		int y = 0;
+		
+	void draw(){
+		// draw bar background //
+		for (int i = 0; i < height; i++){
+			setCursorPosition(x, y + i);
+			cout << "\u001b[38;5;242m" << "░";
+		}
+		
+		if (size <= height){return;}
+		
+		// get scroll bar size //
+		double a = (double)height / 100;
+		double b = (double)100 / size;
+		double c = (double)height * b;
+		double d = (double)a * c;
+		
+		if (ceil(d) > height){
+			d = height;
+		}
+		
+		// get position //
+		double e = (double)height / 100;
+		double si = (double)((double)100 / (double)size);
+		double f = (double)( ((double)100 / (double)size) * position );
+		double g = (double)e * f;
+		
+		if (ceil(g) > height - ceil(d)){
+//          g = (ceil(g) - ceil(d));
+			g = height - ceil(d);
+		}
+		
+		cout << "\u001b[0m";
+		for (int i = 0; i < ceil(d); i++){
+			setCursorPosition(x, y + i + ceil(g));
+			cout << "░";
 		}
 	}
 };

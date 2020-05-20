@@ -19,6 +19,7 @@ class Todo{
 		int scroll = 0;
 		
 		Box TodoContainer;
+		ScrollBar scrollBar;
 
 	void init(){
 		TodoContainer.title = "Todo";
@@ -26,6 +27,13 @@ class Todo{
 		TodoContainer.height = 10;
 		TodoContainer.center = true;
 		TodoContainer.draw();
+
+		scrollBar.height = 10;
+		scrollBar.x = TodoContainer.posx + TodoContainer.width;
+		scrollBar.y = TodoContainer.posy + 1;
+		scrollBar.size = 0;
+		scrollBar.position = 0;
+		scrollBar.draw();
 
 		// search for flags //
 		for (int y = 0; y < raw.size(); y++){
@@ -45,8 +53,8 @@ class Todo{
 			string message = "No results found";
 			int x = centerWidth(message, TodoContainer.width + 1);
 			
-			setCursorPosition(TodoContainer.posx + x, TodoContainer.posy + 1);
-			cout << "\u001b[1m" << message;;
+			setCursorPosition(TodoContainer.posx + x + 1, TodoContainer.posy + 1);
+			cout << "\u001b[0;1m" << message;
 			
 			while (true){
 				string key = getInput();
@@ -63,9 +71,14 @@ class Todo{
 		// display results //
 		updateView();
 		while (true){
+			scrollBar.size = results.size();
+			scrollBar.draw();
+			
 			string key = getInput();
 			
 			if (key == "DownArrow"){
+				scrollBar.position = scroll;
+				
 				if (scroll + posy < results.size() - 1){ // if not a bottom of list //
 					if (posy == TodoContainer.height - 1){ // if at bottom of view //
 						scroll ++;
@@ -75,6 +88,8 @@ class Todo{
 				}
 				
 			}else if (key == "UpArrow"){
+				scrollBar.position = scroll;
+				
 				if (scroll + posy != 0){
 					if (posy == 0){
 						scroll --;
@@ -129,7 +144,7 @@ class Todo{
 				int gap = 0;
 				gap = TodoContainer.width - linedata.size() - results[i][0].size();
 				
-				for (int b = 0; b < gap - 1; b++){
+				for (int b = 0; b < gap - 2; b++){
 					linedata += " ";
 				}
 				
