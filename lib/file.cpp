@@ -18,6 +18,8 @@ extern int fileIndex;
 extern HeaderDrop headerMessage;
 extern DiffManager diffManager;
 
+void saveFile();
+
 void loadFile(string filepath){
 	lines.clear();
 	raw.clear();
@@ -260,6 +262,81 @@ int openFileNewBuffer(){
 	}
 
 	return 2; // return 2 if file remains unopened //
+}
+
+void openFileCurrentBuffer(){
+	cout << "\u001b[0m";
+	string input;
+	bool nofill = false;
+	int height = 1;
+	
+	while (true){
+		Input open;
+		open.container.nofill = nofill;
+		open.height = height;
+		open.input = input;
+		open.title = "Replace buffer";
+		open.prefix = "File > ";
+		open.maxx = 15;
+		open.center = true;
+		open.border = true;
+		open.init();
+		
+		input = open.input;
+		
+		if (FileExists(input)){
+			open.undraw();
+			break;
+		}else if (input == ""){
+			open.undraw();
+			break;
+		}else{
+			height = 2;
+			nofill = true;
+			setCursorPosition(open.x, open.y + 2);
+			cout << "\u001b[38;5;124mFile does not exist";
+			open.container.draw();
+		}
+	}
+	
+	OptionDialog save;
+	if (input != ""){
+		if (hasEdited == true){
+			save.message = "Save changes?";
+			save.items = {"Yes", "No", "Cancel"};
+			save.centerText = true;
+			save.draw();
+			
+			if (save.selected == 0){
+				saveFile();
+			
+			}else if (save.selected == 2){
+				save.undraw();
+				return;
+			}
+		}
+		
+		// clear screen //
+		clearText();
+		
+		// clear file memory //
+		fileMemory[fileIndex].clear();
+		openFiles[fileIndex][0] = input;
+		openFiles[fileIndex][1] = to_string(0);
+		openFiles[fileIndex][2] = to_string(0);
+		openFiles[fileIndex][3] = to_string(0);
+		openFiles[fileIndex][4] = "false";
+		currentfile = input;
+		loadFile(input);
+		moveFileIntoMemory();
+	
+		newRefresh();
+		updateHeader();
+		updateCursor();
+	}
+	
+	newRefresh();
+	updateCursor();
 }
 
 void saveFile(){

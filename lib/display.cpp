@@ -84,6 +84,7 @@ class Box{
 		bool hcenter = false;
 		bool center = false;
 		bool centerText = false;
+		bool nofill = false;
 
 		enum align{
 			LEFT,
@@ -120,14 +121,24 @@ class Box{
 			cout << "┌" << linetop << "┐";
 
 			// draw mid bars //
-			string linefill = "";
-			for (int i = 0; i < width; i++){
-				linefill += " ";
-			   }
+			if (nofill == true){
+				for (int i = 0; i < height; i++){
+					setCursorPosition(posx, posy + i + 1);
+					cout << "│";
+					setCursorPosition(posx + width + 1, posy + i + 1);
+					cout << "│";
+				}
+			}else{
+			
+				string linefill = "";
+				for (int i = 0; i < width; i++){
+					linefill += " ";
+				}
 
-			for (int i = 0; i < height; i++){
-				setCursorPosition(posx, posy + i + 1);
-				cout << "│" << linefill << "│";
+				for (int i = 0; i < height; i++){
+					setCursorPosition(posx, posy + i + 1);
+					cout << "│" << linefill << "│";
+				}
 			}
 
 			// draw bottom line //
@@ -367,6 +378,7 @@ class Input{
 		int y = 0;
 		int maxx = 10;
 		int scroll = 0;
+		int height = 1;
 	
 		bool border = false;
 		bool showing = true;
@@ -378,6 +390,8 @@ class Input{
 		string prefix = "";
 
 		vector <string> customClose;
+		
+		Box container;
 
 	void init(){
 		// center pos //
@@ -392,11 +406,10 @@ class Input{
 
 		// draw border //
 		if (border == true){
-			Box container;
 			container.posx = x - 1;
 			container.posy = y - 1;
 			container.width = maxx + prefix.size() + 1;
-			container.height = 1;
+			container.height = height;
 			container.titleAlign = container.CENTER;
 
 			if (title != ""){

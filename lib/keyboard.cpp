@@ -103,6 +103,16 @@ string getInput(){
 
 		return absolute;
 
+	}else if (key == -62){
+		char a = getch();
+		string absolute;
+		
+		if (a == -113){
+			absolute = "CTRL-ALT-O";
+		}
+		
+		return absolute;
+
 	}else{
 		string absolute = "";
 

@@ -597,6 +597,9 @@ int main(int argc, char** argv){
 			}
 			
 			diffManager.init();
+
+		}else if (key == "CTRL-ALT-O"){
+			openFileCurrentBuffer();
 			
 		}else if (key == "CTRLN"){
 			string filename = "newfile";
@@ -913,11 +916,11 @@ int main(int argc, char** argv){
 			if (configManager.getValue("lowc_enabled") == "1"){
 				configManager.putValue("lowc_enabled", "0");
 				
-				headerMessage.message = "Disabled Smooth Scrolling";
+				headerMessage.message = "Enabled Smooth Scrolling";
 			}else{
 				configManager.putValue("lowc_enabled", "1");
 				
-				headerMessage.message = "Enabled Smooth Scrolling";
+				headerMessage.message = "Disabled Smooth Scrolling";
 			}
 			
 			headerMessage.styling = "\u001b[0m";
