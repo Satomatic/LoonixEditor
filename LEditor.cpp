@@ -150,6 +150,10 @@ int main(int argc, char** argv){
 		diffManager.drawDiffBar();
 		scrollbar.size = lines.size() - 1;
 		scrollbar.position = index;
+		scrollbar.x = screenWidth - 1;
+		scrollbar.height = screenHeight - 2;
+		scrollbar.y = 1; 
+		
 		if (configManager.getValue("scrl_enabled") != "0")
 			scrollbar.draw();
 		updateHeader();

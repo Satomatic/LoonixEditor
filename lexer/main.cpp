@@ -173,8 +173,8 @@ string syntaxLine(string line){
 						prevchar = text.substr(i - 1, 1);
 					}
 
-					if (nextchar == " " || nextchar == "(" || nextchar == "{"){
-						if (prevchar == " " || prevchar == "" || prevchar == "(" || prevchar == "#" || prevchar == ":" || i == 0){
+					if (nextchar == " " || nextchar == "(" || nextchar == "{" || nextchar == "*"){
+						if (prevchar == " " || prevchar == "" || prevchar == "(" || prevchar == "#" || prevchar == ":" || prevchar == "*" || i == 0){
 							string replacer = "\u001b[38;5;32m" + keyword + "\u001b[0m";
 							text.replace(i, keyword.size(), replacer);
 							i += replacer.size();
