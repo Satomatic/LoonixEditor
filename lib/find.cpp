@@ -134,6 +134,7 @@ class Find{
 
 		drawFromPoint(0);
 		updateCursor();
+		drawGuideLines();
 	}
 
 	void updateInput(){

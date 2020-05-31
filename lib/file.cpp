@@ -329,7 +329,11 @@ void openFileCurrentBuffer(){
 		currentfile = input;
 		loadFile(input);
 		moveFileIntoMemory();
-	
+		
+		index = 0;
+		cury = 1;
+		curx = 0;
+		
 		newRefresh();
 		updateHeader();
 		updateCursor();
