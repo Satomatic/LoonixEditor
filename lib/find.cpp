@@ -33,9 +33,9 @@ class Find{
 		// Size information //
 		if (screenWidth > 46){
 			setCursorPosition(FindContainer.width - 18, FindContainer.posy + 1);
-			cout << "\u001b[107;30mReturn\u001b[0m: Find / Next";
+			cout << "\u001b[7mReturn\u001b[0m: Find / Next";
 			setCursorPosition(FindContainer.width - 18, FindContainer.posy + 2);
-			cout << "\u001b[107;30mCtrl X\u001b[0m:        Exit";
+			cout << "\u001b[7mCtrl X\u001b[0m:        Exit";
 		}
 
 		updateInput();
@@ -101,7 +101,7 @@ class Find{
 
 						// highlight find
 						setCursorPosition(curx + XOffset, cury);
-						cout << "\u001b[30;107m" << input << "\u001b[0m";
+						cout << "\u001b[7m" << input << "\u001b[0m";
 					}
 
 					FindContainer.message = "\\Found ";

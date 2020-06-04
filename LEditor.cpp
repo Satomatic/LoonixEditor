@@ -113,9 +113,9 @@ int main(int argc, char** argv){
 	// Welcome Message //
 	Box WelcomeMessage;
 	WelcomeMessage.message = " Welcome to Loonix editor \\ \\";
-	WelcomeMessage.message += "  \u001b[30;107m^N\u001b[0m New";
-	WelcomeMessage.message += " \u001b[30;107m^O\u001b[0m Open";
-	WelcomeMessage.message += " \u001b[30;107m^S\u001b[0m Save";
+	WelcomeMessage.message += "  \u001b[7m^N\u001b[0m New";
+	WelcomeMessage.message += " \u001b[7m^O\u001b[0m Open";
+	WelcomeMessage.message += " \u001b[7m^S\u001b[0m Save";
 	WelcomeMessage.width = 26;
 	WelcomeMessage.height = 3;
 	WelcomeMessage.center = true;
@@ -134,7 +134,6 @@ int main(int argc, char** argv){
 	if (configManager.getValue("scrl_enabled") != "0")
 		scrollbar.draw();
 	
-
 	// program loop //
 	while (true){
 		// header message logic //

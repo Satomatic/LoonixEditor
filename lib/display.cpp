@@ -341,7 +341,7 @@ class OptionDialog{
 		
 		for (int i = 0; i < items.size(); i++){
 			if (i == selected){
-				cout << "\u001b[107;30;4m";
+				cout << "\u001b[7;4m";
 			}else{
 				cout << "\u001b[4m";
 			}
@@ -479,7 +479,7 @@ class Input{
 		
 		// draw cursor //
 		setCursorPosition(x + cursorpos + prefix.size(), y);
-		cout << "\u001b[107;30m \u001b[0m";
+		cout << "\u001b[7m \u001b[0m";
 	
 		cursorpre = cursorpos;
 	}

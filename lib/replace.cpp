@@ -81,7 +81,7 @@ class Replace{
 							
 							// highlight word //
 							setCursorPosition(xcoord, ycoord);
-							cout << "\u001b[107;30m" << replace << "\u001b[0m";
+							cout << "\u001b[7m" << replace << "\u001b[0m";
 							
 							updateCursor();
 							
@@ -276,7 +276,7 @@ class NewReplace{
 			drawGuideLines();
 			
 			setCursorPosition(curx + XOffset, cury);
-			cout << "\u001b[107;30m" << replace << "\u001b[0m";
+			cout << "\u001b[7m" << replace << "\u001b[0m";
 			
 			replaceContainer.draw();
 			setCursorPosition(replaceContainer.posx + 1, replaceContainer.posy + 1);

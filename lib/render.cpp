@@ -65,7 +65,7 @@ int testViewport(){
 void drawHeader(){
 	setCursorPosition(0,0);
 	resetColor();
-	cout << "\u001b[30m\u001b[107m";
+	cout << "\u001b[30;107m";
 
 	if (configManager.getValue("dark_enabled") == "1"){
 		cout << "\u001b[0m";
@@ -108,7 +108,7 @@ void drawHeader(){
 void updateHeader(){
 	setCursorPosition(0,0);
 	resetColor();
-	cout << "\u001b[30m\u001b[107m";
+	cout << "\u001b[30;107m";
 	
 	if (configManager.getValue("dark_enabled") == "1"){
 		cout << "\u001b[0m";
@@ -197,10 +197,9 @@ void updateCursor(){
 	drawGuideLinesC(cury);
 
 	// draw new cursor //
-	cout << "\u001b[30m\u001b[107m";
+	cout << "\u001b[7m";
 	setCursorPosition(curx + XOffset, cury);
 	cout << cursorChar;
-
 	
 	prey = cury;
 	prex = curx;
@@ -235,7 +234,7 @@ void updateCursorBlank(){
 	setCursorPosition(prex, prey);
 	cout << previousline.at(prex);
 
-	cout << "\u001b[30m\u001b[107m";
+	cout << "\u001b[7m";
 	// draw new cursor //
 	setCursorPosition(curx, cury);
 	cout << " ";
