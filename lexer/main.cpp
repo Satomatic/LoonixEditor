@@ -93,7 +93,7 @@ string syntaxLine(string line){
 
 	vector<string> tagLanguages = {
 		"html",
-		"php",
+//      "php",
 		"htm",
 		"xhtml"
 

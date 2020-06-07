@@ -197,7 +197,7 @@ void updateCursor(){
 	drawGuideLinesC(cury);
 
 	// draw new cursor //
-	cout << "\u001b[7m";
+	cout << "\u001b[0m\u001b[7m";
 	setCursorPosition(curx + XOffset, cury);
 	cout << cursorChar;
 	
