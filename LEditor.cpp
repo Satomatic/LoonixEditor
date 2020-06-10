@@ -720,12 +720,10 @@ int main(int argc, char** argv){
 
 		}else if (key == "CTRL-RightArrow"){
 			int pos = curx;
-			for (int i=0; i < raw[index + cury].size(); i++){
-				if (i > curx){
-					if (isAlpha(raw[index + cury].at(i)) != true){
-						pos += (i - curx);
-						break;
-					}
+			for (int i=curx; i < raw[index + cury].size(); i++){
+				if (isAlpha(raw[index + cury].at(i)) != true){
+					pos += (i - curx);
+					break;
 				}
 			}
 
@@ -788,6 +786,7 @@ int main(int argc, char** argv){
 				int start = 0;
 				int end = 0;
 				
+				// selection logic //
 				if (endx < startx){
 					start = endx;
 					end = startx;
@@ -819,7 +818,7 @@ int main(int argc, char** argv){
 				cout << newline;
 				
 				updateViewport();    
-				
+				newRefresh();
 				updateCursor();
 
 			}else if (raw.size() - 1 != 1){

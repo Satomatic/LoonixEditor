@@ -8,14 +8,17 @@ A mildly temperamental console-based text editor for linux.
 ## How to use
 ### Key binds
 **F1** Help menu\
+**F5** Option Menu\
 **Ctrl + N** New file\
 **Ctrl + O** Open file\
 **Ctrl + S** Save file\
 **Ctrl + A** Save as filename\
+**Ctrl + Alt + O** Open in current buffer\
 **Ctrl + X** Close file\
 \
 **F6** Diff bar toggle\
 **F7** Low CPU toggle\
+**F8** Indentation guide toggle\
 \
 **Ctrl + Alt + RightArrow** Move to next file\
 **Ctrl + Alt + LeftArrow** Move to previous file\

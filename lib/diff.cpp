@@ -5,6 +5,7 @@
 using namespace std;
 
 extern vector<vector<string>> fileMemory;
+extern vector<string> viewport;
 extern vector<string> raw;
 extern ConfigManager configManager;
 extern bool diffEnable;
@@ -42,7 +43,7 @@ class DiffManager{
 			setCursorPosition(0, i + 1);
 			cout << "\u001b[0m";
 
-			if (i < diff[fileIndex].size()){
+			if (i < diff[fileIndex].size() && i < viewport.size() - 1){
 				if (diff[fileIndex][index + i] == 0){
 					cout << "\u001b[0m";
 				
@@ -52,7 +53,7 @@ class DiffManager{
 				}else if (diff[fileIndex][index + i] == 2){
 					cout << "\u001b[38;5;29m";
 				}
-				
+
 			}else{
 				cout << "\u001b[38;5;242m";
 			}
