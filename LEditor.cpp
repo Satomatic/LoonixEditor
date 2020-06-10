@@ -695,10 +695,18 @@ int main(int argc, char** argv){
 				raw[index + cury] = nextline;
 				lines[index + cury - 1] = syntaxLine(currentline);
 				lines[index + cury] = syntaxLine(nextline);
+				
+				// swap values in diff //
+				int currentValue = diffManager.diff[fileIndex][index + cury - 1];
+				int previousValue = diffManager.diff[fileIndex][index + cury - 2];
+				
+				diffManager.diff[fileIndex][index + cury - 1] = previousValue;
+				diffManager.diff[fileIndex][index + cury - 2] = currentValue;
 
 				cury --;
 			}
 
+			diffManager.drawDiffBar();
 			newRefresh();
 			updateCursor();
 
@@ -711,10 +719,18 @@ int main(int argc, char** argv){
 				raw[index + cury] = previousline;
 				lines[index + cury + 1] = syntaxLine(currentline);
 				lines[index + cury ] = syntaxLine(previousline);
-
+				
+				// swap values in diff //
+				int currentValue = diffManager.diff[fileIndex][index + cury - 1];
+				int previousValue = diffManager.diff[fileIndex][index + cury];
+				
+				diffManager.diff[fileIndex][index + cury - 1] = previousValue;
+				diffManager.diff[fileIndex][index + cury] = currentValue;
+				
 				cury ++;
 			}
 
+			diffManager.drawDiffBar();
 			newRefresh();
 			updateCursor();
 
