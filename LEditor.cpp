@@ -1205,12 +1205,13 @@ int main(int argc, char** argv){
 			
 					if (value == 0){
 						setCursorPosition(XOffset + i, cury);
+						cout << "\u001b[0m";
 						if (comment == true){
 							cout << "\u001b[38;5;242m";
 						}else{
 							cout << "\u001b[97m";
 						}
-						cout << "\u001b[49m\u001b[4m" << closer;
+						cout << "\u001b[4m" << closer;
 						break;
 					}
 				}
