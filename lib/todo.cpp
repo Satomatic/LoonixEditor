@@ -136,6 +136,8 @@ class Todo{
 	}
 	
 	void updateView(){
+		cout << "\u001b[0m";
+		
 		// update viewport //
 		view.clear();
 		for (int i = 0; i < results.size(); i++){
