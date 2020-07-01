@@ -73,9 +73,11 @@ class OptionMenu{
 	}
 	
 	void drawOptions(){
+		cout << "\u001b[0m";
+	
 		for (int i = 0; i < options.size(); i++){
 			if (i == cursorpos){
-				cout << "\u001b[107;30m";
+				cout << "\u001b[7m";
 			}else{
 				cout << "\u001b[0m";
 			}

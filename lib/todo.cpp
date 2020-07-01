@@ -167,7 +167,7 @@ class Todo{
 		for (int i = 0; i < view.size(); i++){
 			setCursorPosition(TodoContainer.posx + 1, TodoContainer.posy + 1 + i);
 			if (i == posy){
-				cout << "\u001b[107;30m" << view[i] << "\u001b[0m ";
+				cout << "\u001b[7m" << view[i] << "\u001b[0m ";
 			}else{
 				cout << view[i];
 			}

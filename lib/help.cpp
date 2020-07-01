@@ -119,6 +119,8 @@ class helpMenu{
 	}
 	
 	void updateTabs(){
+		cout << "\u001b[0m";
+		
 		int size = 3;
 		
 		for (int i = 0; i < tabs.size(); i++){
@@ -136,7 +138,7 @@ class helpMenu{
 		// draw tabs //
 		for (int i = 0; i < tabs.size(); i++){
 			if (i == tabIndex){
-				cout << "\u001b[107;30m" << tabs[i] << "\u001b[0m";
+				cout << "\u001b[7m" << tabs[i] << "\u001b[0m";
 			}else{
 				cout << tabs[i];
 			}
