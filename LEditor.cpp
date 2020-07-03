@@ -53,6 +53,7 @@ bool insertMode = false;
 HeaderDrop headerMessage;
 DiffManager diffManager;
 ConfigManager configManager;
+ScrollBar scrollbar;
 
 string currentfile = "";
 
@@ -127,7 +128,6 @@ int main(int argc, char** argv){
 
 	diffManager.init();
 
-	ScrollBar scrollbar;
 	scrollbar.x = screenWidth - 1;
 	scrollbar.y = 1;
 	scrollbar.height = screenHeight - 2;
@@ -147,6 +147,8 @@ int main(int argc, char** argv){
 		}
 
 		diffManager.drawDiffBar();
+		
+		// update scroll bar //
 		scrollbar.size = lines.size() - 1;
 		scrollbar.position = index;
 		scrollbar.x = screenWidth - 1;

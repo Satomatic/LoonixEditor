@@ -7,6 +7,7 @@ using namespace std;
 
 extern DiffManager diffManager;
 extern HeaderDrop headerMessage;
+extern ScrollBar scrollbar;
 
 class Replace{
 	public:
@@ -118,6 +119,8 @@ class Replace{
 								drawGuideLines();
 								updateCursor();
 								diffManager.drawDiffBar();
+								scrollbar.position = index;
+								scrollbar.draw();
 							}
 							
 							done ++;
@@ -273,6 +276,8 @@ class NewReplace{
 			newRefresh();
 			updateCursor();
 			diffManager.drawDiffBar();
+			scrollbar.position = index;
+			scrollbar.draw();
 			drawGuideLines();
 			
 			setCursorPosition(curx + XOffset, cury);

@@ -6,6 +6,7 @@
 using namespace std;
 
 extern DiffManager diffManager;
+extern ScrollBar scrollbar;
 
 class Find{
 	public:
@@ -96,6 +97,8 @@ class Find{
 						drawFromPoint(0);
 						drawHeader();
 						diffManager.drawDiffBar();
+						scrollbar.position = index;
+						scrollbar.draw();
 						drawGuideLines();
 						updateCursor();
 
