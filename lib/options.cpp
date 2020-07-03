@@ -5,6 +5,7 @@
 using namespace std;
 
 extern ConfigManager configManager;
+extern DiffManager diffManager;
 
 class OptionMenu{
 	public:
@@ -26,9 +27,9 @@ class OptionMenu{
 		container.title = "Options";
 		container.titleAlign = container.CENTER;
 		container.center = true;
+		container.draw();
 		
 		while (true){
-			container.draw();
 			drawOptions();
 			
 			string key = getInput();
@@ -65,6 +66,7 @@ class OptionMenu{
 		}
 		
 		clear();
+		diffManager.drawDiffBar();
 		newRefresh();
 		drawHeader();
 		drawFooter();

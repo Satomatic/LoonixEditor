@@ -18,7 +18,9 @@ class DiffManager{
 	public:
 		vector<vector<int>> diff;
 		vector<int> tempDiff;
-		string sideChar = "░";
+//      string sideChar = "░";
+//      string sideChar = "~";
+		string sideChar = "▌";
 
 	void init(){
 		vector<int> cdiff;

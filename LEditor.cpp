@@ -8,8 +8,8 @@
 #include "lib/config.cpp"
 #include "lib/render.cpp"
 #include "lib/display.cpp"
-#include "lib/options.cpp"
 #include "lib/diff.cpp"
+#include "lib/options.cpp"
 #include "lib/help.cpp"
 #include "lib/file.cpp"
 #include "lib/replace.cpp"
@@ -82,7 +82,7 @@ int main(int argc, char** argv){
 			updateCursor();
 		}else{
 			if (argc == 3){
-				if (argv[2] == "-c"){
+				if ((string)argv[2] == "-c"){
 					// Create new file and save //
 					createFile(argv[1]);
 					loadFile(argv[1]);
@@ -281,7 +281,7 @@ int main(int argc, char** argv){
 				}else{
 					curx = 0;
 					cury ++;
-					refresh();
+					newRefresh();
 				}
 
 			}else{
