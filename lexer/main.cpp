@@ -81,8 +81,8 @@ string syntaxLine(string line){
 	bool tagMode = false;
 	bool charMode = false;
 
-	vector<string> statements = {"if", "else", "return", "for", "while", "elif", "then", "end", "and", "break"};
-	vector<string> variables = {"bool", "string", "int", "void", "class", "def", "function", "char", "do", "define", "ifndef", "endif", "try", "except", "catch", "const"};
+	vector<string> statements = {"if", "else", "return", "for", "while", "elif", "then", "end", "and", "break", "in", "elseif"};
+	vector<string> variables = {"bool", "string", "int", "void", "class", "def", "function", "char", "do", "define", "ifndef", "endif", "try", "except", "catch", "const", "auto"};
 	vector<string> functions = {"extern", "include", "vector", "from", "import", "export", "pair"};
 	vector<string> tags = {
 		"html", "body", "footer",
@@ -93,7 +93,6 @@ string syntaxLine(string line){
 
 	vector<string> tagLanguages = {
 		"html",
-//      "php",
 		"htm",
 		"xhtml"
 
@@ -143,8 +142,12 @@ string syntaxLine(string line){
 		}else{
 			for (int b = 0; b < statements.size(); b++){
 				string keyword = statements[b];
+				string currentWord = text.substr(i, keyword.size());
+				string upper;
+				
+				for (auto & c: keyword) upper += toupper(c);
 
-				if (text.substr(i, keyword.size()) == keyword && isTagged == false){
+				if (currentWord == keyword || currentWord == upper){
 					string nextchar = text.substr(i + keyword.size(), 1);
 					string prevchar = "";
 
@@ -154,7 +157,7 @@ string syntaxLine(string line){
 
 					if (nextchar == " " || nextchar == "(" || nextchar == "" || nextchar == "{" || nextchar == ";"){
 						if (prevchar == " " || prevchar == "" || i == 0 || prevchar == "}" || prevchar == ")" || prevchar == ":"){
-							string replacer = "\u001b[38;5;163m" + keyword + "\u001b[0m";
+							string replacer = "\u001b[38;5;163m" + currentWord + "\u001b[0m";
 							text.replace(i, keyword.size(), replacer);
 							i += replacer.size();
 						}
@@ -164,8 +167,12 @@ string syntaxLine(string line){
 
 			for (int b = 0; b < variables.size(); b++){
 				string keyword = variables[b];
+				string currentWord = text.substr(i, keyword.size());
+				string upper;
+				
+				for (auto & c: keyword) upper += toupper(c);
 
-				if (text.substr(i, keyword.size()) == keyword){
+				if (currentWord == keyword || currentWord  == upper){
 					string nextchar = text.substr(i + keyword.size(), 1);
 					string prevchar = "";
 
@@ -175,7 +182,8 @@ string syntaxLine(string line){
 
 					if (nextchar == " " || nextchar == "(" || nextchar == "{" || nextchar == "*" || nextchar == ":" || nextchar == ""){
 						if (prevchar == " " || prevchar == "" || prevchar == "(" || prevchar == "#" || prevchar == ":" || prevchar == "*" || i == 0){
-							string replacer = "\u001b[38;5;32m" + keyword + "\u001b[0m";
+							string replacer = "\u001b[38;5;32m" + currentWord + "\u001b[0m";
+							
 							text.replace(i, keyword.size(), replacer);
 							i += replacer.size();
 						}
@@ -185,8 +193,12 @@ string syntaxLine(string line){
 
 			for (int b = 0; b < functions.size(); b++){
 				string keyword = functions[b];
+				string currentWord = text.substr(i, keyword.size());
+				string upper;
+				
+				for (auto & c: keyword) upper += toupper(c);
 
-				if (text.substr(i, keyword.size()) == keyword){
+				if (currentWord == keyword || currentWord == upper){
 					string prevchar = "";
 
 					if (i > 0){
@@ -194,7 +206,7 @@ string syntaxLine(string line){
 					}
 
 					if (prevchar == " " || prevchar == "" || i == 0 || prevchar == "#" || prevchar == ":"){
-						string replacer = "\u001b[38;5;36m" + keyword + "\u001b[0m";
+						string replacer = "\u001b[38;5;36m" + currentWord + "\u001b[0m";
 						text.replace(i, keyword.size(), replacer);
 						i += replacer.size();
 					}
