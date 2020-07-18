@@ -456,7 +456,7 @@ void drawSelection(){
 	}
 	
 	setCursorPosition(start + XOffset, starty);
-	cout << "\u001b[107;30m" << raw[cury + index].substr(start, end - start) << "\u001b[0m";
+	cout << "\u001b[0;7m" << raw[cury + index].substr(start, end - start) << "\u001b[0m";
 }
 
 string returnSelection(){
