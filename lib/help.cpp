@@ -61,7 +61,8 @@ class helpMenu{
 
 			// about menu //
 			{
-				{"Written by", "Satomatic (Brian Thomson)"}
+				{"Written by", "Satomatic (Brian Thomson)"},
+				{"Theme", configManager.getSetting("theme", "default")},
 			}
 		};
 

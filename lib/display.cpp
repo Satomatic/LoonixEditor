@@ -515,7 +515,7 @@ class ScrollBar{
 		// draw bar background //
 		for (int i = 0; i < height; i++){
 			setCursorPosition(x, y + i);
-			cout << "\u001b[38;5;242m" << "░";
+			cout << "\u001b[38;5;242m" << "▌";
 		}
 		
 		if (size <= height){return;}
@@ -543,7 +543,7 @@ class ScrollBar{
 		cout << "\u001b[0m";
 		for (int i = 0; i < ceil(d); i++){
 			setCursorPosition(x, y + i + ceil(g));
-			cout << "░";
+			cout << "▌";
 		}
 	}
 };
