@@ -7,6 +7,7 @@ A mildly temperamental console-based text editor for linux.
 
 ## How to use
 ### Key binds
+
 **F1** Help menu\
 **F5** Option Menu\
 **Ctrl + N** New file\
@@ -36,6 +37,12 @@ A mildly temperamental console-based text editor for linux.
 **Ctrl + /** Comment line\
 **Ctrl + Up** Move line up\
 **Ctrl + Down** Move line down\
+
+### Themes
+Themes can be placed in `~/.ledit/themes` directory. By running setup.sh, the directory will be generated and the packaged themes will be copied in.\
+To change the current theme you can go into `~/.ledit/main.config` and change the `theme` value.
+
+If you want to create your own theme I would recommend copying the default theme and altering the values. The values are just ansi escape sequences so you can customize pretty deeply.
 
 ## Build
 ### Windows
