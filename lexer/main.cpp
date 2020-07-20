@@ -8,6 +8,18 @@ using namespace std;
 
 bool publicCommentMode = false;
 
+// default colours used by program //
+vector<vector<string>> colors = {
+	{"statements", "\u001b[38;5;163m"},
+	{"variables",  "\u001b[38;5;32m"},
+	{"functions",  "\u001b[38;5;36m"},
+	{"comments",   "\u001b[38;5;242;3m"},
+	{"numbers",    "\u001b[38;5;81m"},
+	{"strings",    "\u001b[38;5;214m"},
+	{"chars",      "\u001b[38;5;135m"},
+	{"tagged",     "\u001b[38;5;32m"}
+};
+
 extern string currentfile;
 extern int curx;
 extern int cury;
@@ -59,6 +71,7 @@ string getCommentString(){
 		{"py", "#"},
 		{"html", "<!--"},
 		{"asm", ";"},
+		{"sh", "#"}
 	};
 	
 	string fileExt = currentfile.substr(currentfile.find_last_of(".") + 1);
@@ -70,6 +83,46 @@ string getCommentString(){
 	}
 
 	return "//";
+}
+
+string getColor(string color){
+	for (int i = 0; i < colors.size(); i++){
+		if (colors[i][0] == color){
+			return colors[i][1];
+		}
+	}
+	
+	return "\u001b[0m";
+}
+
+bool loadTheme(string name){
+	bool loaded = false;
+	
+	string configDir = "/home/";
+	configDir += getenv("USER");
+	configDir += "/.ledit";
+
+	if (configDir == "/home/root/.ledit"){
+		configDir = "/root/.ledit";
+	}
+
+	if (FileExists(configDir + "/themes/" + name)){
+		ifstream file(configDir + "/themes/" + name);
+		string line;
+		while (getline(file, line)){
+			vector<string> linesplit = split(line, ':');
+			
+			for (int i = 0; i < colors.size(); i++){
+				if (colors[i][0] == linesplit[0]){
+					colors[i][1] = "\u001b[" + linesplit[1];
+					break;
+				}
+			}
+		}
+		file.close();
+	}
+	
+	return loaded;
 }
 
 // add support for lexer file later on //
@@ -91,6 +144,7 @@ string syntaxLine(string line){
 		"h1", "h2", "h3", "h4", "h5", "h6"
 	};
 
+	// languages that should use tag based highlighting //
 	vector<string> tagLanguages = {
 		"html",
 		"htm",
@@ -157,7 +211,7 @@ string syntaxLine(string line){
 
 					if (nextchar == " " || nextchar == "(" || nextchar == "" || nextchar == "{" || nextchar == ";"){
 						if (prevchar == " " || prevchar == "" || i == 0 || prevchar == "}" || prevchar == ")" || prevchar == ":"){
-							string replacer = "\u001b[38;5;163m" + currentWord + "\u001b[0m";
+							string replacer = getColor("statements") + currentWord + "\u001b[0m";
 							text.replace(i, keyword.size(), replacer);
 							i += replacer.size();
 						}
@@ -182,7 +236,7 @@ string syntaxLine(string line){
 
 					if (nextchar == " " || nextchar == "(" || nextchar == "{" || nextchar == "*" || nextchar == ":" || nextchar == ""){
 						if (prevchar == " " || prevchar == "" || prevchar == "(" || prevchar == "#" || prevchar == ":" || prevchar == "*" || i == 0){
-							string replacer = "\u001b[38;5;32m" + currentWord + "\u001b[0m";
+							string replacer = getColor("variables") + currentWord + "\u001b[0m";
 							
 							text.replace(i, keyword.size(), replacer);
 							i += replacer.size();
@@ -206,7 +260,7 @@ string syntaxLine(string line){
 					}
 
 					if (prevchar == " " || prevchar == "" || i == 0 || prevchar == "#" || prevchar == ":"){
-						string replacer = "\u001b[38;5;36m" + currentWord + "\u001b[0m";
+						string replacer = getColor("functions") + currentWord + "\u001b[0m";
 						text.replace(i, keyword.size(), replacer);
 						i += replacer.size();
 					}
@@ -216,7 +270,7 @@ string syntaxLine(string line){
 			vector<string> numbers = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0"};
 			for (int b = 0; b < numbers.size(); b++){
 				if (text.substr(i, 1) == numbers[b]){
-					string replacer = "\u001b[38;5;81m" + numbers[b] + "\u001b[0m";
+					string replacer = getColor("numbers") + numbers[b] + "\u001b[0m";
 					text.replace(i, 1, replacer);
 					i += replacer.size() - 1;
 					break;
@@ -243,7 +297,7 @@ string syntaxLine(string line){
 				if (isTagged == true){
 					for (int b = 0; b < tags.size(); b++){
 						if (i + 1 + tags[b].size() <= text.size() && text.substr(i + 1, tags[b].size()) == tags[b]){
-							string replacer = "<\u001b[38;5;32m";
+							string replacer = "<" + getColor("tagged");
 							replacer += text.substr(i + 1, tags[b].size());
 							replacer += "\u001b[0m";
 							
@@ -262,7 +316,7 @@ string syntaxLine(string line){
 					find_str(line, "pair <") >= 1
 				
 				){    
-					string replacer = "<\u001b[38;5;32m";
+					string replacer = "<" + getColor("tagged");
 					text.replace(i, 1, replacer);
 					i += replacer.size();
 					tagMode = true;
@@ -270,14 +324,14 @@ string syntaxLine(string line){
 			}
 
 			if (text.substr(i, 1) == "'"){
-				string replacer = "\u001b[38;5;135m'";
+				string replacer = getColor("chars") + "'";
 				text.replace(i, 1, replacer);
 				i += replacer.size();
 				charMode = true;
 			}
 
 			if (text.substr(i, commentString.size()) == commentString){
-				string replacer = "\u001b[38;5;242m\u001b[3m";
+				string replacer = getColor("comments");
 				replacer += commentString;
 				text.replace(i, commentString.size(), replacer);
 				i += replacer.size();
@@ -300,11 +354,11 @@ string syntaxLine(string line){
 
 			if (text.substr(i, 1) == "\""){
 				if (text.substr(i, 2) == "\"\""){
-					string replacer = "\u001b[38;5;214m\"\"\u001b[0m";
+					string replacer = getColor("strings") + "\"\"\u001b[0m";
 					text.replace(i, 2, replacer);
 					i += replacer.size();
 				}else{
-					string replacer = "\u001b[38;5;214m\"";
+					string replacer = getColor("strings") + "\"";
 					text.replace(i, 1, replacer);
 					i += replacer.size();
 					stringMode = true;

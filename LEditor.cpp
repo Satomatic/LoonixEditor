@@ -3,8 +3,8 @@
 #include <math.h>
 #include <vector>
 #include <string>
-#include "lexer/main.cpp"
 #include "lib/keyboard.cpp"
+#include "lexer/main.cpp"
 #include "lib/config.cpp"
 #include "lib/render.cpp"
 #include "lib/display.cpp"
@@ -72,6 +72,7 @@ int main(int argc, char** argv){
 	// config //
 	configManager.checkConfig();
 	configManager.loadConfig();
+	loadTheme(configManager.getSetting("theme", "default"));
 
 	if (argc >= 2){
 		if (FileExists(argv[1]) == true){

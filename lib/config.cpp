@@ -26,6 +26,11 @@ class ConfigManager{
 			string command = "mkdir ";
 			command += configDir;
 			system(command.c_str());
+			
+			command = "mkdir ";
+			command += configDir;
+			command += "/themes";
+			system(command.c_str());
 		}
 		
 		// check main config file //
@@ -39,6 +44,20 @@ class ConfigManager{
 			file << "line_enabled:1" << endl;
 			file << "sess_enabled:0";
 			
+			file.close();
+		}
+		
+		// write default theme //
+		string defaultFile = configDir + "/themes/default";
+		if (!FileExists(defaultFile)){
+			ofstream file(defaultFile);
+			file << "variables:38;5;32m" << endl;
+			file << "statements:38;5;163m" << endl;
+			file << "functions:38;5;36m" << endl;
+			file << "comments:38;5;242;3m" << endl;
+			file << "numbers:38;5;81m" << endl;
+			file << "strings:38;5;214m" << endl;
+			file << "chars:38;5;135m" << endl;
 			file.close();
 		}
 	}
@@ -61,7 +80,7 @@ class ConfigManager{
 			config.push_back({key, value});
 		}
 	}
-
+	
 	void saveConfig(){
 		ofstream file(mainFile);
 		for (int i = 0; i < config.size(); i++){
