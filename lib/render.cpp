@@ -157,6 +157,12 @@ void drawFooter(){
 	}
 }
 
+void undrawFooter(){
+	// very lazy but it works //
+	setCursorPosition(0, screenHeight - 1);
+	cout << "                ";
+}
+
 void drawScreen(){
 	for (int i = 0; i < viewport.size(); i++){
 		setCursorPosition(XOffset, 0 + i);

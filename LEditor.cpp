@@ -16,6 +16,7 @@
 #include "lib/find.cpp"
 #include "lib/todo.cpp"
 #include "lib/jump.cpp"
+#include "lib/command.cpp"
 
 using namespace std;
 
@@ -74,6 +75,10 @@ int main(int argc, char** argv){
 	configManager.loadConfig();
 	loadTheme(configManager.getSetting("theme", "default"));
 
+	if (configManager.getValue("diff_enabled") != "1"){
+		XOffset = 0;
+	}
+
 	if (argc >= 2){
 		if (FileExists(argv[1]) == true){
 			// Open file //
@@ -122,10 +127,6 @@ int main(int argc, char** argv){
 	WelcomeMessage.height = 3;
 	WelcomeMessage.center = true;
 	WelcomeMessage.draw();
-
-	if (configManager.getValue("diff_enabled") != "1"){
-		XOffset = 0;
-	}
 
 	diffManager.init();
 
@@ -971,7 +972,10 @@ int main(int argc, char** argv){
 			headerMessage.styling = "\u001b[0m";
 			headerMessage.draw();
 
-
+		}else if (key == "CTRLP"){
+			CommandLine cmd;
+			cmd.init();
+		
 		}else if (key == "CTRLF"){
 			Find findP;
 			findP.input = returnSelection();
