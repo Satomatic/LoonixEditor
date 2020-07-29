@@ -134,6 +134,11 @@ string syntaxLine(string line){
 	bool tagMode = false;
 	bool charMode = false;
 
+	// assembly stuff //
+	vector<string> assembly_op = {"mov", "add", "sub", "inc", "call", "int"};
+	vector<string> assembly_re = {"ax", "bx", "cx", "dx", "al", "bl", "cl", "dl", "ah", "bh", "ch", "dh", "di", "si"};
+	
+	// generic language stuff //
 	vector<string> statements = {"if", "else", "return", "for", "while", "elif", "then", "end", "and", "break", "in", "elseif"};
 	vector<string> variables = {"bool", "string", "int", "void", "class", "def", "function", "char", "do", "define", "ifndef", "endif", "try", "except", "catch", "const", "auto"};
 	vector<string> functions = {"extern", "include", "vector", "from", "import", "export", "pair"};
@@ -194,6 +199,50 @@ string syntaxLine(string line){
 			}
 		
 		}else{
+			if (fileExt == "asm" || fileExt == "ASM" || fileExt == "S" || fileExt == "s"){
+				for (int b = 0; b < assembly_op.size(); b++){
+					string keyword = assembly_op[b];
+					string currentWord = text.substr(i, keyword.size());
+					string upper;
+					
+					for (auto & c: keyword) upper += toupper(c);
+					
+					if (currentWord == keyword || currentWord == upper){
+						string nextchar = text.substr(i + keyword.size(), 1);
+						string prevchar = "";
+						
+						if (i > 0){prevchar = text.substr(i - 1, 1);}
+						
+						if (nextchar == " " || nextchar == ""){
+							string replacer = getColor("variables") + currentWord + "\u001b[0m";
+							text.replace(i, keyword.size(), replacer);
+							i += replacer.size();
+						}
+					}
+				}
+				
+				for (int b = 0; b < assembly_re.size(); b++){
+					string keyword = assembly_re[b];
+					string currentWord = text.substr(i, keyword.size());
+					string upper;
+					
+					for (auto & c: keyword) upper += toupper(c);
+					
+					if (currentWord == keyword || currentWord == upper){
+						string nextchar = text.substr(i + keyword.size(), 1);
+						string prevchar = "";
+						
+						if (i > 0){prevchar = text.substr(i - 1, 1);}
+						
+						if (nextchar == " " || nextchar == "" || nextchar == "," || nextchar == "]" || nextchar == "+"){
+							string replacer = getColor("statements") + currentWord + "\u001b[0m";
+							text.replace(i, keyword.size(), replacer);
+							i += replacer.size();
+						}
+					}
+				}
+			}
+			
 			for (int b = 0; b < statements.size(); b++){
 				string keyword = statements[b];
 				string currentWord = text.substr(i, keyword.size());
