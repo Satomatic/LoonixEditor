@@ -135,8 +135,8 @@ string syntaxLine(string line){
 	bool charMode = false;
 
 	// assembly stuff //
-	vector<string> assembly_op = {"mov", "add", "sub", "inc", "call", "int"};
-	vector<string> assembly_re = {"ax", "bx", "cx", "dx", "al", "bl", "cl", "dl", "ah", "bh", "ch", "dh", "di", "si"};
+	vector<string> assembly_op = {"mov", "add", "sub", "inc", "call", "int", "cmp", "je", "jmp", "ret"};
+	vector<string> assembly_re = {"ax", "bx", "cx", "dx", "al", "bl", "cl", "dl", "ah", "bh", "ch", "dh", "di", "si", "es", "ds"};
 	
 	// generic language stuff //
 	vector<string> statements = {"if", "else", "return", "for", "while", "elif", "then", "end", "and", "break", "in", "elseif"};

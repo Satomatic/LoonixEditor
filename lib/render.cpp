@@ -51,6 +51,12 @@ void updateViewport(){
 	}
 }
 
+void reloadLines(){
+	for (int i = 0; i < raw.size(); i++){
+		lines[i] = syntaxLine(raw[i]);
+	}
+}
+
 int testViewport(){
 	int size = 0;
 	for (int i = 0; i < lines.size(); i++){

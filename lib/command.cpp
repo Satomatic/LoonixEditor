@@ -5,6 +5,7 @@
 using namespace std;
 
 extern ConfigManager configManager;
+extern ScrollBar scrollbar;
 
 class CommandLine{
 	public:
@@ -24,7 +25,6 @@ class CommandLine{
 		process(inputbox.input);
 	}
 	
-	
 	void process(string input){
 		vector<string> inputsplit = split(input,' ');
 		bool error = false;
@@ -37,11 +37,7 @@ class CommandLine{
 		
 			if (key == "theme"){
 				loadTheme(configManager.getSetting("theme", "default"));
-				
-				// refresh lines with new syntax data //
-				for (int i = 0; i < lines.size(); i++){
-					lines[i] = syntaxLine(raw[i]);
-				}
+				reloadLines();
 			
 			} else if (key == "diff_enabled"){
 				clear();
@@ -49,6 +45,26 @@ class CommandLine{
 			
 			diffManager.drawDiffBar();
 			newRefresh();
+			updateCursor();
+		
+		}else if (inputsplit[0] == "reload" && inputsplit.size() >= 2){
+			if (inputsplit[1] == "theme"){
+				loadTheme(configManager.getSetting("theme", "default"));
+				reloadLines();
+			}
+		
+		}else if (inputsplit[0] == "reload"){
+			clear();
+			
+			for (int i = 0; i < viewport.size(); i++){
+				setCursorPosition(XOffset, i);
+				cout << viewport[i];
+			}
+			
+			diffManager.drawDiffBar();
+			scrollbar.draw();
+			drawHeader();
+			drawFooter();
 			updateCursor();
 		}
 	}
