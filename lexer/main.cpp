@@ -135,8 +135,17 @@ string syntaxLine(string line){
 	bool charMode = false;
 
 	// assembly stuff //
-	vector<string> assembly_op = {"mov", "add", "sub", "inc", "call", "int", "cmp", "je", "jmp", "ret"};
-	vector<string> assembly_re = {"ax", "bx", "cx", "dx", "al", "bl", "cl", "dl", "ah", "bh", "ch", "dh", "di", "si", "es", "ds"};
+	vector<vector<string>> assembly_op = {
+		{"mov", "add", "sub", "inc", "call", "int", "cmp", "je", "jmp", "ret"},
+		{"ax", "bx", "cx", "dx", "al", "bl", "cl", "dl", "ah", "bh", "ch", "dh", "di", "si", "es", "ds", "ss", "sp", "fs", "gs"},
+		{"push", "pusha", "pop", "popa", "cli", "sti", "cld"}
+	};
+	
+	vector<string> assembly_col = {
+		"variables",
+		"statements",
+		"functions"
+	};
 	
 	// generic language stuff //
 	vector<string> statements = {"if", "else", "return", "for", "while", "elif", "then", "end", "and", "break", "in", "elseif"};
@@ -200,47 +209,26 @@ string syntaxLine(string line){
 		
 		}else{
 			if (fileExt == "asm" || fileExt == "ASM" || fileExt == "S" || fileExt == "s"){
-				for (int b = 0; b < assembly_op.size(); b++){
-					string keyword = assembly_op[b];
-					string currentWord = text.substr(i, keyword.size());
-					string upper;
+				for (int y = 0; y < assembly_op.size(); y++){
+					for (int b = 0; b < assembly_op[y].size(); b++){
+						string keyword = assembly_op[y][b];
+						string currentWord = text.substr(i, keyword.size());
+						string upper;
 					
-					for (auto & c: keyword) upper += toupper(c);
+						for (auto & c: keyword) upper += toupper(c);
 					
-					if (currentWord == keyword || currentWord == upper){
-						string nextchar = text.substr(i + keyword.size(), 1);
-						string prevchar = "";
+						if (currentWord == keyword || currentWord == upper){
+							string nextchar = text.substr(i + keyword.size(), 1);
+							string prevchar = "";
+							
+							if (i > 0){prevchar = text.substr(i - 1, 1);}
 						
-						if (i > 0){prevchar = text.substr(i - 1, 1);}
-						
-						if (nextchar == " " || nextchar == ""){
-							if (prevchar == " " || prevchar == "" || prevchar == "," || prevchar == "[" || prevchar == "]" || prevchar == "+"){
-								string replacer = getColor("variables") + currentWord + "\u001b[0m";
-								text.replace(i, keyword.size(), replacer);
-								i += replacer.size();
-							}
-						}
-					}
-				}
-				
-				for (int b = 0; b < assembly_re.size(); b++){
-					string keyword = assembly_re[b];
-					string currentWord = text.substr(i, keyword.size());
-					string upper;
-					
-					for (auto & c: keyword) upper += toupper(c);
-					
-					if (currentWord == keyword || currentWord == upper){
-						string nextchar = text.substr(i + keyword.size(), 1);
-						string prevchar = "";
-						
-						if (i > 0){prevchar = text.substr(i - 1, 1);}
-						
-						if (nextchar == " " || nextchar == "" || nextchar == "," || nextchar == "]" || nextchar == "+"){
-							if (prevchar == " " || prevchar == "" || prevchar == "," || prevchar == "[" || prevchar == "+"){
-								string replacer = getColor("statements") + currentWord + "\u001b[0m";
-								text.replace(i, keyword.size(), replacer);
-								i += replacer.size();
+							if (nextchar == " " || nextchar == "" || nextchar == "," || nextchar == "]" || nextchar == "+"){
+								if (prevchar == " " || prevchar == "" || prevchar == "," || prevchar == "[" || prevchar == "+"){
+									string replacer = getColor(assembly_col[y]) + currentWord + "\u001b[0m";
+									text.replace(i, keyword.size(), replacer);
+									i += replacer.size();
+								}
 							}
 						}
 					}
