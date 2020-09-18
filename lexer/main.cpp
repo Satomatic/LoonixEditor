@@ -214,9 +214,11 @@ string syntaxLine(string line){
 						if (i > 0){prevchar = text.substr(i - 1, 1);}
 						
 						if (nextchar == " " || nextchar == ""){
-							string replacer = getColor("variables") + currentWord + "\u001b[0m";
-							text.replace(i, keyword.size(), replacer);
-							i += replacer.size();
+							if (prevchar == " " || prevchar == "" || prevchar == "," || prevchar == "[" || prevchar == "]" || prevchar == "+"){
+								string replacer = getColor("variables") + currentWord + "\u001b[0m";
+								text.replace(i, keyword.size(), replacer);
+								i += replacer.size();
+							}
 						}
 					}
 				}
@@ -235,9 +237,11 @@ string syntaxLine(string line){
 						if (i > 0){prevchar = text.substr(i - 1, 1);}
 						
 						if (nextchar == " " || nextchar == "" || nextchar == "," || nextchar == "]" || nextchar == "+"){
-							string replacer = getColor("statements") + currentWord + "\u001b[0m";
-							text.replace(i, keyword.size(), replacer);
-							i += replacer.size();
+							if (prevchar == " " || prevchar == "" || prevchar == "," || prevchar == "[" || prevchar == "+"){
+								string replacer = getColor("statements") + currentWord + "\u001b[0m";
+								text.replace(i, keyword.size(), replacer);
+								i += replacer.size();
+							}
 						}
 					}
 				}
