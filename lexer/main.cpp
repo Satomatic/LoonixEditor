@@ -149,7 +149,7 @@ string syntaxLine(string line){
 	
 	// generic language stuff //
 	vector<string> statements = {"if", "else", "return", "for", "while", "elif", "then", "end", "and", "break", "in", "elseif"};
-	vector<string> variables = {"bool", "string", "int", "void", "class", "def", "function", "char", "do", "define", "ifndef", "endif", "try", "except", "catch", "const", "auto"};
+	vector<string> variables = {"bool", "string", "int", "void", "class", "def", "function", "char", "do", "define", "ifndef", "endif", "try", "except", "catch", "const", "auto", "unsigned"};
 	vector<string> functions = {"extern", "include", "vector", "from", "import", "export", "pair"};
 	vector<string> tags = {
 		"html", "body", "footer",
@@ -250,7 +250,7 @@ string syntaxLine(string line){
 						prevchar = text.substr(i - 1, 1);
 					}
 
-					if (nextchar == " " || nextchar == "(" || nextchar == "" || nextchar == "{" || nextchar == ";"){
+					if (nextchar == " " || nextchar == "(" || nextchar == "" || nextchar == "{" || nextchar == ";" || nextchar == ":"){
 						if (prevchar == " " || prevchar == "" || i == 0 || prevchar == "}" || prevchar == ")" || prevchar == ":"){
 							string replacer = getColor("statements") + currentWord + "\u001b[0m";
 							text.replace(i, keyword.size(), replacer);
