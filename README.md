@@ -1,6 +1,10 @@
 # LoonixEditor
 A mildly temperamental console-based text editor for linux.
 
+**Notice**\
+This branch is a quick patch that makes LoonixEditor usable however there are alot of functions / keybinding that don't work.\
+Also, don't expect this branch to be updated very often.
+
 <img src="https://i.imgur.com/HP8RcEW.png" width="552px">
 
 **LoonixEditor running with dark header enabled**
