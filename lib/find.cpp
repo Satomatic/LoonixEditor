@@ -74,18 +74,18 @@ class Find{
 						int csx = find_results[current][1];
 						int csy = find_results[current][0];
 
-						index = csy - 1;
+						scroll = csy - 1;
 						cury = 1;
 						curx = csx;
 
 						if (raw.size() - 1 < screenHeight - 1){
-							index = 0;
+							scroll = 0;
 							cury = csy;
 							curx = csx;
 						}else{
 							if (testViewport() < screenHeight - 1){
 								int difference = screenHeight - testViewport() - 1;
-								index -= difference;
+								scroll -= difference;
 								cury += difference;
 							}
 						}
@@ -97,7 +97,7 @@ class Find{
 						drawFromPoint(0);
 						drawHeader();
 						diffManager.drawDiffBar();
-						scrollbar.position = index;
+						scrollbar.position = scroll;
 						scrollbar.draw();
 						drawGuideLines();
 						updateCursor();
@@ -144,13 +144,15 @@ class Find{
 		setCursorPosition(FindContainer.posx + 1, FindContainer.posy + 1);
 
 		int max = FindContainer.width - 27;
+		string renderString;
 
 		if (input.size() > max){
-			cout << "\u001b[1mfind: \u001b[0m" << input.substr(input.size() - max, max);
+			renderString = "\u001b[1mfind: \u001b[0m" + input.substr(input.size() - max, max);
 		}else{
-			cout << "\u001b[1mfind: \u001b[0m" << input;
+			renderString = "\u001b[1mfind: \u001b[0m" + input;
 		}
-
-		cout << " ";
+		
+		cout << renderString;
+		setCursorPosition(renderString.size() - 7, FindContainer.posy + 1);
 	}
 };

@@ -5,7 +5,7 @@
 using namespace std;
 
 extern vector<string> raw;
-extern int index;
+extern int scroll;
 extern int cury;
 extern int curx;
 
@@ -105,17 +105,17 @@ class Todo{
 				int xcoord = stoi(currentLine[2]);
 				int ycoord = stoi(currentLine[3]);
 				
-				index = ycoord - 1;
+				scroll = ycoord - 1;
 				cury = 1;
 				curx = xcoord;
 			
-				if (testViewport() < screenHeight - 1 && index >= screenHeight){
+				if (testViewport() < screenHeight - 1 && scroll >= screenHeight){
 					int difference = screenHeight - 1 - testViewport();
-					index -= difference;
+					scroll -= difference;
 					cury += difference;
 					
-				}else if (index <= screenHeight){
-					index = 0;
+				}else if (scroll <= screenHeight){
+					scroll = 0;
 					cury = ycoord;
 				}
 			

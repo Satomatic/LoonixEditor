@@ -11,7 +11,7 @@ extern ConfigManager configManager;
 extern bool diffEnable;
 extern int screenHeight;
 extern int fileIndex;
-extern int index;
+extern int scroll;
 extern int cury;
 
 class DiffManager{
@@ -44,13 +44,13 @@ class DiffManager{
 			cout << "\u001b[0m";
 
 			if (i < diff[fileIndex].size() && i < viewport.size() - 1){
-				if (diff[fileIndex][index + i] == 0){
+				if (diff[fileIndex][scroll + i] == 0){
 					cout << "\u001b[0m";
 				
-				}else if (diff[fileIndex][index + i] == 1){
+				}else if (diff[fileIndex][scroll + i] == 1){
 					cout << "\u001b[38;5;214m";
 				
-				}else if (diff[fileIndex][index + i] == 2){
+				}else if (diff[fileIndex][scroll + i] == 2){
 					cout << "\u001b[38;5;29m";
 				}
 
@@ -66,18 +66,18 @@ class DiffManager{
 		diff[fileIndex][line] = value;
 	}
 	
-	void insertLine(int curpos, int index){
-		diff[fileIndex].insert(diff[fileIndex].begin() + curpos + index, 1);        
+	void insertLine(int curpos, int scroll){
+		diff[fileIndex].insert(diff[fileIndex].begin() + curpos + scroll, 1);        
 		drawDiffBar();
 	}
 
-	void removeLine(int curpos, int index){
-		diff[fileIndex].erase(diff[fileIndex].begin() + index + curpos - 1);
+	void removeLine(int curpos, int scroll){
+		diff[fileIndex].erase(diff[fileIndex].begin() + scroll + curpos - 1);
 		drawDiffBar();    
 	}
 
 	void updateCurrentLine(){
-		updateLine(cury + index - 1, 1);
+		updateLine(cury + scroll - 1, 1);
 		drawDiffBar();
 	}
 

@@ -356,7 +356,9 @@ class OptionDialog{
 			
 			cout << "\u001b[0m  ";
 
-		}    
+		}
+		
+		setCursorPosition(curx, cury);
 	}
 	
 	void undraw(){
@@ -479,7 +481,6 @@ class Input{
 		
 		// draw cursor //
 		setCursorPosition(x + cursorpos + prefix.size(), y);
-		cout << "\u001b[7m \u001b[0m";
 	
 		cursorpre = cursorpos;
 	}

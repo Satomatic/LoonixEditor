@@ -80,6 +80,8 @@ class helpMenu{
 		updateTabs();
 
 		while (true){
+			setCursorPosition(curx, cury);
+		
 			string key = getInput();
 			
 			if (key == "LeftArrow"){

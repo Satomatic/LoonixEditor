@@ -39,7 +39,7 @@ void updateViewport(){
 	viewport.clear();
 	rawViewport.clear();
 	for (int i = 0; i < lines.size(); i++){
-		if (i >= index && i <= index + screenHeight - 2){
+		if (i >= scroll && i <= scroll + screenHeight - 2){
 			if (unilen(raw[i]) >= screenWidth - 1){
 				viewport.push_back(lines[i].substr(0, screenWidth - 2) + "$");
 				rawViewport.push_back(raw[i].substr(0, screenWidth - 2) + "$");
@@ -60,7 +60,7 @@ void reloadLines(){
 int testViewport(){
 	int size = 0;
 	for (int i = 0; i < lines.size(); i++){
-		if (i >= index && i <= index + screenHeight - 2){
+		if (i >= scroll && i <= scroll + screenHeight - 2){
 			size++;
 		}
 	}
@@ -80,7 +80,7 @@ void drawHeader(){
 	string headerdata = "Loonix [cols: X][row: Y] :: Z";
 
 	headerdata = replace_all(headerdata, "X", to_string(curx));
-	headerdata = replace_all(headerdata, "Y", to_string(index + cury));
+	headerdata = replace_all(headerdata, "Y", to_string(scroll + cury));
 	headerdata = replace_all(headerdata, "Z", currentfile);
 
 	if (openFiles.size() > 1){
@@ -123,7 +123,7 @@ void updateHeader(){
 	string headerdata = "Loonix [cols: X][row: Y] :: Z";
 
 	headerdata = replace_all(headerdata, "X", to_string(curx));
-	headerdata = replace_all(headerdata, "Y", to_string(index + cury));
+	headerdata = replace_all(headerdata, "Y", to_string(scroll + cury));
 	headerdata = replace_all(headerdata, "Z", currentfile);
 
 	if (openFiles.size() > 1){
@@ -177,44 +177,24 @@ void drawScreen(){
 }
 
 void updateCursor(){
-	int cursorAbsolute = index + cury;
-	string currentline = raw[cursorAbsolute];
-	string previousline = raw[index + prey];
+	string previousline = raw[scroll + prey];
 	string previousChar = "";
-
-
-	// get current cursor //
-	char cursorChar;
-	if (curx >= unilen(currentline)){
-		cursorChar = ' ';
-	}else{
-		cursorChar = nonUniString(currentline).at(curx);
-	}
-
-	if (index + prey <= raw.size()){
+	
+	if (scroll + prey <= raw.size()){
 		previousChar = syntaxLine(previousline);
 	}
-
-	// draw over cursor //
-	cout << "\u001b[0m";
-	setCursorPosition(XOffset, prey);
-	cout << previousChar << " ";
 	
-	if (prex > previousline.size()){
-		setCursorPosition(XOffset + prex, prey);
-		cout << " ";
-	}
-
+	cout << "\033[0m";
+	setCursorPosition(XOffset, prey);
+	cout << previousChar;
+	
 	drawGuideLinesC(prey);
 	drawGuideLinesC(cury);
-
-	// draw new cursor //
-	cout << "\u001b[0m\u001b[7m";
-	setCursorPosition(curx + XOffset, cury);
-	cout << cursorChar;
 	
-	prey = cury;
+	setCursorPosition(curx, cury);
+
 	prex = curx;
+	prey = cury;
 }
 
 void updateLine(){
@@ -230,7 +210,7 @@ void updateLine(){
 	}
 
 	setCursorPosition(XOffset, cury);
-	cout << lines[index + cury];
+	cout << lines[scroll + cury];
 
 	for (int i = 0; i < difference; i++){
 		cout << " ";
@@ -238,8 +218,8 @@ void updateLine(){
 }
 
 void updateCursorBlank(){
-	int cursorAbsolute = index + cury;
-	string previousline = raw[index + prey];
+	int cursorAbsolute = scroll + cury;
+	string previousline = raw[scroll + prey];
 
 	// draw over cursor //
 	cout << "\u001b[39;49m";
@@ -287,7 +267,7 @@ void clearFromPoint(int line){
 void renderBox(int x, int y, int w, int h){
 	for (int i = 0; i < h; i ++){
 		for (int b = 0; b < w; b ++){
-			string currentline = raw[index + i + y];
+			string currentline = raw[scroll + i + y];
 			if (x + b <= currentline.size() - 1){
 				setCursorPosition(b + x, i + y);
 				cout << currentline.at(b + x);
@@ -468,7 +448,7 @@ void drawSelection(){
 	}
 	
 	setCursorPosition(start + XOffset, starty);
-	cout << "\u001b[0;7m" << raw[cury + index].substr(start, end - start) << "\u001b[0m";
+	cout << "\u001b[0;7m" << raw[cury + scroll].substr(start, end - start) << "\u001b[0m";
 }
 
 string returnSelection(){
@@ -477,10 +457,10 @@ string returnSelection(){
 	}
 	
 	if (endx < startx){
-		return raw[cury + index].substr(endx, startx - endx);
+		return raw[cury + scroll].substr(endx, startx - endx);
 	
 	}else{
-		return raw[cury + index].substr(startx, endx - startx);
+		return raw[cury + scroll].substr(startx, endx - startx);
 	}
 }
 

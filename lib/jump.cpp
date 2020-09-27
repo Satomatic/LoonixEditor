@@ -5,7 +5,7 @@
 using namespace std;
 
 extern vector<string> raw;
-extern int index;
+extern int scroll;
 extern int posx;
 extern int posy;
 
@@ -72,13 +72,13 @@ class jumpLine{
 			
 			if (cisnum == true){
 				if (stoi(input) <= raw.size() - 1){
-					index = stoi(input) - 1;
+					scroll = stoi(input) - 1;
 					cury = 1;
 					curx = 0;
 					
 					if (testViewport() < screenHeight - 1){
 						int difference = screenHeight - testViewport();
-						index -= difference;
+						scroll -= difference;
 						cury += difference;
 					}
 					

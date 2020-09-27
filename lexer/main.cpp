@@ -98,7 +98,7 @@ string getColor(string color){
 bool loadTheme(string name){
 	bool loaded = false;
 	
-	string configDir = "/home/";
+	string configDir = "/Users/";
 	configDir += getenv("USER");
 	configDir += "/.ledit";
 

@@ -75,7 +75,7 @@ void loadFileFromMemory(string filename){
 	string currentfile = filename;
 	hasEdited = false;
 	
-	// search for file in index //
+	// search for file in scroll //
 	int foundIndex = 0;
 	
 	for (int i = 0; i < fileMemory.size(); i++){
@@ -102,7 +102,7 @@ void loadFileFromMemory(string filename){
 		if (openFiles[i][0] == currentfile){
 			curx = stoi(openFiles[i][1]);
 			cury = stoi(openFiles[i][2]);
-			index = stoi(openFiles[i][3]);
+			scroll = stoi(openFiles[i][3]);
 			
 			if (openFiles[i][4] == "1"){
 				hasEdited = true;
@@ -126,7 +126,7 @@ void moveFileIntoMemory(){
 		}
 	}
 	
-	// edit file index vector //
+	// edit file scroll vector //
 	if (fileFound == false){
 		openFiles.push_back({currentfile, "0", "1", "0", "0"});
 		fileMemory.push_back({currentfile});
@@ -137,7 +137,7 @@ void moveFileIntoMemory(){
 	}else{
 		openFiles[foundIndex][1] = to_string(curx);
 		openFiles[foundIndex][2] = to_string(cury);
-		openFiles[foundIndex][3] = to_string(index);
+		openFiles[foundIndex][3] = to_string(scroll);
 		openFiles[foundIndex][4] = to_string(hasEdited);
 	
 		int foundIndex = 0;
@@ -180,7 +180,7 @@ void openFile(){
 		loadFile(input);
 
 		// redraw display //
-		index = 0;
+		scroll = 0;
 		curx = 0; // reset cursor
 		cury = 1;
 
@@ -244,7 +244,7 @@ int openFileNewBuffer(){
 			if (overwrite.selected == 0){
 				moveFileIntoMemory();
 		
-				index = 0;
+				scroll = 0;
 				curx = 0;
 				cury = 1;
 		
@@ -330,7 +330,7 @@ void openFileCurrentBuffer(){
 		loadFile(input);
 		moveFileIntoMemory();
 		
-		index = 0;
+		scroll = 0;
 		cury = 1;
 		curx = 0;
 		
@@ -431,7 +431,7 @@ void newFile(){
 
 	updateViewport();
 
-	index = 0;
+	scroll = 0;
 	curx = 0;
 	cury = 1;
 

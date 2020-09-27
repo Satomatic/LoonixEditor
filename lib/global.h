@@ -7,7 +7,7 @@ extern int screenHeight;
 
 extern int curx;
 extern int cury;
-extern int index;
+extern int scroll;
 extern int XOffset;
 
 extern int prex;

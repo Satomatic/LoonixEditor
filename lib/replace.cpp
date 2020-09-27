@@ -119,7 +119,7 @@ class Replace{
 								drawGuideLines();
 								updateCursor();
 								diffManager.drawDiffBar();
-								scrollbar.position = index;
+								scrollbar.position = scroll;
 								scrollbar.draw();
 							}
 							
@@ -257,18 +257,18 @@ class NewReplace{
 			int ycoord = stoi(results[i][0]);
 			bool close = false;
 			
-			index = ycoord - 1;
+			scroll = ycoord - 1;
 			cury = 1;
 			curx = xcoord;
 			
 			if (raw.size() - 1 < screenHeight - 1){
-				index = 0;
+				scroll = 0;
 				cury = ycoord;
 				curx = xcoord;
 			}else{
 				if (testViewport() < screenHeight - 1){
 					int difference = screenHeight - testViewport() - 1;
-					index -= difference;
+					scroll -= difference;
 					cury += difference;
 				}
 			}
@@ -276,7 +276,7 @@ class NewReplace{
 			newRefresh();
 			updateCursor();
 			diffManager.drawDiffBar();
-			scrollbar.position = index;
+			scrollbar.position = scroll;
 			scrollbar.draw();
 			drawGuideLines();
 			

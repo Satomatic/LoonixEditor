@@ -50,12 +50,12 @@ vector<string> split(string text, char letter){
 	return returnvector;
 }
 
-vector<string> splitIndex(string text, int index){
+vector<string> splitIndex(string text, int scroll){
 	vector<string> returnvector;
 	string current = "";
 
 	for (int i =0; i < text.size(); i++){
-		if (i == index){
+		if (i == scroll){
 			returnvector.push_back(current);
 			current = text[i];
 		}else{

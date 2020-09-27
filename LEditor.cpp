@@ -27,7 +27,7 @@ vector <string> viewport;
 vector <string> rawViewport;
 
 // multi file vectors //
-vector <vector<string>> openFiles = {}; // {"filename", "curx", "cury", "index", "has saved (0/1)"}
+vector <vector<string>> openFiles = {}; // {"filename", "curx", "cury", "scroll", "has saved (0/1)"}
 vector <vector<string>> fileMemory = {};
 
 int fileIndex = 0;
@@ -36,7 +36,7 @@ int curx = 0;
 int cury = 1;
 int prex = 0;
 int prey = 1;
-int index = 0;
+int scroll = 0;
 
 int startx = 0;
 int starty = 0;
@@ -61,6 +61,8 @@ string currentfile = "";
 int main(int argc, char** argv){
 	// start up //
 	signal(SIGINT,SIG_IGN);
+
+    system("stty discard undef"); // re-enables cirtain blocked keys
 
 	hideCursor();
 	system("stty -ixon");
@@ -152,7 +154,7 @@ int main(int argc, char** argv){
 		
 		// update scroll bar //
 		scrollbar.size = lines.size() - 1;
-		scrollbar.position = index;
+		scrollbar.position = scroll;
 		scrollbar.x = screenWidth - 1;
 		scrollbar.height = screenHeight - 2;
 		scrollbar.y = 1; 
@@ -161,6 +163,8 @@ int main(int argc, char** argv){
 			scrollbar.draw();
 		updateHeader();
 		drawFooter();
+
+		updateCursor();		
 
 		string key = getInput();
 
@@ -195,15 +199,15 @@ int main(int argc, char** argv){
 				moveCury = -10;
 			}
 			
-			if (index + cury != raw.size() - 1){
-				string nextline = raw[index + cury + 1];
+			if (scroll + cury != raw.size() - 1){
+				string nextline = raw[scroll + cury + 1];
 				if (curx >= nextline.size()){
 					curx = nextline.size();
 				}
 
 				if (cury == viewport.size() - 1){
 					updateCursor();
-					index += moveIndex;
+					scroll += moveIndex;
 					cury += moveCury;
 					newRefresh();
 
@@ -225,16 +229,16 @@ int main(int argc, char** argv){
 				moveCury = -10;
 			}
 		
-			if (index + cury != 1){
-				string previousline = raw[index + cury - 1];
+			if (scroll + cury != 1){
+				string previousline = raw[scroll + cury - 1];
 				if (curx >= previousline.size()){
 					curx = previousline.size();
 				}
 			}
 
 			if (cury == 1){
-				if (cury + index != 1){
-					index -= moveIndex;
+				if (cury + scroll != 1){
+					scroll -= moveIndex;
 					cury -= moveCury;
 					
 					newRefresh();
@@ -248,19 +252,19 @@ int main(int argc, char** argv){
 		}else if (key == "LeftArrow"){
 			if (curx == 0){
 				if (cury == 1){
-					if (index + cury != 1){
-						index --;
+					if (scroll + cury != 1){
+						scroll --;
 						refresh();
-						curx = unilen(raw[index  + cury]);//.length();
+						curx = unilen(raw[scroll  + cury]);//.length();
 					}
 				}else{
-					curx = unilen(raw[index + cury - 1]);//.length();
+					curx = unilen(raw[scroll + cury - 1]);//.length();
 					cury --;
 				}
 
 			}else{
 				if (curx >= 4){
-					string currentline = raw[index + cury];
+					string currentline = raw[scroll + cury];
 					if (currentline.substr(curx - 4, 4) == "    "){
 						curx -= 4;
 					}else{
@@ -275,11 +279,11 @@ int main(int argc, char** argv){
 			updateCursor();
 
 		}else if (key == "RightArrow"){
-			if (curx == unilen(raw[index + cury])){
+			if (curx == unilen(raw[scroll + cury])){
 				if (cury == viewport.size() - 1){
-					if (index + cury != raw.size() - 1){
+					if (scroll + cury != raw.size() - 1){
 						curx = 0;
-						index ++;
+						scroll ++;
 						refresh();
 					}
 				}else{
@@ -289,7 +293,7 @@ int main(int argc, char** argv){
 				}
 
 			}else{
-				string currentline = raw[index + cury];
+				string currentline = raw[scroll + cury];
 				if (currentline.substr(curx, 4) == "    "){
 					curx += 4;
 				}else{
@@ -301,12 +305,12 @@ int main(int argc, char** argv){
 			updateCursor();
 
 		}else if (key == "PGUP"){
-			if (index - screenHeight <= 0){
-				index = 0;
+			if (scroll - screenHeight <= 0){
+				scroll = 0;
 				cury = 1;
 				curx = 0;
 			}else{
-				index -= screenHeight;
+				scroll -= screenHeight;
 				cury = 1;
 				curx = 0;
 			}
@@ -316,10 +320,10 @@ int main(int argc, char** argv){
 
 		}else if (key == "PGDN"){
 			if (lines.size() >= screenHeight - 1){
-				index += screenHeight;
+				scroll += screenHeight;
 			
 				if (testViewport() < screenHeight - 1){
-					index = lines.size() - screenHeight + 1;
+					scroll = lines.size() - screenHeight + 1;
 					cury = viewport.size() - 1;
 				
 				}else{
@@ -344,7 +348,7 @@ int main(int argc, char** argv){
 			
 
 		}else if (key == "Delete"){
-			string currentline = raw[index + cury];
+			string currentline = raw[scroll + cury];
 			string newline;
 			vector<string> linesplit;
 			
@@ -366,26 +370,26 @@ int main(int argc, char** argv){
 				}
 			
 				// update raw and lines //
-				raw[index + cury] = newline;
-				lines[index + cury] = syntaxLine(newline);
+				raw[scroll + cury] = newline;
+				lines[scroll + cury] = syntaxLine(newline);
 			
 				// update line //
 				updateViewport();
 				setCursorPosition(0, cury);
-				cout << lines[index + cury] << "  ";
+				cout << lines[scroll + cury] << "  ";
 				
 				updateCursor();
 			}
 
 		}else if (key == "Backspace" && curx == 0 && cury != 1){ // At beginning of line
-			string currentline = raw[index + cury];
-			string previousline = raw[index + cury - 1];
-			lines[index + cury - 1] = syntaxLine(raw[index + cury - 1] + currentline);
-			raw[index + cury - 1] = raw[index + cury - 1] + currentline;
+			string currentline = raw[scroll + cury];
+			string previousline = raw[scroll + cury - 1];
+			lines[scroll + cury - 1] = syntaxLine(raw[scroll + cury - 1] + currentline);
+			raw[scroll + cury - 1] = raw[scroll + cury - 1] + currentline;
 
-			lines.erase(lines.begin() + index + cury);
-			raw.erase(raw.begin() + index + cury);
-			diffManager.removeLine(cury, index);
+			lines.erase(lines.begin() + scroll + cury);
+			raw.erase(raw.begin() + scroll + cury);
+			diffManager.removeLine(cury, scroll);
 
 			refresh();
 			drawGuideLines();
@@ -400,7 +404,7 @@ int main(int argc, char** argv){
 			hasEdited = true;
 
 		}else if (key == "Backspace" && curx != 0){
-			string currentline = raw[index + cury];
+			string currentline = raw[scroll + cury];
 			string newline = "";
 			string extend = "";
 
@@ -438,8 +442,8 @@ int main(int argc, char** argv){
 				curx --;
 			}
 
-			lines[index + cury] = syntaxLine(newline);
-			raw[index + cury] = newline;
+			lines[scroll + cury] = syntaxLine(newline);
+			raw[scroll + cury] = newline;
 			updateViewport();
 
 			resetColor();
@@ -452,16 +456,16 @@ int main(int argc, char** argv){
 			hasEdited = true;
 
 		}else if (key == "Return"){
-			string currentline = raw[index + cury];
+			string currentline = raw[scroll + cury];
 			if (curx == currentline.size()){
-				lines.insert(lines.begin() + index + cury + 1, "");
-				raw.insert(raw.begin() + index + cury + 1, "");
+				lines.insert(lines.begin() + scroll + cury + 1, "");
+				raw.insert(raw.begin() + scroll + cury + 1, "");
 			}else{
 				vector<string> linesplit = splitIndex(currentline, curx);
-				lines[index + cury] = syntaxLine(linesplit[0]);
-				lines.insert(lines.begin() + index + cury + 1, syntaxLine(linesplit[1]));
-				raw[index + cury] = linesplit[0];
-				raw.insert(raw.begin() + index + cury + 1, linesplit[1]);
+				lines[scroll + cury] = syntaxLine(linesplit[0]);
+				lines.insert(lines.begin() + scroll + cury + 1, syntaxLine(linesplit[1]));
+				raw[scroll + cury] = linesplit[0];
+				raw.insert(raw.begin() + scroll + cury + 1, linesplit[1]);
 			}
 
 			// auto indent
@@ -479,18 +483,18 @@ int main(int argc, char** argv){
 				int tabCount = floor(spaceCount / 4);
 
 				for (int i = 0; i < tabCount; i++){
-					raw[index + cury + 1].insert(0, "    ");
-					lines[index + cury + 1].insert(0, "    ");
+					raw[scroll + cury + 1].insert(0, "    ");
+					lines[scroll + cury + 1].insert(0, "    ");
 				}
 
 				curx = tabCount * 4;
 			}
 			
-			diffManager.insertLine(cury, index);
+			diffManager.insertLine(cury, scroll);
 
 			// move viewport down
 			if (cury == screenHeight - 2){
-				index ++;
+				scroll ++;
 			}else{
 				cury ++;
 			}
@@ -558,7 +562,7 @@ int main(int argc, char** argv){
 					currentfile = openFiles[fileIndex][0];
 					curx = stoi(openFiles[fileIndex][1]);
 					cury = stoi(openFiles[fileIndex][2]);
-					index = stoi(openFiles[fileIndex][3]);
+					scroll = stoi(openFiles[fileIndex][3]);
 					
 					if (openFiles[fileIndex][4] == "1"){
 						hasEdited = true;
@@ -645,7 +649,7 @@ int main(int argc, char** argv){
 			// reset cursor values //   
 			fileIndex = openFiles.size() - 1;
 			currentfile = filename;
-			index = 0;
+			scroll = 0;
 			cury = 0;
 			curx = 0;
 			
@@ -666,23 +670,23 @@ int main(int argc, char** argv){
 		}else if (key == "CTRL/"){
 			string commentString = getCommentString();
 		
-			if (raw[index + cury].size() >= commentString.size()){
-				if (raw[index + cury].substr(0, commentString.size()) == multString(" ", commentString.size())){
+			if (raw[scroll + cury].size() >= commentString.size()){
+				if (raw[scroll + cury].substr(0, commentString.size()) == multString(" ", commentString.size())){
 					for (int i = 0; i < commentString.size(); i++){
-						raw[index + cury][i] = commentString[i];
+						raw[scroll + cury][i] = commentString[i];
 					}
 				}else{
-					raw[index + cury].insert(0, commentString);
+					raw[scroll + cury].insert(0, commentString);
 					curx += commentString.size();
 				}
 			}else{
-				raw[index + cury].insert(0, commentString);
+				raw[scroll + cury].insert(0, commentString);
 				curx += commentString.size();
 			}
 			
-			lines[index + cury] = syntaxLine(raw[index + cury]);
+			lines[scroll + cury] = syntaxLine(raw[scroll + cury]);
 			
-			if (cury + index < raw.size() - 1){
+			if (cury + scroll < raw.size() - 1){
 				cury ++;
 				curx = 0;
 			}
@@ -691,21 +695,21 @@ int main(int argc, char** argv){
 			updateCursor();
 
 		}else if (key == "CTRL-UpArrow"){
-			if (index + cury != 1){
-				string nextline = raw[index + cury - 1];
-				string currentline = raw[index + cury];
+			if (scroll + cury != 1){
+				string nextline = raw[scroll + cury - 1];
+				string currentline = raw[scroll + cury];
 
-				raw[index + cury - 1] = currentline;
-				raw[index + cury] = nextline;
-				lines[index + cury - 1] = syntaxLine(currentline);
-				lines[index + cury] = syntaxLine(nextline);
+				raw[scroll + cury - 1] = currentline;
+				raw[scroll + cury] = nextline;
+				lines[scroll + cury - 1] = syntaxLine(currentline);
+				lines[scroll + cury] = syntaxLine(nextline);
 				
 				// swap values in diff //
-				int currentValue = diffManager.diff[fileIndex][index + cury - 1];
-				int previousValue = diffManager.diff[fileIndex][index + cury - 2];
+				int currentValue = diffManager.diff[fileIndex][scroll + cury - 1];
+				int previousValue = diffManager.diff[fileIndex][scroll + cury - 2];
 				
-				diffManager.diff[fileIndex][index + cury - 1] = previousValue;
-				diffManager.diff[fileIndex][index + cury - 2] = currentValue;
+				diffManager.diff[fileIndex][scroll + cury - 1] = previousValue;
+				diffManager.diff[fileIndex][scroll + cury - 2] = currentValue;
 
 				cury --;
 			}
@@ -715,21 +719,21 @@ int main(int argc, char** argv){
 			updateCursor();
 
 		}else if (key == "CTRL-DownArrow"){
-			if (index + cury != raw.size() - 1){ // not at end of file
-				string previousline = raw[index + cury + 1];
-				string currentline = raw[index + cury];
+			if (scroll + cury != raw.size() - 1){ // not at end of file
+				string previousline = raw[scroll + cury + 1];
+				string currentline = raw[scroll + cury];
 
-				raw[index + cury + 1] = currentline;
-				raw[index + cury] = previousline;
-				lines[index + cury + 1] = syntaxLine(currentline);
-				lines[index + cury ] = syntaxLine(previousline);
+				raw[scroll + cury + 1] = currentline;
+				raw[scroll + cury] = previousline;
+				lines[scroll + cury + 1] = syntaxLine(currentline);
+				lines[scroll + cury ] = syntaxLine(previousline);
 				
 				// swap values in diff //
-				int currentValue = diffManager.diff[fileIndex][index + cury - 1];
-				int previousValue = diffManager.diff[fileIndex][index + cury];
+				int currentValue = diffManager.diff[fileIndex][scroll + cury - 1];
+				int previousValue = diffManager.diff[fileIndex][scroll + cury];
 				
-				diffManager.diff[fileIndex][index + cury - 1] = previousValue;
-				diffManager.diff[fileIndex][index + cury] = currentValue;
+				diffManager.diff[fileIndex][scroll + cury - 1] = previousValue;
+				diffManager.diff[fileIndex][scroll + cury] = currentValue;
 				
 				cury ++;
 			}
@@ -740,22 +744,22 @@ int main(int argc, char** argv){
 
 		}else if (key == "CTRL-RightArrow"){
 			int pos = curx;
-			for (int i=curx; i < raw[index + cury].size(); i++){
-				if (isAlpha(raw[index + cury].at(i)) != true){
+			for (int i=curx; i < raw[scroll + cury].size(); i++){
+				if (isAlpha(raw[scroll + cury].at(i)) != true){
 					pos += (i - curx);
 					break;
 				}
 			}
 
-			if (raw[index + cury].substr(curx, 4) == "    "){
+			if (raw[scroll + cury].substr(curx, 4) == "    "){
 				curx += 4;
 			
 			}else{            
-				if (pos > raw[index + cury].size() - 1 || curx == raw[index + cury].size()){
+				if (pos > raw[scroll + cury].size() - 1 || curx == raw[scroll + cury].size()){
 					if (cury == viewport.size() - 1){
-						if (index + cury != raw.size() - 1){
+						if (scroll + cury != raw.size() - 1){
 							curx = 0;
-							index ++;
+							scroll ++;
 							refresh();
 							drawHeader();
 						}
@@ -773,25 +777,25 @@ int main(int argc, char** argv){
 		}else if (key == "CTRL-LeftArrow"){
 			int pos = 0;
 			for (int i=curx - 1; i > 0; i--){
-				if (isAlpha(raw[index + cury].at(i)) != true){
+				if (isAlpha(raw[scroll + cury].at(i)) != true){
 					pos = i;
 					break;
 				}
 			}
 
-			if (curx >= 4 && raw[index + cury].substr(curx - 4, 4) == "    "){
+			if (curx >= 4 && raw[scroll + cury].substr(curx - 4, 4) == "    "){
 				curx -= 4;
 			}else{
 				if (curx == 0){
 					if (cury == 1){
-						if (index + cury != 1){ // move viewport up
-							index --;
+						if (scroll + cury != 1){ // move viewport up
+							scroll --;
 							refresh();
 							drawHeader();
-							curx = raw[index + cury].length();
+							curx = raw[scroll + cury].length();
 						}
 					}else{ // move to previous line
-						curx = raw[index + cury - 1].size();
+						curx = raw[scroll + cury - 1].size();
 						cury -= 1;
 					}
 				}else{ // move back
@@ -818,15 +822,15 @@ int main(int argc, char** argv){
 				
 				// undraw line //
 				setCursorPosition(0, cury);
-				for (int i = 0; i < raw[cury + index].size(); i++){
+				for (int i = 0; i < raw[cury + scroll].size(); i++){
 					cout << " ";
 				}
 						
 				// generate new line //
-				string newline = raw[cury + index].erase(start, (end - start));
-				raw[cury + index] = newline;
-				lines[cury + index] = syntaxLine(newline);
-				diffManager.removeLine(cury, index);
+				string newline = raw[cury + scroll].erase(start, (end - start));
+				raw[cury + scroll] = newline;
+				lines[cury + scroll] = syntaxLine(newline);
+				diffManager.removeLine(cury, scroll);
 				
 				startx = 0;
 				starty = 0;
@@ -842,31 +846,31 @@ int main(int argc, char** argv){
 				updateCursor();
 
 			}else if (raw.size() - 1 != 1){
-				if (raw.size() - 1 == index + cury && cury == 1){ // end of file and at cury 1
-					if (index != 0){
-						lines.erase(lines.begin() + index + cury);
-						raw.erase(lines.begin() + index + cury);
-						diffManager.removeLine(cury, index);
+				if (raw.size() - 1 == scroll + cury && cury == 1){ // end of file and at cury 1
+					if (scroll != 0){
+						lines.erase(lines.begin() + scroll + cury);
+						raw.erase(lines.begin() + scroll + cury);
+						diffManager.removeLine(cury, scroll);
 						
-						index --;
+						scroll --;
 						
-						if (raw[index + cury].size() < curx){
-							curx = raw[index + cury].size();
+						if (raw[scroll + cury].size() < curx){
+							curx = raw[scroll + cury].size();
 						}
 						
 						newRefresh();
 						updateCursor();
 					}
 					
-				}else if (raw.size() - 1 == index + cury){ // end of file and more than cury 1
-					lines.erase(lines.begin() + index + cury);
-					raw.erase(raw.begin() + index + cury);
-					diffManager.removeLine(cury, index);
+				}else if (raw.size() - 1 == scroll + cury){ // end of file and more than cury 1
+					lines.erase(lines.begin() + scroll + cury);
+					raw.erase(raw.begin() + scroll + cury);
+					diffManager.removeLine(cury, scroll);
 					
 					cury --;
 					
-					if (raw[index + cury].size() < curx){
-						curx = raw[index + cury].size();
+					if (raw[scroll + cury].size() < curx){
+						curx = raw[scroll + cury].size();
 					}
 					
 					updateCursor();
@@ -875,12 +879,12 @@ int main(int argc, char** argv){
 					updateCursor();
 				
 				}else{
-					lines.erase(lines.begin() + index + cury);
-					raw.erase(raw.begin() + index + cury);
-					diffManager.removeLine(cury, index);
+					lines.erase(lines.begin() + scroll + cury);
+					raw.erase(raw.begin() + scroll + cury);
+					diffManager.removeLine(cury, scroll);
 
-					if (raw[index + cury].size() < curx){
-						curx = raw[index + cury].size();
+					if (raw[scroll + cury].size() < curx){
+						curx = raw[scroll + cury].size();
 					}
 
 					clearFromPoint(cury - 1);
@@ -892,11 +896,11 @@ int main(int argc, char** argv){
 			hasEdited = true;
 
 		}else if (key == "CTRLL"){
-			string currentline = raw[index + cury];
+			string currentline = raw[scroll + cury];
 
 			string info = "line: [x/y] col: [z/p]";
 
-			info = replace_all(info, "x", to_string(index + cury));
+			info = replace_all(info, "x", to_string(scroll + cury));
 			info = replace_all(info, "y", to_string(raw.size() - 1));
 			info = replace_all(info, "z", to_string(curx));
 			info = replace_all(info, "p", to_string(currentline.size()));
@@ -991,24 +995,24 @@ int main(int argc, char** argv){
 			todo.init();
 
 		}else if (key == "CTRLD"){
-			raw.insert(raw.begin() + cury + index, raw[cury + index]);
-			lines.insert(lines.begin() + cury + index, syntaxLine(raw[cury + index]));
+			raw.insert(raw.begin() + cury + scroll, raw[cury + scroll]);
+			lines.insert(lines.begin() + cury + scroll, syntaxLine(raw[cury + scroll]));
 			
 			if (cury == screenHeight - 2){
-				index ++;
+				scroll ++;
 			}else{
 				cury ++;
 			}
 			
-			diffManager.insertLine(cury, index);
+			diffManager.insertLine(cury, scroll);
 			
 			newRefresh();
 			updateCursor();
 
 		}else if (key == "ALT-UpArrow"){
 			// move screen //
-			if (index > 0){
-				index --;
+			if (scroll > 0){
+				scroll --;
 			
 				// handel cursor //
 				if (cury != screenHeight - 2){
@@ -1020,8 +1024,8 @@ int main(int argc, char** argv){
 			updateCursor();
 		
 		}else if (key == "ALT-DownArrow"){
-			if (index < raw.size() - screenHeight + 1){
-				index ++;
+			if (scroll < raw.size() - screenHeight + 1){
+				scroll ++;
 			
 				if (cury > 1){
 					cury --;
@@ -1051,7 +1055,7 @@ int main(int argc, char** argv){
 				loadFileFromMemory(openFiles[fileIndex][0]);
 				curx = stoi(openFiles[fileIndex][1]);
 				cury = stoi(openFiles[fileIndex][2]);
-				index = stoi(openFiles[fileIndex][3]);
+				scroll = stoi(openFiles[fileIndex][3]);
 				updateCursor();
 		
 				currentfile = openFiles[fileIndex][0];
@@ -1082,7 +1086,7 @@ int main(int argc, char** argv){
 				loadFileFromMemory(openFiles[fileIndex][0]);
 				curx = stoi(openFiles[fileIndex][1]);
 				cury = stoi(openFiles[fileIndex][2]);
-				index = stoi(openFiles[fileIndex][3]);
+				scroll = stoi(openFiles[fileIndex][3]);
 
 				currentfile = openFiles[fileIndex][0];
 
@@ -1102,7 +1106,7 @@ int main(int argc, char** argv){
 				endy = cury;
 			}
 			
-			if (endx < raw[starty + index].size()){
+			if (endx < raw[starty + scroll].size()){
 				endx ++;
 			}
 			
@@ -1128,11 +1132,11 @@ int main(int argc, char** argv){
 			drawSelection();
 
 		}else if (key == "TAB"){
-			string currentline = raw[index + cury];
+			string currentline = raw[scroll + cury];
 
 			currentline.insert(curx, "    ");
-			lines[index + cury] = syntaxLine(currentline);
-			raw[index + cury] = currentline;
+			lines[scroll + cury] = syntaxLine(currentline);
+			raw[scroll + cury] = currentline;
 			updateViewport();
 
 			// make update line function at some point //
@@ -1145,21 +1149,21 @@ int main(int argc, char** argv){
 
 			hasEdited = true;
 
-		}else if (key == "/" && raw[index + cury].size() > curx + 1 && raw[index + cury].substr(curx + 1, 1) == " "){
-			raw[index + cury][curx] = '/';
-			lines[index + cury] = syntaxLine(raw[index + cury]);
+		}else if (key == "/" && raw[scroll + cury].size() > curx + 1 && raw[scroll + cury].substr(curx + 1, 1) == " "){
+			raw[scroll + cury][curx] = '/';
+			lines[scroll + cury] = syntaxLine(raw[scroll + cury]);
 				
 			updateViewport();
 			curx ++;
 				
 			resetColor();
 			setCursorPosition(0, cury);
-			cout << lines[index + cury];
+			cout << lines[scroll + cury];
 			updateCursor();
 			
 		}else{
 			if (key.size() == 1){
-				string currentline = raw[index + cury];
+				string currentline = raw[scroll + cury];
 				string newline = "";
 
 				if (curx == currentline.size()){
@@ -1176,8 +1180,8 @@ int main(int argc, char** argv){
 					}
 				}
 				
-				lines[index + cury] = syntaxLine(newline);
-				raw[index + cury] = newline;
+				lines[scroll + cury] = syntaxLine(newline);
+				raw[scroll + cury] = newline;
 				updateViewport();
 				curx ++;
 
@@ -1187,7 +1191,7 @@ int main(int argc, char** argv){
 				updateCursor();
 			}
 
-			diffManager.updateLine(cury + index - 1, 1);
+			diffManager.updateLine(cury + scroll - 1, 1);
 			diffManager.drawDiffBar();
 			
 			hasEdited = true;
@@ -1196,7 +1200,7 @@ int main(int argc, char** argv){
 		checkScreenSize();
 
 		int value = 0;
-		string currentline = raw[index + cury];
+		string currentline = raw[scroll + cury];
 		bool comment = false;
 		bool stringmode = false;
 		

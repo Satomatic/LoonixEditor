@@ -14,7 +14,7 @@ class ConfigManager{
 		string user;
 
 	void checkConfig(){
-		configDir = "/home/X/.ledit";
+		configDir = "/Users/X/.ledit";
 		configDir = replace_all(configDir, "X", getenv("USER"));
 	
 		if (configDir == "/home/root/.ledit"){
