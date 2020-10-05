@@ -148,7 +148,7 @@ string syntaxLine(string line){
 	};
 	
 	// generic language stuff //
-	vector<string> statements = {"if", "else", "return", "for", "while", "elif", "then", "end", "and", "break", "in", "elseif"};
+	vector<string> statements = {"if", "else", "return", "for", "while", "elif", "then", "end", "and", "break", "in", "elseif", "public", "static", "private"};
 	vector<string> variables = {"bool", "string", "int", "void", "class", "def", "function", "char", "do", "define", "ifndef", "endif", "try", "except", "catch", "const", "auto", "unsigned"};
 	vector<string> functions = {"extern", "include", "vector", "from", "import", "export", "pair"};
 	vector<string> tags = {
