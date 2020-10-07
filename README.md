@@ -1,7 +1,7 @@
 # LoonixEditor
 A mildly temperamental console-based text editor for linux.
 
-<img src="https://i.imgur.com/7BHP8Nv.png" width="552px">
+<img src="https://i.imgur.com/ERov6y6.png" width="552px">
 
 **LoonixEditor running with dark header enabled and vim theme**
 
