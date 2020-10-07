@@ -1,9 +1,9 @@
 # LoonixEditor
 A mildly temperamental console-based text editor for linux.
 
-<img src="https://i.imgur.com/HP8RcEW.png" width="552px">
+<img src="https://i.imgur.com/7BHP8Nv.png" width="552px">
 
-**LoonixEditor running with dark header enabled**
+**LoonixEditor running with dark header enabled and vim theme**
 
 ## How to use
 ### Key binds
