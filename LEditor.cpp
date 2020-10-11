@@ -991,17 +991,19 @@ int main(int argc, char** argv){
 			todo.init();
 
 		}else if (key == "CTRLD"){
+			setCursorPosition(20, 20);
+
 			raw.insert(raw.begin() + cury + index, raw[cury + index]);
 			lines.insert(lines.begin() + cury + index, syntaxLine(raw[cury + index]));
 			
+			diffManager.insertLine(cury, index);
+
 			if (cury == screenHeight - 2){
 				index ++;
 			}else{
 				cury ++;
 			}
-			
-			diffManager.insertLine(cury, index);
-			
+						
 			newRefresh();
 			updateCursor();
 
@@ -1245,3 +1247,5 @@ int main(int argc, char** argv){
 	clear();
 	showCursor();
 }
+
+
