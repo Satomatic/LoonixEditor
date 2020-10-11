@@ -62,7 +62,10 @@ class CommandLine{
 			}
 			
 			diffManager.drawDiffBar();
-			scrollbar.draw();
+		   
+			if (configManager.getValue("scrl_enabled") == "1")
+				scrollbar.draw();
+  
 			drawHeader();
 			drawFooter();
 			updateCursor();

@@ -120,7 +120,8 @@ class Replace{
 								updateCursor();
 								diffManager.drawDiffBar();
 								scrollbar.position = index;
-								scrollbar.draw();
+								if (configManager.getValue("scrl_enabled") == "1")
+									scrollbar.draw();
 							}
 							
 							done ++;
@@ -277,7 +278,9 @@ class NewReplace{
 			updateCursor();
 			diffManager.drawDiffBar();
 			scrollbar.position = index;
-			scrollbar.draw();
+			if (configManager.getValue("scrl_enabled") == "1")
+				scrollbar.draw();
+			
 			drawGuideLines();
 			
 			setCursorPosition(curx + XOffset, cury);

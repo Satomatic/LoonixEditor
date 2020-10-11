@@ -138,8 +138,10 @@ string syntaxLine(string line){
 	vector<vector<string>> assembly_op = {
 		{"mov", "add", "sub", "inc", "call", "int", "cmp", "je", "jmp", "ret"},
 		{"ax", "bx", "cx", "dx", "al", "bl", "cl", "dl", "ah", "bh", "ch", "dh", "di", "si", "es", "ds", "ss", "sp", "fs", "gs"},
-		{"push", "pusha", "pop", "popa", "cli", "sti", "cld"}
+		{"push", "pusha", "pop", "popa", "cli", "sti", "cld", "dd", "dw", "db", "times"}
 	};
+	
+	
 	
 	vector<string> assembly_col = {
 		"variables",

@@ -98,7 +98,8 @@ class Find{
 						drawHeader();
 						diffManager.drawDiffBar();
 						scrollbar.position = index;
-						scrollbar.draw();
+						if (configManager.getValue("scrl_enabled") == "1")
+							scrollbar.draw();
 						drawGuideLines();
 						updateCursor();
 
