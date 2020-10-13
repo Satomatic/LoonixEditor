@@ -20,7 +20,7 @@ void loadTheme(std::string name){
 		std::string line;
 		while (getline(file, line)){
 			std::vector<std::string> linesplit = split(line, ':');
-		
+			
 			for (int i = 0; i < colors.size(); i++){
 				if (colors[i][0] == linesplit[0]){
 					colors[i][1] = "\033[" + linesplit[1];
@@ -163,6 +163,31 @@ std::string syntaxLine(std::string line){
 			}
 			
 			//
+			// Boolean Syntaxing
+			//
+			bool bool_type = 0;
+			if (to_lower(text.substr(i, 5)) == "false"){
+				bool_type = 1;
+			}
+			
+			std::string keyword = text.substr(i, 4 + bool_type);
+			if (to_lower(keyword) == "true" || to_lower(keyword) == "false"){
+				std::string nchar = text.substr(i + keyword.size(), 1);
+				std::string pchar;
+				if (i > 0) pchar = text.substr(i - 1, 1);
+				
+				bool p_found = charContains(pchar);
+				bool n_found = charContains(nchar);
+				
+				if (p_found && n_found){
+					std::string color = getColor("numbers");
+					std::string replacer = color + keyword + "\033[0m";
+					text.replace(i, keyword.size(), replacer);
+					i += replacer.size();
+				}
+			}
+			
+			//
 			// Number Syntaxing
 			//
 			std::string numbers = "1234567890";
@@ -231,7 +256,6 @@ std::string syntaxLine(std::string line){
 			}
 		}
 	}
-	
-	text += "\033[0m";
-	return text;
+
+	return "\u001b[0m" + text;
 }
