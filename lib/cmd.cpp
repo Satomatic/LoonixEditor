@@ -9,6 +9,39 @@
 
 using namespace std;
 
+string replace_all(string text, string replace, string replacer){
+	for (int i = 0; i < text.size(); i++){
+		if (text.substr(i, replace.size()) == replace){
+			text.replace(i, replace.size(), replacer);
+			i += replacer.size();
+		}
+	}
+	
+	return text;
+}
+
+int find_str(string text, string finding){
+	int results = 0;
+	for (int i = 0; i < text.size(); i ++){
+		if (text.substr(i, finding.size()) == finding){
+			results ++;
+		}
+	}
+	return results;
+}
+
+string to_upper(string text){
+	string upper;
+	for (auto & c: text ) upper += toupper(c);
+	return upper;
+}
+
+string to_lower(string text){
+	string lower;
+	for (auto & c: text ) lower += tolower(c);
+	return lower;
+}
+
 int centerWidth(string text, int width){
 	int x = width / 2 - (text.size() / 2);
 	
