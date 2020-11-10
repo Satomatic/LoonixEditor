@@ -54,7 +54,7 @@ std::vector<std::vector<std::string>> generic_keywords = {
 		"bool", "string", "int", "void", "class",
 		"def", "function", "char", "do", "define",
 		"ifndef", "endif", "try", "except", "catch",
-		"const", "auto", "unsigned"
+		"const", "auto", "unsigned", "func"
 	},
 	// functions
 	{
@@ -80,7 +80,8 @@ std::vector<std::string> extraChars = {
 	"}", ")", "]", ">",
 	",", ".", ";", ":",
 	"+", "-", "#", "%",
-	"@", "=", "", " "
+	"@", "=", "",  " ",
+	"*"
 };
 
 std::string fileExtension;
