@@ -1,6 +1,33 @@
 # LoonixEditor
 A mildly temperamental console-based text editor for linux.
 
+## Notice!
+The LoonixEditor console-based text editor for linux is currently being rewritten.
+Honestly, I didn't know what I was doing when I first wrote LoonixEditor. Because of this,
+an editor full of horrible code practices and bugs was formed. I intend on rewriting from the
+ground up, only borrowing some of the newer which I think to be "acceptable".\
+\
+Hopefully, the new editor (which will keep the original name) will run faster, be less buggy,
+and be a nicer project to work on as a whole. This rewrite may take a while but hopefully, it will
+be worth it in the long run.\
+\
+As well as being a complete code rewrite, I plan on adding many new features that just wouldn't be possible
+with the current state of the project. Such features include:
+- Lua plugin support
+- Multiple view editing
+- Integrated file manager
+- Custom keyboard shortcuts
+- Better menus
+
+I will move this version of the editor to its own branch where it may rest for the rest of time, I will most likely
+call the branch LegacyEditor (a play on LoonixEditor).\
+\
+Fun fact is, this isn't the first iteration of LoonixEditor. The original working title for this was
+LoonixEditor 2 as it was a rewrite of an even worse project.\
+\
+We can only hope the best for LoonixEditor 3\
+See you then :^)
+
 <img src="https://i.imgur.com/ERov6y6.png" width="552px">
 
 **LoonixEditor running with dark header enabled and vim theme**
