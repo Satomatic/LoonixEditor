@@ -2,7 +2,7 @@
 A mildly temperamental console-based text editor for linux.
 
 ## Notice!
-The LoonixEditor console-based text editor for linux is currently being rewritten.
+LoonixEditor, the console-based text editor for linux is currently being rewritten.
 Honestly, I didn't know what I was doing when I first wrote LoonixEditor. Because of this,
 an editor full of horrible code practices and bugs was formed. I intend on rewriting from the
 ground up, only borrowing some of the newer which I think to be "acceptable".\
