@@ -114,7 +114,7 @@ std::string syntaxLine(std::string line){
 						std::string current = text.substr(i, keyword.size());
 						std::string upper = to_upper(keyword);
 						
-						if (current == keyword || current == upper){
+						if (current == keyword || current == upper || line.size() >= 4 && current.substr(0, 4) == "uint"){
 							std::string nchar = text.substr(i + keyword.size(), 1);
 							std::string pchar;
 							
